@@ -5,18 +5,12 @@ package checkers.src.main.java;
  * legal moves, captures, and diagonals on the board.
  */
 public class Move {
-  /**
-   * The game frame that contains the board state.
-   */
-  private final Frame frame;
   private final BoardState boardState;
   /**
    * Constructs a Move object for the given frame.
    *
-   * @param frameParam the game frame containing the board
    */
-  public Move(final Frame frameParam, BoardState boardStateParam) {
-    this.frame = frameParam;
+  public Move(BoardState boardStateParam) {
     this.boardState = boardStateParam;
   }
 

@@ -33,7 +33,7 @@ public final class Game {
     BoardState boardState = new BoardState();
     BoardPanel boardPanel = new BoardPanel(boardState);
     Frame boardFrame = new Frame(boardState, boardPanel);
-    Move move = new Move(boardFrame, boardState);
+    Move move = new Move(boardState);
     BoardController controller = new BoardController(boardFrame, move, boardState);
 
     JButton red = new JButton("Red");
