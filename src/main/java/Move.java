@@ -9,26 +9,15 @@ public class Move {
    * The game frame that contains the board state.
    */
   private final Frame frame;
-  /**
-   * The index of the last row/column on the board.
-   */
-  private static final int LAST_ROW_INDEX = Board.BOARD_SIZE - 1;
-  /**
-   * Maximum row offset used in move calculations.
-   */
-  private static final int MAX_ROW_OFFSET = Board.BOARD_SIZE - 3;
-  /**
-   * Maximum column offset used in move calculations.
-   */
-  private static final int MAX_COLUMN_OFFSET = Board.BOARD_SIZE - 2;
-
+  private final BoardState boardState;
   /**
    * Constructs a Move object for the given frame.
    *
    * @param frameParam the game frame containing the board
    */
-  public Move(final Frame frameParam) {
+  public Move(final Frame frameParam, BoardState boardStateParam) {
     this.frame = frameParam;
+    this.boardState = boardStateParam;
   }
 
   /**
@@ -39,7 +28,7 @@ public class Move {
    * @return true if the piece is red, false otherwise
    */
   public boolean isItRed(final int column, final int row) {
-    return frame.getBoard().getValueOfPiece(row, column) == Board.RED;
+    return boardState.getPiece(row, column) == GameConstants.RED;
   }
 
   /**
@@ -50,7 +39,7 @@ public class Move {
    * @return true if the piece is black, false otherwise
    */
   public boolean isItBlack(final int column, final int row) {
-    return frame.getBoard().getValueOfPiece(row, column) == Board.BLACK;
+    return boardState.getPiece(row, column) == GameConstants.BLACK;
   }
 
   /**
@@ -61,7 +50,7 @@ public class Move {
    * @return true if the piece is a black king, false otherwise
    */
   public boolean isItBlackKing(final int column, final int row) {
-    return frame.getBoard().getValueOfPiece(row, column) == Board.BLACK_KING;
+    return boardState.getPiece(row, column) == GameConstants.BLACK_KING;
   }
 
   /**
@@ -72,7 +61,7 @@ public class Move {
    * @return true if the piece is a red king, false otherwise
    */
   public boolean isItRedKing(final int column, final int row) {
-    return frame.getBoard().getValueOfPiece(row, column) == Board.RED_KING;
+    return boardState.getPiece(row, column) == GameConstants.RED_KING;
   }
 
   /**
@@ -83,7 +72,7 @@ public class Move {
    * @return true if the cell is empty, false otherwise
    */
   public boolean isItEmpty(final int column, final int row) {
-    return frame.getBoard().getValueOfPiece(row, column) == Board.EMPTY;
+    return boardState.getPiece(row, column) == GameConstants.EMPTY;
   }
 
   /**
@@ -121,7 +110,7 @@ public class Move {
     int j;
     for (i = rowFirst - 1, j = columnFirst - 1;
          i > rowSecond + 1 && j > columnSecond + 1; i--, j--) {
-      if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+      if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
       }
     }
@@ -145,7 +134,7 @@ public class Move {
     int j;
     for (i = rowFirst + 1, j = columnFirst - 1;
          i < rowSecond - 1 && j > columnSecond + 1; i++, j--) {
-      if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+      if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
       }
     }
@@ -169,7 +158,7 @@ public class Move {
     int j;
     for (i = rowFirst - 1, j = columnFirst + 1;
          i > rowSecond + 1 && j < columnSecond - 1; i--, j++) {
-      if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+      if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
       }
     }
@@ -193,7 +182,7 @@ public class Move {
     int j;
     for (i = rowFirst + 1, j = columnFirst + 1;
          i < rowSecond - 1 && j < columnSecond - 1; i++, j++) {
-      if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+      if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
       }
     }
@@ -210,11 +199,11 @@ public class Move {
   public boolean checkAllPiecesPossibleTakes(final int color,
                                              final int colorQueen) {
     boolean result = false;
-    for (int row = 0; row < Board.BOARD_SIZE; row++) {
-      for (int col = 0; col < Board.BOARD_SIZE; col++) {
+    for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+      for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
         if (canITake(col, row)) {
-          if (frame.getBoard().getValueOfPiece(row, col) == color
-              || frame.getBoard().getValueOfPiece(row, col) == colorQueen) {
+          if (boardState.getPiece(row, col) == color
+              || boardState.getPiece(row, col) == colorQueen) {
             result = true;
           }
         }
@@ -240,7 +229,7 @@ public class Move {
     if (isItEmpty(columnsecond, rowsecond) && isItOnTheSameDiagonal(columnfirst,
         rowfirst, columnsecond, rowsecond)) {
       switch (color) {
-        case Board.RED:
+        case GameConstants.RED:
           if (isItBlack((columnsecond + columnfirst) / 2,
               (rowfirst + rowsecond) / 2) || isItBlackKing(
               (columnsecond + columnfirst) / 2,
@@ -255,7 +244,7 @@ public class Move {
             result = false;
           }
           break;
-        case Board.BLACK:
+        case GameConstants.BLACK:
           if (isItRed((columnsecond + columnfirst) / 2,
               (rowsecond + rowfirst) / 2) || isItRedKing(
               (columnsecond + columnfirst) / 2,
@@ -270,7 +259,7 @@ public class Move {
             result = false;
           }
           break;
-        case Board.BLACK_KING:
+        case GameConstants.BLACK_KING:
           if (rowsecond < rowfirst && columnsecond < columnfirst) {
             if (checkLeftTopDiagonalEmptySpaces(columnfirst, rowfirst,
                 columnsecond, rowsecond)) {
@@ -312,7 +301,7 @@ public class Move {
             }
           }
           break;
-        case Board.RED_KING:
+        case GameConstants.RED_KING:
           if (rowsecond < rowfirst && columnsecond < columnfirst) {
             if (checkLeftTopDiagonalEmptySpaces(columnfirst, rowfirst,
                 columnsecond, rowsecond)) {
@@ -372,38 +361,38 @@ public class Move {
    */
   public boolean canIMove(final int column, final int row) {
     boolean result = false;
-    int colorofpiece = frame.getBoard().getValueOfPiece(row, column);
+    int colorofpiece = boardState.getPiece(row, column);
     switch (colorofpiece) {
-      case Board.RED:
-        if (column != LAST_ROW_INDEX) {
-          if (frame.getBoard().getValueOfPiece(row - 1, column + 1)
-              == Board.EMPTY) {
+      case GameConstants.RED:
+        if (column != GameConstants.LAST_ROW_INDEX) {
+          if (boardState.getPiece(row - 1, column + 1)
+              == GameConstants.EMPTY) {
             result = true;
           }
         }
         if (column != 0) {
-          if (frame.getBoard().getValueOfPiece(row - 1, column - 1)
-              == Board.EMPTY) {
+          if (boardState.getPiece(row - 1, column - 1)
+              == GameConstants.EMPTY) {
             result = true;
           }
         }
         break;
-      case Board.BLACK:
-        if (column != LAST_ROW_INDEX) {
-          if (frame.getBoard().getValueOfPiece(row + 1, column + 1)
-              == Board.EMPTY) {
+      case GameConstants.BLACK:
+        if (column != GameConstants.LAST_ROW_INDEX) {
+          if (boardState.getPiece(row + 1, column + 1)
+              == GameConstants.EMPTY) {
             result = true;
           }
         }
         if (column != 0) {
-          if (frame.getBoard().getValueOfPiece(row + 1, column - 1)
-              == Board.EMPTY) {
+          if (boardState.getPiece(row + 1, column - 1)
+              == GameConstants.EMPTY) {
             result = true;
           }
         }
         break;
-      case Board.BLACK_KING:
-      case Board.RED_KING:
+      case GameConstants.BLACK_KING:
+      case GameConstants.RED_KING:
         result = true;
       default:
         break;
@@ -422,11 +411,11 @@ public class Move {
     boolean result = false;
     int i;
     int j;
-    int colorofpiece = frame.getBoard().getValueOfPiece(row, column);
+    int colorofpiece = boardState.getPiece(row, column);
     switch (colorofpiece) {
-      case Board.RED:
+      case GameConstants.RED:
         if (row >= 2) {
-          if (column < MAX_COLUMN_OFFSET) {
+          if (column < GameConstants.MAX_COLUMN_OFFSET) {
             if ((isItBlackKing(column + 1, row - 1) || isItBlack(column + 1,
                 row - 1)) && isItEmpty(column + 2, row - 2)) {
               result = true;
@@ -440,9 +429,9 @@ public class Move {
           }
         }
         break;
-      case Board.BLACK:
-        if (row <= MAX_ROW_OFFSET) {
-          if (column < MAX_COLUMN_OFFSET) {
+      case GameConstants.BLACK:
+        if (row <= GameConstants.MAX_ROW_OFFSET) {
+          if (column < GameConstants.MAX_COLUMN_OFFSET) {
             if ((isItRedKing(column + 1, row + 1) || isItRed(column + 1,
                 row + 1)) && isItEmpty(column + 2, row + 2)) {
               result = true;
@@ -456,98 +445,98 @@ public class Move {
           }
         }
         break;
-      case Board.BLACK_KING:
+      case GameConstants.BLACK_KING:
         for (i = row - 1, j = column - 1; i > 0 && j > 0; i--, j--) {
           if (!checkLeftTopDiagonalEmptySpaces(column, row, j - 1, i - 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.RED_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.RED) {
-              if (frame.getBoard().getValueOfPiece(i - 1, j - 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.RED_KING
+                || boardState.getPiece(i, j) == GameConstants.RED) {
+              if (boardState.getPiece(i - 1, j - 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
-        for (i = row + 1, j = column - 1; i < LAST_ROW_INDEX && j > 0;
+        for (i = row + 1, j = column - 1; i < GameConstants.LAST_ROW_INDEX && j > 0;
              i++, j--) {
           if (!checkLeftBotDiagonalEmptySpaces(column, row, j - 1, i + 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.RED_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.RED) {
-              if (frame.getBoard().getValueOfPiece(i + 1, j - 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.RED_KING
+                || boardState.getPiece(i, j) == GameConstants.RED) {
+              if (boardState.getPiece(i + 1, j - 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
-        for (i = row - 1, j = column + 1; i > 0 && j < LAST_ROW_INDEX;
+        for (i = row - 1, j = column + 1; i > 0 && j < GameConstants.LAST_ROW_INDEX;
              i--, j++) {
           if (!checkRightTopDiagonalEmptySpaces(column, row, j + 1, i - 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.RED_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.RED) {
-              if (frame.getBoard().getValueOfPiece(i - 1, j + 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.RED_KING
+                || boardState.getPiece(i, j) == GameConstants.RED) {
+              if (boardState.getPiece(i - 1, j + 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
         for (i = row + 1, j = column + 1;
-             i < LAST_ROW_INDEX && j < LAST_ROW_INDEX; i++, j++) {
+             i < GameConstants.LAST_ROW_INDEX && j < GameConstants.LAST_ROW_INDEX; i++, j++) {
           if (!checkRightBotDiagonalEmptySpaces(column, row, j + 1, i + 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.RED_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.RED) {
-              if (frame.getBoard().getValueOfPiece(i + 1, j + 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.RED_KING
+                || boardState.getPiece(i, j) == GameConstants.RED) {
+              if (boardState.getPiece(i + 1, j + 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
         break;
-      case Board.RED_KING:
+      case GameConstants.RED_KING:
         for (i = row - 1, j = column - 1; i > 0 && j > 0; i--, j--) {
           if (!checkLeftTopDiagonalEmptySpaces(column, row, j - 1, i - 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.BLACK_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.BLACK) {
-              if (frame.getBoard().getValueOfPiece(i - 1, j - 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
+                || boardState.getPiece(i, j) == GameConstants.BLACK) {
+              if (boardState.getPiece(i - 1, j - 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
-        for (i = row + 1, j = column - 1; i < LAST_ROW_INDEX && j > 0;
+        for (i = row + 1, j = column - 1; i < GameConstants.LAST_ROW_INDEX && j > 0;
              i++, j--) {
           if (!checkLeftBotDiagonalEmptySpaces(column, row, j - 1, i + 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.BLACK_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.BLACK) {
-              if (frame.getBoard().getValueOfPiece(i + 1, j - 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
+                || boardState.getPiece(i, j) == GameConstants.BLACK) {
+              if (boardState.getPiece(i + 1, j - 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
-        for (i = row - 1, j = column + 1; i > 0 && j < LAST_ROW_INDEX;
+        for (i = row - 1, j = column + 1; i > 0 && j < GameConstants.LAST_ROW_INDEX;
              i--, j++) {
           if (!checkRightTopDiagonalEmptySpaces(column, row, j + 1, i - 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.BLACK_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.BLACK) {
-              if (frame.getBoard().getValueOfPiece(i - 1, j + 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
+                || boardState.getPiece(i, j) == GameConstants.BLACK) {
+              if (boardState.getPiece(i - 1, j + 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
           }
         }
         for (i = row + 1, j = column + 1;
-             i < LAST_ROW_INDEX && j < LAST_ROW_INDEX; i++, j++) {
+             i < GameConstants.LAST_ROW_INDEX && j < GameConstants.LAST_ROW_INDEX; i++, j++) {
           if (!checkRightBotDiagonalEmptySpaces(column, row, j + 1, i + 1)) {
-            if (frame.getBoard().getValueOfPiece(i, j) == Board.BLACK_KING
-                || frame.getBoard().getValueOfPiece(i, j) == Board.BLACK) {
-              if (frame.getBoard().getValueOfPiece(i + 1, j + 1)
-                  == Board.EMPTY) {
+            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
+                || boardState.getPiece(i, j) == GameConstants.BLACK) {
+              if (boardState.getPiece(i + 1, j + 1)
+                  == GameConstants.EMPTY) {
                 result = true;
               }
             }
@@ -577,8 +566,8 @@ public class Move {
                                           final int color) {
     boolean result = true;
     switch (color) {
-      case Board.RED_KING:
-      case Board.BLACK_KING:
+      case GameConstants.RED_KING:
+      case GameConstants.BLACK_KING:
         int i;
         int j;
         if (Math.abs(rowsecond - columnsecond) == Math.abs(
@@ -587,7 +576,7 @@ public class Move {
           if (rowsecond < rowfirst && columnsecond < columnfirst) {
             for (i = rowfirst - 1, j = columnfirst - 1;
                  i >= rowsecond && j >= columnsecond; i--, j--) {
-              if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+              if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
                 result = false;
               }
             }
@@ -595,7 +584,7 @@ public class Move {
           if (rowsecond > rowfirst && columnsecond < columnfirst) {
             for (i = rowfirst + 1, j = columnfirst - 1;
                  i <= rowsecond && j >= columnsecond; i++, j--) {
-              if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+              if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
                 result = false;
               }
             }
@@ -603,7 +592,7 @@ public class Move {
           if (rowsecond < rowfirst && columnsecond > columnfirst) {
             for (i = rowfirst - 1, j = columnfirst + 1;
                  i >= rowsecond && j <= columnsecond; i--, j++) {
-              if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+              if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
                 result = false;
               }
             }
@@ -611,7 +600,7 @@ public class Move {
           if (rowsecond > rowfirst && columnsecond > columnfirst) {
             for (i = rowfirst + 1, j = columnfirst + 1;
                  i <= rowsecond && j <= columnsecond; i++, j++) {
-              if (frame.getBoard().getValueOfPiece(i, j) != Board.EMPTY) {
+              if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
                 result = false;
               }
             }
@@ -623,7 +612,7 @@ public class Move {
           result = false;
         }
         break;
-      case Board.RED:
+      case GameConstants.RED:
         if (Math.abs(columnsecond - columnfirst) != 1) {
           result = false;
         }
@@ -631,7 +620,7 @@ public class Move {
           result = false;
         }
         break;
-      case Board.BLACK:
+      case GameConstants.BLACK:
         if (Math.abs(columnsecond - columnfirst) != 1) {
           result = false;
         }
@@ -642,7 +631,7 @@ public class Move {
       default:
         break;
     }
-    if (frame.getBoard().getPieces()[rowsecond][columnsecond] != Board.EMPTY) {
+    if (boardState.getPiece(rowsecond,columnsecond) != GameConstants.EMPTY) {
       result = false;
     }
     return result;

@@ -12,22 +12,22 @@ public final class BoardController {
   /**
    * The color used by the bot's normal pieces.
    */
-  private int botsColor = Board.BLACK;
+  private int botsColor = GameConstants.BLACK;
 
   /**
    * The color used by the bot's king pieces.
    */
-  private int botsKingColor = Board.BLACK_KING;
+  private int botsKingColor = GameConstants.BLACK_KING;
 
   /**
    * The color used by the player's normal pieces.
    */
-  private int playersColor = Board.RED;
+  private int playersColor = GameConstants.RED;
 
   /**
    * The color used by the player's king pieces.
    */
-  private int playersKingColor = Board.RED_KING;
+  private int playersKingColor = GameConstants.RED_KING;
 
   /**
    * Reference to the game frame.
@@ -47,12 +47,12 @@ public final class BoardController {
   /**
    * The color of the current player.
    */
-  private int currentColor = Board.BLACK;
+  private int currentColor = GameConstants.BLACK;
 
   /**
    * The color of the current king piece.
    */
-  private int currentColorKing = Board.BLACK_KING;
+  private int currentColorKing = GameConstants.BLACK_KING;
 
   /**
    * Delay in milliseconds before the bot makes a move.
@@ -67,7 +67,9 @@ public final class BoardController {
   /**
    * Index of the last row on the board.
    */
-  private static final int LAST_ROW_INDEX = Board.BOARD_SIZE - 1;
+  private static final int LAST_ROW_INDEX = GameConstants.BOARD_SIZE - 1;
+
+  private final BoardState boardState;
 
   /**
    * Creates a new BoardController for a given frame and move handler.
@@ -75,9 +77,11 @@ public final class BoardController {
    * @param frameParam the game frame
    * @param moveParam  the move handler
    */
-  public BoardController(final Frame frameParam, final Move moveParam) {
+  public BoardController(final Frame frameParam, final Move moveParam,
+                         final BoardState boardStateParam) {
     this.frame = frameParam;
     this.move = moveParam;
+    this.boardState = boardStateParam;
     this.frame.addBoardListener(new BoardListener());
   }
 
@@ -92,10 +96,10 @@ public final class BoardController {
    * Toggles the current king color between red and black.
    */
   public void setCurrentColorKing() {
-    if (this.currentColorKing == Board.RED_KING) {
-      this.currentColorKing = Board.BLACK_KING;
+    if (this.currentColorKing == GameConstants.RED_KING) {
+      this.currentColorKing = GameConstants.BLACK_KING;
     } else {
-      this.currentColorKing = Board.RED_KING;
+      this.currentColorKing = GameConstants.RED_KING;
     }
   }
 
@@ -174,8 +178,7 @@ public final class BoardController {
    * Clears the currently selected tile on the board.
    */
   public void clearChosenTile() {
-    frame.getBoard().setSelectedColumn(Board.BOARD_SIZE);
-    frame.getBoard().setSelectedRow(Board.BOARD_SIZE);
+    boardState.setSelected(GameConstants.BOARD_SIZE, GameConstants.BOARD_SIZE);
     frame.repaint();
   }
 
@@ -183,10 +186,10 @@ public final class BoardController {
    * Toggles the current player and lets the bot move if it's their turn.
    */
   public void setCurrentColor() {
-    if (currentColor == Board.RED) {
-      this.currentColor = Board.BLACK;
+    if (currentColor == GameConstants.RED) {
+      this.currentColor = GameConstants.BLACK;
     } else {
-      this.currentColor = Board.RED;
+      this.currentColor = GameConstants.RED;
     }
 
     if (currentColor == botsColor) {
@@ -234,11 +237,11 @@ public final class BoardController {
   public void take(final int firstRow, final int firstColumn,
                    final int secondRow, final int secondColumn,
                    final int currentColorParam) {
-    frame.getBoard().getPieces()[firstRow][firstColumn] = Board.EMPTY;
-    frame.getBoard().getPieces()[secondRow][secondColumn] = currentColorParam;
+    boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
+    boardState.setPiece(secondRow, secondColumn, currentColorParam);
     int rowBetween = (firstRow + secondRow) / 2;
     int colBetween = (firstColumn + secondColumn) / 2;
-    frame.getBoard().getPieces()[rowBetween][colBetween] = Board.EMPTY;
+    boardState.setPiece(rowBetween, colBetween, GameConstants.EMPTY);
   }
 
   /**
@@ -253,25 +256,20 @@ public final class BoardController {
   public void queenTake(final int firstRow, final int firstColumn,
                         final int secondRow, final int secondColumn,
                         final int currentColorParam) {
-    frame.getBoard().setValueOfPiece(firstRow, firstColumn, Board.EMPTY);
-    frame.getBoard()
-        .setValueOfPiece(secondRow, secondColumn, currentColorParam);
+    boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
+    boardState.setPiece(secondRow, secondColumn, currentColorParam);
 
     if (secondRow < firstRow && secondColumn < firstColumn) {
-      frame.getBoard()
-          .setValueOfPiece(secondRow + 1, secondColumn + 1, Board.EMPTY);
+      boardState.setPiece(secondRow + 1, secondColumn + 1, GameConstants.EMPTY);
     }
     if (secondRow > firstRow && secondColumn < firstColumn) {
-      frame.getBoard()
-          .setValueOfPiece(secondRow - 1, secondColumn + 1, Board.EMPTY);
+      boardState.setPiece(secondRow - 1, secondColumn + 1, GameConstants.EMPTY);
     }
     if (secondRow < firstRow && secondColumn > firstColumn) {
-      frame.getBoard()
-          .setValueOfPiece(secondRow + 1, secondColumn - 1, Board.EMPTY);
+      boardState.setPiece(secondRow + 1, secondColumn - 1, GameConstants.EMPTY);
     }
     if (secondRow > firstRow && secondColumn > firstColumn) {
-      frame.getBoard()
-          .setValueOfPiece(secondRow - 1, secondColumn - 1, Board.EMPTY);
+      boardState.setPiece(secondRow - 1, secondColumn - 1, GameConstants.EMPTY);
     }
   }
 
@@ -288,12 +286,12 @@ public final class BoardController {
     /**
      * Column of the first click.
      */
-    private int firstClickColumnNumber = Board.BOARD_SIZE;
+    private int firstClickColumnNumber = GameConstants.BOARD_SIZE;
 
     /**
      * Row of the first click.
      */
-    private int firstClickRowNumber = Board.BOARD_SIZE;
+    private int firstClickRowNumber = GameConstants.BOARD_SIZE;
 
     /**
      * Color of the piece selected in the first click.
@@ -310,10 +308,10 @@ public final class BoardController {
 
     private void promoteIfNeeded(final int row, final int col,
                                  final int color) {
-      if (color == Board.RED && row == 0) {
-        frame.getBoard().setValueOfPiece(row, col, Board.RED_KING);
-      } else if (color == Board.BLACK && row == LAST_ROW_INDEX) {
-        frame.getBoard().setValueOfPiece(row, col, Board.BLACK_KING);
+      if (color == GameConstants.RED && row == 0) {
+        boardState.setPiece(row, col, GameConstants.RED_KING);
+      } else if (color == GameConstants.BLACK && row == LAST_ROW_INDEX) {
+        boardState.setPiece(row, col, GameConstants.BLACK_KING);
       }
     }
 
@@ -324,11 +322,10 @@ public final class BoardController {
         firstClickRowNumber = e.getY() / TILE_SIZE;
         if (move.canIMove(firstClickColumnNumber, firstClickRowNumber)
             || move.canITake(firstClickColumnNumber, firstClickRowNumber)) {
-          int value = frame.getBoard().getValueOfPiece(firstClickRowNumber,
+          int value = boardState.getPiece(firstClickRowNumber,
               firstClickColumnNumber);
           if (value == getCurrentColor() || value == getCurrentColorKing()) {
-            frame.getBoard().setSelectedColumn(firstClickColumnNumber);
-            frame.getBoard().setSelectedRow(firstClickRowNumber);
+            boardState.setSelected(firstClickRowNumber, firstClickColumnNumber);
             frame.getBoard().repaint();
             colorOfFirstClick = value;
             firstclick = false;
@@ -343,11 +340,11 @@ public final class BoardController {
             getCurrentColorKing())) {
           if (move.isItLegalSecondClickMove(columnsecond, rowsecond,
               firstClickColumnNumber, firstClickRowNumber, colorOfFirstClick)) {
-            if (frame.getBoard().getValueOfPiece(rowsecond, columnsecond)
-                == Board.EMPTY) {
-              frame.getBoard().setValueOfPiece(firstClickRowNumber,
-                  firstClickColumnNumber, Board.EMPTY);
-              frame.getBoard().setValueOfPiece(rowsecond, columnsecond,
+            if (boardState.getPiece(rowsecond, columnsecond)
+                == GameConstants.EMPTY) {
+              boardState.setPiece(firstClickRowNumber,
+                  firstClickColumnNumber, GameConstants.EMPTY);
+              boardState.setPiece(rowsecond, columnsecond,
                   colorOfFirstClick);
               promoteIfNeeded(rowsecond, columnsecond, colorOfFirstClick);
               setCurrentColor();
@@ -356,8 +353,8 @@ public final class BoardController {
         } else {
           if (move.legalTakeMove(columnsecond, rowsecond,
               firstClickColumnNumber, firstClickRowNumber, colorOfFirstClick)) {
-            if (colorOfFirstClick == Board.BLACK
-                || colorOfFirstClick == Board.RED) {
+            if (colorOfFirstClick == GameConstants.BLACK
+                || colorOfFirstClick == GameConstants.RED) {
               take(firstClickRowNumber, firstClickColumnNumber, rowsecond,
                   columnsecond, getCurrentColor());
             } else {

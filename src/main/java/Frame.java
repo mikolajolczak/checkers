@@ -11,27 +11,21 @@ import javax.swing.JOptionPane;
  */
 public class Frame extends JFrame {
 
-  /**
-   * Width of the window in pixels.
-   */
-  private static final int WINDOW_WIDTH = 416;
-
-  /**
-   * Height of the window in pixels.
-   */
-  private static final int WINDOW_HEIGHT = 436;
 
   /**
    * The main board for the game.
    */
-  private final Board board = new Board();
+  private final BoardPanel board;
+
+  private final BoardState state;
+
 
   /**
    * Returns the board associated with this frame.
    *
    * @return the game board
    */
-  public Board getBoard() {
+  public BoardPanel getBoard() {
     return board;
   }
 
@@ -47,11 +41,13 @@ public class Frame extends JFrame {
   /**
    * Constructor: initializes the frame and adds the board.
    */
-  public Frame() {
-    this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+  public Frame(BoardState state, BoardPanel board) {
+    this.setSize(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
     this.setLocationRelativeTo(null);
     this.setBackground(Color.LIGHT_GRAY);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.board = board;
+    this.state = state;
     this.add(board);
   }
 
@@ -61,13 +57,13 @@ public class Frame extends JFrame {
   public void isGameFinished() {
     int sumOfReds = 0;
     int sumOfBlacks = 0;
-    for (int row = 0; row < Board.BOARD_SIZE; row++) {
-      for (int col = 0; col < Board.BOARD_SIZE; col++) {
-        if (board.getPieces()[row][col] == Board.RED
-            || board.getPieces()[row][col] == Board.RED_KING) {
+    for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+      for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
+        if (state.getPiece(row,col) == GameConstants.RED
+            || state.getPiece(row,col) == GameConstants.RED_KING) {
           sumOfReds++;
-        } else if (board.getPieces()[row][col] == Board.BLACK
-            || board.getPieces()[row][col] == Board.BLACK_KING) {
+        } else if (state.getPiece(row,col) == GameConstants.BLACK
+            || state.getPiece(row,col) == GameConstants.BLACK_KING) {
           sumOfBlacks++;
         }
       }

@@ -4,39 +4,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Bot {
-  private final Board board;
+  private final BoardPanel board;
+  private final BoardState boardState;
   private final Move move;
   private final BoardController boardController;
-
-  private static final int MOVE_ARRAY_LENGTH = 5;
-  private static final int INITIAL_SUM_MAX = -100;
-  private int[] bestMoves = new int[MOVE_ARRAY_LENGTH];
   private final ArrayList<int[]> coordinates = new ArrayList<>();
-  private static final int MOVE = 0;
-  private static final int TAKE = 1;
-  private static final int QUEEN_TAKE = 2;
-  private static final int LAST_ROW_INDEX = Board.BOARD_SIZE - 1;
-  private static final int SECOND_LAST_INDEX = Board.BOARD_SIZE - 2;
-  private static final int TO_COL = 3;
-  private static final int MOVE_TYPE = 4;
-  private static final int SCORE_PLAYER_THREAT = 20;
-  private static final int SCORE_PLAYER_THREAT_KING = 30;
-  private static final int SCORE_TAKE_POSSIBLE = 10;
-  private static final int SCORE_CHANCE_FOR_QUEEN = 15;
+  private int[] bestMoves = new int[GameConstants.MOVE_ARRAY_LENGTH];
 
-  public Bot(final Board boardParam, final Move moveParam,
-             final BoardController boardControllerParam) {
+
+  public Bot(final BoardPanel boardParam, final Move moveParam,
+             final BoardController boardControllerParam, final BoardState boardStateParam) {
     this.board = boardParam;
     this.move = moveParam;
     this.boardController = boardControllerParam;
+    this.boardState = boardStateParam;
   }
 
   public boolean checkAllPiecesPossibleTakes(final int color,
                                              final int colorQueen,
                                              final int[][] boardParam) {
     boolean result = false;
-    for (int row = 0; row < Board.BOARD_SIZE; row++) {
-      for (int col = 0; col < Board.BOARD_SIZE; col++) {
+    for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+      for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
         if (canITake(col, row, boardParam)) {
           if (boardParam[row][col] == color
               || boardParam[row][col] == colorQueen) {
@@ -54,63 +43,63 @@ public class Bot {
     if (move.checkAllPiecesPossibleTakes(boardController.getBotsColor(),
         boardController.getBotsKingColor())) {
 
-      for (int row = 0; row < Board.BOARD_SIZE; row++) {
-        for (int col = 0; col < Board.BOARD_SIZE; col++) {
-          if (board.getValueOfPiece(row, col) == boardController.getBotsColor()
-              || board.getValueOfPiece(row, col)
+      for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+        for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
+          if (boardState.getPiece(row, col) == boardController.getBotsColor()
+              || boardState.getPiece(row, col)
               == boardController.getBotsKingColor()) {
 
             if (move.canITake(col, row)) {
               int row1;
               int col1;
-              switch (board.getValueOfPiece(row, col)) {
-                case Board.RED:
+              switch (boardState.getPiece(row, col)) {
+                case GameConstants.RED:
                   if (row >= 2) {
                     if (col != 0 && col != 1) {
                       if (move.legalTakeMove(col - 2, row - 2, col, row,
-                          Board.RED)) {
-                        int[] array = {row, col, row - 2, col - 2, Bot.TAKE};
+                          GameConstants.RED)) {
+                        int[] array = {row, col, row - 2, col - 2, GameConstants.TAKE};
                         coordinates.add(array);
                       }
                     }
-                    if (col != SECOND_LAST_INDEX && col != LAST_ROW_INDEX) {
+                    if (col != GameConstants.SECOND_LAST_INDEX && col != GameConstants.LAST_ROW_INDEX) {
                       if (move.legalTakeMove(col + 2, row - 2, col, row,
-                          Board.RED)) {
-                        int[] array = {row, col, row - 2, col + 2, Bot.TAKE};
+                          GameConstants.RED)) {
+                        int[] array = {row, col, row - 2, col + 2, GameConstants.TAKE};
                         coordinates.add(array);
                       }
                     }
                   }
                   break;
-                case Board.BLACK:
-                  if (row < SECOND_LAST_INDEX) {
+                case GameConstants.BLACK:
+                  if (row < GameConstants.SECOND_LAST_INDEX) {
                     if (col != 0 && col != 1) {
                       if (move.legalTakeMove(col - 2, row + 2, col, row,
-                          Board.BLACK)) {
+                          GameConstants.BLACK)) {
 
-                        int[] array = {row, col, row + 2, col - 2, Bot.TAKE};
+                        int[] array = {row, col, row + 2, col - 2, GameConstants.TAKE};
                         coordinates.add(array);
                       }
                     }
-                    if (col != SECOND_LAST_INDEX && col != LAST_ROW_INDEX) {
+                    if (col != GameConstants.SECOND_LAST_INDEX && col != GameConstants.LAST_ROW_INDEX) {
                       if (move.legalTakeMove(col + 2, row + 2, col, row,
-                          Board.BLACK)) {
+                          GameConstants.BLACK)) {
 
-                        int[] array = {row, col, row + 2, col + 2, Bot.TAKE};
+                        int[] array = {row, col, row + 2, col + 2, GameConstants.TAKE};
                         coordinates.add(array);
                       }
                     }
                   }
                   break;
-                case Board.BLACK_KING:
+                case GameConstants.BLACK_KING:
                   for (row1 = row + 1, col1 = col + 1;
-                       row1 < Board.BOARD_SIZE && col1 < Board.BOARD_SIZE;
+                       row1 < GameConstants.BOARD_SIZE && col1 < GameConstants.BOARD_SIZE;
                        row1++, col1++) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightBotDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
@@ -119,23 +108,23 @@ public class Bot {
                   for (row1 = row - 1, col1 = col - 1; row1 >= 0 && col1 >= 0;
                        row1--, col1--) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
 
                   }
                   for (row1 = row - 1, col1 = col + 1;
-                       row1 >= 0 && col1 < Board.BOARD_SIZE;
+                       row1 >= 0 && col1 < GameConstants.BOARD_SIZE;
                        row1--, col1++) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
@@ -143,31 +132,31 @@ public class Bot {
 
                   }
                   for (row1 = row + 1, col1 = col - 1;
-                       row1 < Board.BOARD_SIZE && col1 >= 0;
+                       row1 < GameConstants.BOARD_SIZE && col1 >= 0;
                        row1++, col1--) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
 
                   }
                   break;
-                case Board.RED_KING:
+                case GameConstants.RED_KING:
 
                   for (row1 = row + 1, col1 = col + 1;
-                       row1 < Board.BOARD_SIZE && col1 < Board.BOARD_SIZE;
+                       row1 < GameConstants.BOARD_SIZE && col1 < GameConstants.BOARD_SIZE;
                        row1++, col1++) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
 
 
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
@@ -176,42 +165,42 @@ public class Bot {
                   for (row1 = row - 1, col1 = col - 1; row1 >= 0 && col1 >= 0;
                        row1--, col1--) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
 
 
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
 
                   }
                   for (row1 = row - 1, col1 = col + 1;
-                       row1 >= 0 && col1 < Board.BOARD_SIZE;
+                       row1 >= 0 && col1 < GameConstants.BOARD_SIZE;
                        row1--, col1++) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
 
 
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
 
                   }
                   for (row1 = row + 1, col1 = col - 1;
-                       row1 < Board.BOARD_SIZE && col1 >= 0;
+                       row1 < GameConstants.BOARD_SIZE && col1 >= 0;
                        row1++, col1--) {
                     if (move.legalTakeMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
 
 
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.QUEEN_TAKE};
+                        int[] array = {row, col, row1, col1, GameConstants.QUEEN_TAKE};
                         coordinates.add(array);
                       }
                     }
@@ -226,66 +215,66 @@ public class Bot {
 
       }
     } else {
-      for (int row = 0; row < Board.BOARD_SIZE; row++) {
-        for (int col = 0; col < Board.BOARD_SIZE; col++) {
-          if (board.getValueOfPiece(row, col) == boardController.getBotsColor()
-              || board.getValueOfPiece(row, col)
+      for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+        for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
+          if (boardState.getPiece(row, col) == boardController.getBotsColor()
+              || boardState.getPiece(row, col)
               == boardController.getBotsKingColor()) {
 
             if (move.canIMove(col, row)) {
               int row1;
               int col1;
-              switch (board.getValueOfPiece(row, col)) {
+              switch (boardState.getPiece(row, col)) {
 
-                case Board.RED:
+                case GameConstants.RED:
                   if (row >= 1) {
                     if (col != 0) {
                       if (move.isItLegalSecondClickMove(col - 1, row - 1, col,
-                          row, Board.RED)) {
-                        int[] array = {row, col, row - 1, col - 1, Bot.MOVE};
+                          row, GameConstants.RED)) {
+                        int[] array = {row, col, row - 1, col - 1, GameConstants.MOVE};
                         coordinates.add(array);
 
                       }
                     }
-                    if (col != LAST_ROW_INDEX) {
+                    if (col != GameConstants.LAST_ROW_INDEX) {
                       if (move.isItLegalSecondClickMove(col + 1, row - 1, col,
-                          row, Board.RED)) {
-                        int[] array = {row, col, row - 1, col + 1, Bot.MOVE};
+                          row, GameConstants.RED)) {
+                        int[] array = {row, col, row - 1, col + 1, GameConstants.MOVE};
                         coordinates.add(array);
 
                       }
                     }
                   }
                   break;
-                case Board.BLACK:
-                  if (row < LAST_ROW_INDEX) {
+                case GameConstants.BLACK:
+                  if (row < GameConstants.LAST_ROW_INDEX) {
                     if (col != 0) {
                       if (move.isItLegalSecondClickMove(col - 1, row + 1, col,
-                          row, Board.BLACK)) {
-                        int[] array = {row, col, row + 1, col - 1, Bot.MOVE};
+                          row, GameConstants.BLACK)) {
+                        int[] array = {row, col, row + 1, col - 1, GameConstants.MOVE};
                         coordinates.add(array);
 
                       }
                     }
-                    if (col != LAST_ROW_INDEX) {
+                    if (col != GameConstants.LAST_ROW_INDEX) {
                       if (move.isItLegalSecondClickMove(col + 1, row + 1, col,
-                          row, Board.BLACK)) {
-                        int[] array = {row, col, row + 1, col + 1, Bot.MOVE};
+                          row, GameConstants.BLACK)) {
+                        int[] array = {row, col, row + 1, col + 1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
                   }
                   break;
-                case Board.RED_KING:
+                case GameConstants.RED_KING:
 
                   for (row1 = row + 1, col1 = col + 1;
-                       row1 < Board.BOARD_SIZE && col1 < Board.BOARD_SIZE;
+                       row1 < GameConstants.BOARD_SIZE && col1 < GameConstants.BOARD_SIZE;
                        row1++, col1++) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
                       if (!move.checkRightBotDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
@@ -293,49 +282,49 @@ public class Bot {
                   for (row1 = row - 1, col1 = col - 1; row1 >= 0 && col1 >= 0;
                        row1--, col1--) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
                   }
                   for (row1 = row - 1, col1 = col + 1;
-                       row1 >= 0 && col1 < Board.BOARD_SIZE;
+                       row1 >= 0 && col1 < GameConstants.BOARD_SIZE;
                        row1--, col1++) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
 
                     }
                   }
                   for (row1 = row + 1, col1 = col - 1;
-                       row1 < Board.BOARD_SIZE && col1 >= 0;
+                       row1 < GameConstants.BOARD_SIZE && col1 >= 0;
                        row1++, col1--) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.RED_KING)) {
+                        GameConstants.RED_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
                   }
                   break;
-                case Board.BLACK_KING:
+                case GameConstants.BLACK_KING:
                   for (row1 = row + 1, col1 = col + 1;
-                       row1 < Board.BOARD_SIZE && col1 < Board.BOARD_SIZE;
+                       row1 < GameConstants.BOARD_SIZE && col1 < GameConstants.BOARD_SIZE;
                        row1++, col1++) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightBotDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
@@ -343,35 +332,35 @@ public class Bot {
                   for (row1 = row - 1, col1 = col - 1; row1 >= 0 && col1 >= 0;
                        row1--, col1--) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
                   }
                   for (row1 = row - 1, col1 = col + 1;
-                       row1 >= 0 && col1 < Board.BOARD_SIZE;
+                       row1 >= 0 && col1 < GameConstants.BOARD_SIZE;
                        row1--, col1++) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
 
                     }
                   }
                   for (row1 = row + 1, col1 = col - 1;
-                       row1 < Board.BOARD_SIZE && col1 >= 0;
+                       row1 < GameConstants.BOARD_SIZE && col1 >= 0;
                        row1++, col1--) {
                     if (move.isItLegalSecondClickMove(col1, row1, col, row,
-                        Board.BLACK_KING)) {
+                        GameConstants.BLACK_KING)) {
                       if (!move.checkRightTopDiagonalEmptySpaces(col, row, col1,
                           row1)) {
-                        int[] array = {row, col, row1, col1, Bot.MOVE};
+                        int[] array = {row, col, row1, col1, GameConstants.MOVE};
                         coordinates.add(array);
                       }
                     }
@@ -388,53 +377,53 @@ public class Bot {
   }
 
   public void simulate() {
-    int sumMax = INITIAL_SUM_MAX;
+    int sumMax = GameConstants.INITIAL_SUM_MAX;
     for (int[] array : coordinates) {
-      int[][] localpieces = new int[Board.BOARD_SIZE][Board.BOARD_SIZE];
-      for (int row = 0; row < Board.BOARD_SIZE; row++) {
-        for (int col = 0; col < Board.BOARD_SIZE; col++) {
-          localpieces[row][col] = board.getPieces()[row][col];
+      int[][] localpieces = new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
+      for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+        for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
+          localpieces[row][col] = boardState.getPiece(row,col);
         }
       }
 
       int sum = 0;
-      if (array[MOVE_TYPE] == Bot.MOVE) {
-        if (localpieces[array[0]][array[1]] == Board.RED
-            || localpieces[array[0]][array[1]] == Board.BLACK) {
-          localpieces[array[0]][array[1]] = Board.EMPTY;
-          localpieces[array[2]][array[TO_COL]] = boardController.getBotsColor();
+      if (array[GameConstants.MOVE_TYPE] == GameConstants.MOVE) {
+        if (localpieces[array[0]][array[1]] == GameConstants.RED
+            || localpieces[array[0]][array[1]] == GameConstants.BLACK) {
+          localpieces[array[0]][array[1]] = GameConstants.EMPTY;
+          localpieces[array[2]][array[GameConstants.TO_COL]] = boardController.getBotsColor();
         }
-        if (localpieces[array[0]][array[1]] == Board.RED_KING
-            || localpieces[array[0]][array[1]] == Board.BLACK_KING) {
-          localpieces[array[0]][array[1]] = Board.EMPTY;
-          localpieces[array[2]][array[TO_COL]] =
+        if (localpieces[array[0]][array[1]] == GameConstants.RED_KING
+            || localpieces[array[0]][array[1]] == GameConstants.BLACK_KING) {
+          localpieces[array[0]][array[1]] = GameConstants.EMPTY;
+          localpieces[array[2]][array[GameConstants.TO_COL]] =
               boardController.getBotsKingColor();
         }
-      } else if (array[MOVE_TYPE] == Bot.TAKE) {
-        take(array[0], array[1], array[2], array[TO_COL],
+      } else if (array[GameConstants.MOVE_TYPE] == GameConstants.TAKE) {
+        take(array[0], array[1], array[2], array[GameConstants.TO_COL],
             boardController.getBotsColor(), localpieces);
-      } else if (array[MOVE_TYPE] == Bot.QUEEN_TAKE) {
-        queenTake(array[0], array[1], array[2], array[TO_COL],
+      } else if (array[GameConstants.MOVE_TYPE] == GameConstants.QUEEN_TAKE) {
+        queenTake(array[0], array[1], array[2], array[GameConstants.TO_COL],
             boardController.getBotsKingColor(), localpieces);
       }
       if (checkAllPiecesPossibleTakes(boardController.getPlayersColor(),
           boardController.getPlayersKingColor(), localpieces)) {
-        if (localpieces[array[2]][array[TO_COL]]
+        if (localpieces[array[2]][array[GameConstants.TO_COL]]
             == boardController.getBotsColor()) {
-          sum -= SCORE_PLAYER_THREAT;
+          sum -= GameConstants.SCORE_PLAYER_THREAT;
         }
-        if (localpieces[array[2]][array[TO_COL]]
+        if (localpieces[array[2]][array[GameConstants.TO_COL]]
             == boardController.getBotsKingColor()) {
-          sum -= SCORE_PLAYER_THREAT_KING;
+          sum -= GameConstants.SCORE_PLAYER_THREAT_KING;
         }
       }
       if (checkAllPiecesPossibleTakes(boardController.getBotsColor(),
           boardController.getBotsKingColor(), localpieces)) {
-        sum += SCORE_TAKE_POSSIBLE;
+        sum += GameConstants.SCORE_TAKE_POSSIBLE;
       }
       if (isChanceForQueen(boardController.getBotsColor(), localpieces,
-          localpieces[array[2]][array[TO_COL]])) {
-        sum += SCORE_CHANCE_FOR_QUEEN;
+          localpieces[array[2]][array[GameConstants.TO_COL]])) {
+        sum += GameConstants.SCORE_CHANCE_FOR_QUEEN;
       }
       if (sum >= sumMax) {
         bestMoves = array;
@@ -449,13 +438,13 @@ public class Bot {
                                   final int[][] boardParam,
                                   final int typeOfFigure) {
     boolean check = false;
-    if (typeOfFigure != Board.BLACK_KING && typeOfFigure != Board.RED_KING) {
-      for (int col = 0; col < LAST_ROW_INDEX; col++) {
-        if (boardParam[LAST_ROW_INDEX][col] == colorToCheck
-            && colorToCheck == Board.BLACK) {
+    if (typeOfFigure != GameConstants.BLACK_KING && typeOfFigure != GameConstants.RED_KING) {
+      for (int col = 0; col < GameConstants.LAST_ROW_INDEX; col++) {
+        if (boardParam[GameConstants.LAST_ROW_INDEX][col] == colorToCheck
+            && colorToCheck == GameConstants.BLACK) {
           check = true;
         }
-        if (boardParam[0][col] == colorToCheck && colorToCheck == Board.RED) {
+        if (boardParam[0][col] == colorToCheck && colorToCheck == GameConstants.RED) {
           check = true;
         }
       }
@@ -469,35 +458,33 @@ public class Bot {
     int rowFirst = bestMoves[0];
     int colFirst = bestMoves[1];
     int rowSecond = bestMoves[2];
-    int colSecond = bestMoves[TO_COL];
+    int colSecond = bestMoves[GameConstants.TO_COL];
 
-    if (bestMoves[MOVE_TYPE] == Bot.MOVE) {
-      if (board.getValueOfPiece(rowFirst, colFirst)
+    if (bestMoves[GameConstants.MOVE_TYPE] == GameConstants.MOVE) {
+      if (boardState.getPiece(rowFirst, colFirst)
           == boardController.getBotsColor()) {
-        board.getPieces()[rowFirst][colFirst] = Board.EMPTY;
-        board.getPieces()[rowSecond][colSecond] =
-            boardController.getBotsColor();
+        boardState.setPiece(rowFirst, colFirst, GameConstants.EMPTY);
+        boardState.setPiece(rowSecond, colSecond, boardController.getBotsColor());
 
-      } else if (board.getValueOfPiece(rowFirst, colFirst)
+      } else if (boardState.getPiece(rowFirst, colFirst)
           == boardController.getBotsKingColor()) {
-        board.getPieces()[rowFirst][colFirst] = Board.EMPTY;
-        board.getPieces()[rowSecond][colSecond] =
-            boardController.getBotsKingColor();
+        boardState.setPiece(rowFirst, colFirst, GameConstants.EMPTY);
+        boardState.setPiece(rowSecond, colSecond, boardController.getBotsKingColor());
       }
-    } else if (bestMoves[MOVE_TYPE] == Bot.TAKE) {
+    } else if (bestMoves[GameConstants.MOVE_TYPE] == GameConstants.TAKE) {
 
       boardController.take(rowFirst, colFirst, rowSecond, colSecond,
           boardController.getBotsColor());
-    } else if (bestMoves[MOVE_TYPE] == Bot.QUEEN_TAKE) {
+    } else if (bestMoves[GameConstants.MOVE_TYPE] == GameConstants.QUEEN_TAKE) {
       boardController.queenTake(rowFirst, colFirst, rowSecond, colSecond,
           boardController.getBotsKingColor());
     }
-    if (rowSecond == LAST_ROW_INDEX
-        && boardController.getBotsColor() == Board.BLACK) {
-      board.getPieces()[rowSecond][colSecond] = Board.BLACK_KING;
+    if (rowSecond == GameConstants.LAST_ROW_INDEX
+        && boardController.getBotsColor() == GameConstants.BLACK) {
+      boardState.setPiece(rowSecond, colSecond, GameConstants.BLACK_KING);
     }
-    if (rowSecond == 0 && boardController.getBotsColor() == Board.RED) {
-      board.getPieces()[rowSecond][colSecond] = Board.RED_KING;
+    if (rowSecond == 0 && boardController.getBotsColor() == GameConstants.RED) {
+      boardState.setPiece(rowSecond, colSecond, GameConstants.RED_KING);
     }
 
     board.repaint();
@@ -511,11 +498,11 @@ public class Bot {
                    final int secondRow,
                    final int secondColumn, final int currentColor,
                    final int[][] boardParam) {
-    boardParam[firstRow][firstColumn] = Board.EMPTY;
+    boardParam[firstRow][firstColumn] = GameConstants.EMPTY;
     boardParam[secondRow][secondColumn] = currentColor;
     int rowBetween = (firstRow + secondRow) / 2;
     int colBetween = (firstColumn + secondColumn) / 2;
-    boardParam[rowBetween][colBetween] = Board.EMPTY;
+    boardParam[rowBetween][colBetween] = GameConstants.EMPTY;
   }
 
   public boolean canITake(final int column, final int row,
@@ -525,125 +512,125 @@ public class Bot {
     int j;
     int colorofpiece = boardParam[row][column];
     switch (colorofpiece) {
-      case Board.RED:
+      case GameConstants.RED:
         if (row >= 2) {
-          if (column == LAST_ROW_INDEX || column == SECOND_LAST_INDEX) {
-            if ((boardParam[row - 1][column - 1] == Board.BLACK
-                || boardParam[row - 1][column - 1] == Board.BLACK_KING)
-                && boardParam[row - 2][column - 2] == Board.EMPTY) {
+          if (column == GameConstants.LAST_ROW_INDEX || column == GameConstants.SECOND_LAST_INDEX) {
+            if ((boardParam[row - 1][column - 1] == GameConstants.BLACK
+                || boardParam[row - 1][column - 1] == GameConstants.BLACK_KING)
+                && boardParam[row - 2][column - 2] == GameConstants.EMPTY) {
               result = true;
             }
           } else if (column == 0 || column == 1) {
-            if ((boardParam[row - 1][column + 1] == Board.BLACK
-                || boardParam[row - 1][column + 1] == Board.BLACK_KING)
-                && boardParam[row - 2][column + 2] == Board.EMPTY) {
+            if ((boardParam[row - 1][column + 1] == GameConstants.BLACK
+                || boardParam[row - 1][column + 1] == GameConstants.BLACK_KING)
+                && boardParam[row - 2][column + 2] == GameConstants.EMPTY) {
               result = true;
             }
-          } else if (((boardParam[row - 1][column + 1] == Board.BLACK
-              || boardParam[row - 1][column + 1] == Board.BLACK_KING)
-              && boardParam[row - 2][column + 2] == Board.EMPTY) || (
-              (boardParam[row - 1][column - 1] == Board.BLACK
-                  || boardParam[row - 1][column - 1] == Board.BLACK_KING)
-                  && boardParam[row - 2][column - 2] == Board.EMPTY)) {
+          } else if (((boardParam[row - 1][column + 1] == GameConstants.BLACK
+              || boardParam[row - 1][column + 1] == GameConstants.BLACK_KING)
+              && boardParam[row - 2][column + 2] == GameConstants.EMPTY) || (
+              (boardParam[row - 1][column - 1] == GameConstants.BLACK
+                  || boardParam[row - 1][column - 1] == GameConstants.BLACK_KING)
+                  && boardParam[row - 2][column - 2] == GameConstants.EMPTY)) {
             result = true;
           }
         }
         break;
-      case Board.BLACK:
-        if (row < SECOND_LAST_INDEX) {
-          if (column == LAST_ROW_INDEX || column == SECOND_LAST_INDEX) {
-            if ((boardParam[row + 1][column - 1] == Board.RED
-                || boardParam[row + 1][column - 1] == Board.RED_KING)
-                && boardParam[row + 2][column - 2] == Board.EMPTY) {
+      case GameConstants.BLACK:
+        if (row < GameConstants.SECOND_LAST_INDEX) {
+          if (column == GameConstants.LAST_ROW_INDEX || column == GameConstants.SECOND_LAST_INDEX) {
+            if ((boardParam[row + 1][column - 1] == GameConstants.RED
+                || boardParam[row + 1][column - 1] == GameConstants.RED_KING)
+                && boardParam[row + 2][column - 2] == GameConstants.EMPTY) {
               result = true;
             }
           } else if (column == 0 || column == 1) {
-            if ((boardParam[row + 1][column + 1] == Board.RED
-                || boardParam[row + 1][column + 1] == Board.RED_KING)
-                && boardParam[row + 2][column + 2] == Board.EMPTY) {
+            if ((boardParam[row + 1][column + 1] == GameConstants.RED
+                || boardParam[row + 1][column + 1] == GameConstants.RED_KING)
+                && boardParam[row + 2][column + 2] == GameConstants.EMPTY) {
               result = true;
             }
           } else {
-            if (((boardParam[row + 1][column + 1] == Board.RED
-                || boardParam[row + 1][column + 1] == Board.RED_KING)
-                && boardParam[row + 2][column + 2] == Board.EMPTY) || (
-                (boardParam[row + 1][column - 1] == Board.RED
-                    || boardParam[row + 1][column - 1] == Board.RED_KING)
-                    && boardParam[row + 2][column - 2] == Board.EMPTY)) {
+            if (((boardParam[row + 1][column + 1] == GameConstants.RED
+                || boardParam[row + 1][column + 1] == GameConstants.RED_KING)
+                && boardParam[row + 2][column + 2] == GameConstants.EMPTY) || (
+                (boardParam[row + 1][column - 1] == GameConstants.RED
+                    || boardParam[row + 1][column - 1] == GameConstants.RED_KING)
+                    && boardParam[row + 2][column - 2] == GameConstants.EMPTY)) {
               result = true;
             }
           }
         }
         break;
-      case Board.BLACK_KING:
+      case GameConstants.BLACK_KING:
         for (i = row - 1, j = column - 1; i > 0 && j > 0; i--, j--) {
-          if (boardParam[i][j] == Board.RED_KING
-              || boardParam[i][j] == Board.RED) {
-            if (boardParam[i - 1][j - 1] == Board.EMPTY) {
+          if (boardParam[i][j] == GameConstants.RED_KING
+              || boardParam[i][j] == GameConstants.RED) {
+            if (boardParam[i - 1][j - 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
-        for (i = row + 1, j = column - 1; i < LAST_ROW_INDEX && j > 0;
+        for (i = row + 1, j = column - 1; i < GameConstants.LAST_ROW_INDEX && j > 0;
              i++, j--) {
-          if (boardParam[i][j] == Board.RED_KING
-              || boardParam[i][j] == Board.RED) {
-            if (boardParam[i + 1][j - 1] == Board.EMPTY) {
+          if (boardParam[i][j] == GameConstants.RED_KING
+              || boardParam[i][j] == GameConstants.RED) {
+            if (boardParam[i + 1][j - 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
-        for (i = row - 1, j = column + 1; i > 0 && j < LAST_ROW_INDEX;
+        for (i = row - 1, j = column + 1; i > 0 && j < GameConstants.LAST_ROW_INDEX;
              i--, j++) {
-          if (boardParam[i][j] == Board.RED_KING
-              || boardParam[i][j] == Board.RED) {
-            if (boardParam[i - 1][j + 1] == Board.EMPTY) {
+          if (boardParam[i][j] == GameConstants.RED_KING
+              || boardParam[i][j] == GameConstants.RED) {
+            if (boardParam[i - 1][j + 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
         for (i = row + 1, j = column + 1;
-             i < LAST_ROW_INDEX && j < LAST_ROW_INDEX; i++, j++) {
-          if (boardParam[i][j] == Board.RED_KING
-              || boardParam[i][j] == Board.RED) {
-            if (boardParam[i + 1][j + 1] == Board.EMPTY) {
+             i < GameConstants.LAST_ROW_INDEX && j < GameConstants.LAST_ROW_INDEX; i++, j++) {
+          if (boardParam[i][j] == GameConstants.RED_KING
+              || boardParam[i][j] == GameConstants.RED) {
+            if (boardParam[i + 1][j + 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
         break;
-      case Board.RED_KING:
+      case GameConstants.RED_KING:
         for (i = row - 1, j = column - 1; i > 0 && j > 0; i--, j--) {
-          if (boardParam[i][j] == Board.BLACK_KING
-              || boardParam[i][j] == Board.BLACK) {
-            if (boardParam[i - 1][j - 1] == Board.EMPTY) {
+          if (boardParam[i][j] == GameConstants.BLACK_KING
+              || boardParam[i][j] == GameConstants.BLACK) {
+            if (boardParam[i - 1][j - 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
-        for (i = row + 1, j = column - 1; i < LAST_ROW_INDEX && j > 0;
+        for (i = row + 1, j = column - 1; i < GameConstants.LAST_ROW_INDEX && j > 0;
              i++, j--) {
-          if (boardParam[i][j] == Board.BLACK_KING
-              || boardParam[i][j] == Board.BLACK) {
-            if (boardParam[i + 1][j - 1] == Board.EMPTY) {
+          if (boardParam[i][j] == GameConstants.BLACK_KING
+              || boardParam[i][j] == GameConstants.BLACK) {
+            if (boardParam[i + 1][j - 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
-        for (i = row - 1, j = column + 1; i > 0 && j < LAST_ROW_INDEX;
+        for (i = row - 1, j = column + 1; i > 0 && j < GameConstants.LAST_ROW_INDEX;
              i--, j++) {
-          if (boardParam[i][j] == Board.BLACK_KING
-              || boardParam[i][j] == Board.BLACK) {
-            if (boardParam[i - 1][j + 1] == Board.EMPTY) {
+          if (boardParam[i][j] == GameConstants.BLACK_KING
+              || boardParam[i][j] == GameConstants.BLACK) {
+            if (boardParam[i - 1][j + 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
         }
         for (i = row + 1, j = column + 1;
-             i < LAST_ROW_INDEX && j < LAST_ROW_INDEX; i++, j++) {
-          if (boardParam[i][j] == Board.BLACK_KING
-              || boardParam[i][j] == Board.BLACK) {
-            if (boardParam[i + 1][j + 1] == Board.EMPTY) {
+             i < GameConstants.LAST_ROW_INDEX && j < GameConstants.LAST_ROW_INDEX; i++, j++) {
+          if (boardParam[i][j] == GameConstants.BLACK_KING
+              || boardParam[i][j] == GameConstants.BLACK) {
+            if (boardParam[i + 1][j + 1] == GameConstants.EMPTY) {
               result = true;
             }
           }
@@ -659,20 +646,20 @@ public class Bot {
                         final int secondRow,
                         final int secondColumn, final int currentColor,
                         final int[][] boardParam) {
-    boardParam[firstRow][firstColumn] = Board.EMPTY;
+    boardParam[firstRow][firstColumn] = GameConstants.EMPTY;
     boardParam[secondRow][secondColumn] = currentColor;
     if (secondRow < firstRow && secondColumn < firstColumn) {
-      boardParam[secondRow + 1][secondColumn + 1] = Board.EMPTY;
+      boardParam[secondRow + 1][secondColumn + 1] = GameConstants.EMPTY;
     }
 
     if (secondRow > firstRow && secondColumn < firstColumn) {
-      boardParam[secondRow - 1][secondColumn + 1] = Board.EMPTY;
+      boardParam[secondRow - 1][secondColumn + 1] = GameConstants.EMPTY;
     }
     if (secondRow < firstRow && secondColumn > firstColumn) {
-      boardParam[secondRow + 1][secondColumn - 1] = Board.EMPTY;
+      boardParam[secondRow + 1][secondColumn - 1] = GameConstants.EMPTY;
     }
     if (secondRow > firstRow && secondColumn > firstColumn) {
-      boardParam[secondRow - 1][secondColumn - 1] = Board.EMPTY;
+      boardParam[secondRow - 1][secondColumn - 1] = GameConstants.EMPTY;
     }
   }
 }

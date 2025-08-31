@@ -13,25 +13,6 @@ import javax.swing.WindowConstants;
  */
 public final class Game {
 
-  /**
-   * X coordinate for the color choice frame location.
-   */
-  private static final int COLOR_CHOICE_X = 700;
-
-  /**
-   * Y coordinate for the color choice frame location.
-   */
-  private static final int COLOR_CHOICE_Y = 400;
-
-  /**
-   * Width of the color choice frame.
-   */
-  private static final int COLOR_CHOICE_WIDTH = 350;
-
-  /**
-   * Height of the color choice frame.
-   */
-  private static final int COLOR_CHOICE_HEIGHT = 90;
 
   /**
    * Private constructor to prevent instantiation of this utility class.
@@ -48,18 +29,19 @@ public final class Game {
    */
   public static void main(final String[] args) {
     JFrame colorChoiceFrame = new JFrame();
-    colorChoiceFrame.setLocation(COLOR_CHOICE_X, COLOR_CHOICE_Y);
-
-    Frame boardFrame = new Frame();
-    Move move = new Move(boardFrame);
-    BoardController controller = new BoardController(boardFrame, move);
+    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X, GameConstants.COLOR_CHOICE_Y);
+    BoardState boardState = new BoardState();
+    BoardPanel boardPanel = new BoardPanel(boardState);
+    Frame boardFrame = new Frame(boardState, boardPanel);
+    Move move = new Move(boardFrame, boardState);
+    BoardController controller = new BoardController(boardFrame, move, boardState);
 
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
     JLabel chooseColor = new JLabel("Choose your color");
 
     colorChoiceFrame.setLayout(new FlowLayout());
-    colorChoiceFrame.setSize(COLOR_CHOICE_WIDTH, COLOR_CHOICE_HEIGHT);
+    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH, GameConstants.COLOR_CHOICE_HEIGHT);
     colorChoiceFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     boardFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,10 +50,10 @@ public final class Game {
     colorChoiceFrame.add(black);
 
     red.addActionListener(e -> {
-      controller.setBotsColor(Board.BLACK);
-      controller.setBotsKingColor(Board.BLACK_KING);
-      controller.setPlayersColor(Board.RED);
-      controller.setPlayersKingColor(Board.RED_KING);
+      controller.setBotsColor(GameConstants.BLACK);
+      controller.setBotsKingColor(GameConstants.BLACK_KING);
+      controller.setPlayersColor(GameConstants.RED);
+      controller.setPlayersKingColor(GameConstants.RED_KING);
       controller.setCurrentColor();
       controller.setCurrentColorKing();
       colorChoiceFrame.dispose();
@@ -79,10 +61,10 @@ public final class Game {
     });
 
     black.addActionListener(e -> {
-      controller.setBotsColor(Board.RED);
-      controller.setBotsKingColor(Board.RED_KING);
-      controller.setPlayersColor(Board.BLACK);
-      controller.setPlayersKingColor(Board.BLACK_KING);
+      controller.setBotsColor(GameConstants.RED);
+      controller.setBotsKingColor(GameConstants.RED_KING);
+      controller.setPlayersColor(GameConstants.BLACK);
+      controller.setPlayersKingColor(GameConstants.BLACK_KING);
       colorChoiceFrame.dispose();
       controller.setCurrentColorKing();
       boardFrame.setVisible(true);
@@ -91,7 +73,7 @@ public final class Game {
 
     colorChoiceFrame.setVisible(true);
 
-    Bot bot = new Bot(boardFrame.getBoard(), move, controller);
+    Bot bot = new Bot(boardFrame.getBoard(), move, controller, boardState);
     controller.setBot(bot);
   }
 }
