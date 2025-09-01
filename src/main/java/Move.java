@@ -100,9 +100,7 @@ public class Move {
                                                  final int rowFirst,
                                                  final int columnSecond,
                                                  final int rowSecond) {
-    int i;
-    int j;
-    for (i = rowFirst - 1, j = columnFirst - 1;
+    for (int i = rowFirst - 1, j = columnFirst - 1;
          i > rowSecond + 1 && j > columnSecond + 1; i--, j--) {
       if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
@@ -124,9 +122,8 @@ public class Move {
                                                  final int rowFirst,
                                                  final int columnSecond,
                                                  final int rowSecond) {
-    int i;
-    int j;
-    for (i = rowFirst + 1, j = columnFirst - 1;
+
+    for (int i = rowFirst + 1, j = columnFirst - 1;
          i < rowSecond - 1 && j > columnSecond + 1; i++, j--) {
       if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
@@ -148,9 +145,7 @@ public class Move {
                                                   final int rowFirst,
                                                   final int columnSecond,
                                                   final int rowSecond) {
-    int i;
-    int j;
-    for (i = rowFirst - 1, j = columnFirst + 1;
+    for (int i = rowFirst - 1, j = columnFirst + 1;
          i > rowSecond + 1 && j < columnSecond - 1; i--, j++) {
       if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
@@ -172,9 +167,7 @@ public class Move {
                                                   final int rowFirst,
                                                   final int columnSecond,
                                                   final int rowSecond) {
-    int i;
-    int j;
-    for (i = rowFirst + 1, j = columnFirst + 1;
+    for (int i = rowFirst + 1, j = columnFirst + 1;
          i < rowSecond - 1 && j < columnSecond - 1; i++, j++) {
       if (boardState.getPiece(i, j) != GameConstants.EMPTY) {
         return true;
@@ -196,7 +189,7 @@ public class Move {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
         int piece = boardStateParam.getPiece(row, col);
         if ((piece == color || piece == colorQueen) && canITake(col, row,
-                boardStateParam)) {//tu cos moze byc
+                boardStateParam)) {
           return true;
         }
       }
