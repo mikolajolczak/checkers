@@ -15,7 +15,8 @@ public final class BoardClickHandler extends MouseAdapter {
   private int firstClickCol = GameConstants.BOARD_SIZE;
   private int firstClickColor;
 
-  public BoardClickHandler(BoardController controller, Move move, BoardState boardState, Frame frame) {
+  public BoardClickHandler(BoardController controller, Move move,
+                           BoardState boardState, Frame frame) {
     this.controller = controller;
     this.move = move;
     this.boardState = boardState;
@@ -28,51 +29,105 @@ public final class BoardClickHandler extends MouseAdapter {
     int row = e.getY() / GameConstants.SQUARE_SIZE;
 
     if (firstClick) {
-      if (move.canIMove(col, row) || move.canITake(col, row)) {
-        int value = boardState.getPiece(row, col);
-        if (value == controller.getCurrentColor() || value == controller.getCurrentColorKing()) {
-          boardState.setSelected(row, col);
-          frame.getBoard().repaint();
-          firstClickRow = row;
-          firstClickCol = col;
-          firstClickColor = value;
-          firstClick = false;
-        }
-      }
+      handleFirstClick(row, col);
     } else {
-      controller.clearChosenTile();
-
-      if (!move.checkAllPiecesPossibleTakes(controller.getCurrentColor(),
-          controller.getCurrentColorKing())) {
-        if (move.isItLegalSecondClickMove(col, row, firstClickCol, firstClickRow, firstClickColor)) {
-          if (boardState.getPiece(row, col) == GameConstants.EMPTY) {
-            boardState.setPiece(firstClickRow, firstClickCol, GameConstants.EMPTY);
-            boardState.setPiece(row, col, firstClickColor);
-            promoteIfNeeded(row, col, firstClickColor);
-            controller.setCurrentColor();
-          }
-        }
-      } else {
-        if (move.legalTakeMove(col, row, firstClickCol, firstClickRow, firstClickColor)) {
-          if (firstClickColor == GameConstants.BLACK || firstClickColor == GameConstants.RED) {
-            controller.take(firstClickRow, firstClickCol, row, col, controller.getCurrentColor());
-          } else {
-            controller.queenTake(firstClickRow, firstClickCol, row, col, controller.getCurrentColorKing());
-          }
-          promoteIfNeeded(row, col, firstClickColor);
-          controller.setCurrentColor();
-        }
-      }
-
-      firstClick = true;
-      frame.getBoard().repaint();
+      handleSecondClick(row, col);
     }
+
+    frame.getBoard().repaint();
+  }
+
+  private void handleFirstClick(int row, int col) {
+    if (!canSelectPiece(row, col)) {
+      return;
+    }
+
+    firstClickRow = row;
+    firstClickCol = col;
+    firstClickColor = boardState.getPiece(row, col);
+    boardState.setSelected(row, col);
+    firstClick = false;
+  }
+
+  private boolean canSelectPiece(int row, int col) {
+    int value = boardState.getPiece(row, col);
+    boolean isCurrentPiece = value == controller.getCurrentColor()
+        || value == controller.getCurrentColorKing();
+    return isCurrentPiece && (move.canIMove(col, row) || move.canITake(col,
+        row));
+  }
+
+  private void handleSecondClick(int row, int col) {
+    controller.clearChosenTile();
+
+    if (mustTake()) {
+      handleTakeClick(row, col);
+    } else {
+      handleNormalClick(row, col);
+    }
+
+    firstClick = true;
+  }
+
+  private boolean mustTake() {
+    return move.checkAllPiecesPossibleTakes(controller.getCurrentColor(),
+        controller.getCurrentColorKing());
+  }
+
+  private void handleNormalClick(int row, int col) {
+    if (isLegalNormalMove(row, col)) {
+      movePiece(row, col);
+      promoteIfNeeded(row, col, firstClickColor);
+      controller.setCurrentColor();
+    }
+  }
+
+  private boolean isLegalNormalMove(int row, int col) {
+    return move.isItLegalSecondClickMove(col, row, firstClickCol, firstClickRow,
+        firstClickColor)
+        && boardState.getPiece(row, col) == GameConstants.EMPTY;
+  }
+
+  private void movePiece(int row, int col) {
+    boardState.setPiece(firstClickRow, firstClickCol, GameConstants.EMPTY);
+    boardState.setPiece(row, col, firstClickColor);
+  }
+
+  private void handleTakeClick(int row, int col) {
+    if (!move.legalTakeMove(col, row, firstClickCol, firstClickRow,
+        firstClickColor)) {
+      return;
+    }
+
+    if (isQueen(firstClickColor)) {
+      attemptQueenTake(row, col);
+    } else {
+      attemptNormalTake(row, col);
+    }
+
+    promoteIfNeeded(row, col, firstClickColor);
+    controller.setCurrentColor();
+  }
+
+  private boolean isQueen(int color) {
+    return color == GameConstants.BLACK_KING || color == GameConstants.RED_KING;
+  }
+
+  private void attemptNormalTake(int row, int col) {
+    controller.take(firstClickRow, firstClickCol, row, col,
+        controller.getCurrentColor());
+  }
+
+  private void attemptQueenTake(int row, int col) {
+    controller.queenTake(firstClickRow, firstClickCol, row, col,
+        controller.getCurrentColorKing());
   }
 
   private void promoteIfNeeded(int row, int col, int color) {
     if (color == GameConstants.RED && row == 0) {
       boardState.setPiece(row, col, GameConstants.RED_KING);
-    } else if (color == GameConstants.BLACK && row == GameConstants.LAST_ROW_INDEX) {
+    } else if (color == GameConstants.BLACK
+        && row == GameConstants.LAST_ROW_INDEX) {
       boardState.setPiece(row, col, GameConstants.BLACK_KING);
     }
   }

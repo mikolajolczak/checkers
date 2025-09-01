@@ -51,7 +51,7 @@ public final class Game {
     colorChoiceFrame.add(red);
     colorChoiceFrame.add(black);
 
-    red.addActionListener(e -> {
+    red.addActionListener(_ -> {
       controller.setBotsColor(GameConstants.BLACK);
       controller.setBotsKingColor(GameConstants.BLACK_KING);
       controller.setPlayersColor(GameConstants.RED);
@@ -62,7 +62,7 @@ public final class Game {
       boardFrame.setVisible(true);
     });
 
-    black.addActionListener(e -> {
+    black.addActionListener(_ -> {
       controller.setBotsColor(GameConstants.RED);
       controller.setBotsKingColor(GameConstants.RED_KING);
       controller.setPlayersColor(GameConstants.BLACK);
