@@ -126,7 +126,7 @@ public class Bot {
         }
 
         if (move.legalTakeMove(newCol, newRow, col, row, piece)) {
-          if (!hasObstaclesBetween(col, row, newCol, newRow)) {
+          if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
                 new int[]{row, col, newRow, newCol, GameConstants.QUEEN_TAKE});
           }
@@ -146,7 +146,7 @@ public class Bot {
         }
 
         if (move.isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
-          if (!hasObstaclesBetween(col, row, newCol, newRow)) {
+          if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
                 new int[]{row, col, newRow, newCol, GameConstants.MOVE});
           }
@@ -163,12 +163,12 @@ public class Bot {
 
     if (Math.abs(toRow - fromRow) > 1) {
       return
-          move.checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
-              ||
-              move.checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
+          !move.checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
+              &&
+              !move.checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
                   toRow);
     }
-    return false;
+    return true;
   }
 
   public void simulate() {
