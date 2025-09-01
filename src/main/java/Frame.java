@@ -68,10 +68,17 @@ public class Frame extends JFrame {
         }
       }
     }
-    if (sumOfReds <= 0) {
-      JOptionPane.showMessageDialog(this, "Black won!");
-    } else if (sumOfBlacks <= 0) {
-      JOptionPane.showMessageDialog(this, "Red won!");
+
+    if (sumOfReds <= 0 || sumOfBlacks <= 0) {
+      if (sumOfReds <= 0) {
+        JOptionPane.showMessageDialog(this, "Black won!");
+        this.dispose();
+      }
+      if (sumOfBlacks <= 0) {
+        JOptionPane.showMessageDialog(this, "Red won!");
+        this.dispose();
+      }
     }
+
   }
 }

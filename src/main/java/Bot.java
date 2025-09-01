@@ -261,7 +261,8 @@ public class Bot {
 
     switch (moveType) {
       case GameConstants.MOVE:
-        executeMove(fromRow, fromCol, toRow, toCol);
+        int color = boardController.getBoardState().getPiece(fromRow, fromCol);
+        boardController.movePiece(toRow, toCol, fromCol, fromRow , color);
         break;
       case GameConstants.TAKE:
         boardController.take(fromRow, fromCol, toRow, toCol,
@@ -272,8 +273,7 @@ public class Bot {
             boardController.getBotsKingColor(), boardState);
         break;
     }
-
-    promoteToKingIfNeeded(toRow, toCol);
+    boardController.getPromotionService().promoteIfNeeded(toRow, toCol, boardController.getBotsColor());
 
     boardController.getFrame().getBoard().repaint();
     possibleMoves.clear();
@@ -281,26 +281,6 @@ public class Bot {
     boardController.getFrame().isGameFinished();
   }
 
-  private void executeMove(int fromRow, int fromCol, int toRow, int toCol) {
-    int piece = boardState.getPiece(fromRow, fromCol);
-    boardState.setPiece(fromRow, fromCol, GameConstants.EMPTY);
-
-    if (boardController.getMove().isKing(piece)) {
-      boardState.setPiece(toRow, toCol, boardController.getBotsKingColor());
-    } else {
-      boardState.setPiece(toRow, toCol, boardController.getBotsColor());
-    }
-  }
-
-  private void promoteToKingIfNeeded(int row, int col) {
-    if (row == GameConstants.LAST_ROW_INDEX &&
-        boardController.getBotsColor() == GameConstants.BLACK) {
-      boardState.setPiece(row, col, GameConstants.BLACK_KING);
-    } else if (row == 0 &&
-        boardController.getBotsColor() == GameConstants.RED) {
-      boardState.setPiece(row, col, GameConstants.RED_KING);
-    }
-  }
 
 
 }
