@@ -35,8 +35,9 @@ public final class Game {
     BoardPanel boardPanel = new BoardPanel(boardState);
     Frame boardFrame = new Frame(boardState, boardPanel);
 
-    Move move = new Move(boardState);
+
     PromotionService promotionService = new PromotionService(boardState);
+    Move move = new Move(boardState, promotionService);
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
     TurnManager turnManager = new TurnManager(playerConfiguration, GameConstants.RED, GameConstants.RED_KING);
     MoveService moveService = new MoveService(move, turnManager, boardState);

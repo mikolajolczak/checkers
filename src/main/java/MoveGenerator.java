@@ -37,7 +37,7 @@ public class MoveGenerator {
     return possibleMoves;
   }
   private void findCaptureMoves(int row, int col, int piece) {
-    if (move.isKing(piece)) {
+    if (move.getPromotionService().isQueen(piece)) {
       findKingCaptures(row, col, piece);
     } else {
       findRegularCaptures(row, col, piece);
@@ -49,7 +49,7 @@ public class MoveGenerator {
   }
 
   private void findRegularMoves(int row, int col, int piece) {
-    if (move.isKing(piece)) {
+    if (move.getPromotionService().isQueen(piece)) {
       findKingMoves(row, col, piece);
     } else {
       findRegularPieceMoves(row, col, piece);

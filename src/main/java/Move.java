@@ -6,9 +6,16 @@ package checkers.src.main.java;
  */
 public class Move {
   private final BoardState boardState;
+  private final PromotionService promotionService;
 
-  public Move(BoardState boardStateParam) {
+  public Move(BoardState boardStateParam,
+              PromotionService promotionServiceParam) {
     this.boardState = boardStateParam;
+    promotionService = promotionServiceParam;
+  }
+
+  public PromotionService getPromotionService() {
+    return promotionService;
   }
 
   public boolean isItRed(int col, int row) {
@@ -90,17 +97,13 @@ public class Move {
     } else if (piece == GameConstants.BLACK) {
       return (col < GameConstants.LAST_ROW_INDEX && isItEmpty(col + 1, row + 1)) ||
           (col > 0 && isItEmpty(col - 1, row + 1));
-    } else return isKing(piece);
+    } else return promotionService.isQueen(piece);
   }
 
   public boolean canITake(int col, int row, BoardState bs) {
     int piece = bs.getPiece(row, col);
-    return isKing(piece) ? canKingTake(row, col, piece, bs)
+    return promotionService.isQueen(piece) ? canKingTake(row, col, piece, bs)
         : canRegularPieceTake(row, col, piece, bs);
-  }
-
-  public boolean isKing(int piece) {
-    return piece == GameConstants.BLACK_KING || piece == GameConstants.RED_KING;
   }
 
   public boolean canKingTake(int row, int col, int piece, BoardState bs) {
