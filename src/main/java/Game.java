@@ -29,25 +29,36 @@ public final class Game {
    */
   public static void main(final String[] args) {
     JFrame colorChoiceFrame = new JFrame();
-    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X, GameConstants.COLOR_CHOICE_Y);
+    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
+        GameConstants.COLOR_CHOICE_Y);
     BoardState boardState = new BoardState();
     BoardPanel boardPanel = new BoardPanel(boardState);
     Frame boardFrame = new Frame(boardState, boardPanel);
 
     Move move = new Move(boardState);
-    var promotionService = new PromotionService(boardState);
-    BoardController controller = new BoardController(boardFrame, boardState, promotionService, move);
+    PromotionService promotionService = new PromotionService(boardState);
+    PlayerConfiguration playerConfiguration = new PlayerConfiguration();
+    TurnManager turnManager = new TurnManager(playerConfiguration, GameConstants.RED, GameConstants.RED_KING);
+    MoveService moveService = new MoveService(move, turnManager, boardState);
+    MoveExecutor moveExecutor = new MoveExecutor();
+    UIController uiController = new UIController(boardFrame);
+    MoveEvaluator moveEvaluator = new MoveEvaluator(move,playerConfiguration,moveExecutor);
+    MoveGenerator moveGenerator = new MoveGenerator(move, playerConfiguration);
+    Bot bot = new Bot(boardState, moveGenerator, moveEvaluator);
+    BoardController controller =
+        new BoardController(playerConfiguration, bot, turnManager,
+            moveService, moveExecutor, uiController, boardState,
+            promotionService);
 
-    BoardClickHandler clickHandler = new BoardClickHandler(controller,
-        boardFrame
-    );
+    BoardClickHandler clickHandler = new BoardClickHandler(controller, move);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
     JLabel chooseColor = new JLabel("Choose your color");
 
     colorChoiceFrame.setLayout(new FlowLayout());
-    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH, GameConstants.COLOR_CHOICE_HEIGHT);
+    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH,
+        GameConstants.COLOR_CHOICE_HEIGHT);
     colorChoiceFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     boardFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,31 +67,27 @@ public final class Game {
     colorChoiceFrame.add(black);
 
     red.addActionListener(_ -> {
-      controller.setBotsColor(GameConstants.BLACK);
-      controller.setBotsKingColor(GameConstants.BLACK_KING);
-      controller.setPlayersColor(GameConstants.RED);
-      controller.setPlayersKingColor(GameConstants.RED_KING);
-      controller.setCurrentColor();
-      controller.setCurrentColorKing();
+      playerConfiguration.setBotColor(GameConstants.BLACK);
+      playerConfiguration.setBotKingColor(GameConstants.BLACK_KING);
+      playerConfiguration.setHumanColor(GameConstants.RED);
+      playerConfiguration.setHumanKingColor(GameConstants.RED_KING);
       colorChoiceFrame.dispose();
       boardFrame.setVisible(true);
     });
 
     black.addActionListener(_ -> {
-      controller.setBotsColor(GameConstants.RED);
-      controller.setBotsKingColor(GameConstants.RED_KING);
-      controller.setPlayersColor(GameConstants.BLACK);
-      controller.setPlayersKingColor(GameConstants.BLACK_KING);
+      playerConfiguration.setBotColor(GameConstants.RED);
+      playerConfiguration.setBotKingColor(GameConstants.RED_KING);
+      playerConfiguration.setHumanColor(GameConstants.BLACK);
+      playerConfiguration.setHumanKingColor(GameConstants.BLACK_KING);
       colorChoiceFrame.dispose();
-      controller.setCurrentColorKing();
       boardFrame.setVisible(true);
-      controller.setCurrentColor();
+      if (turnManager.isCurrentPlayerBot()) {
+        controller.executeBotTurn();
+      }
     });
 
     colorChoiceFrame.setVisible(true);
-    MoveEvaluator moveEvaluator = new MoveEvaluator(controller);
-    MoveGenerator moveGenerator = new MoveGenerator(controller);
-    Bot bot = new Bot(controller, boardState,moveGenerator ,moveEvaluator);
-    controller.setBot(bot);
+
   }
 }

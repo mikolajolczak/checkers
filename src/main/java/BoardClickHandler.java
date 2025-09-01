@@ -6,19 +6,15 @@ import java.awt.event.MouseEvent;
 public final class BoardClickHandler extends MouseAdapter {
 
   private final BoardController controller;
-
-
-  private final Frame frame;
-
+  private final Move move;
   private boolean firstClick = true;
   private int firstClickRow = GameConstants.BOARD_SIZE;
   private int firstClickCol = GameConstants.BOARD_SIZE;
   private int firstClickColor;
 
-  public BoardClickHandler(BoardController controller,
-                           Frame frame) {
+  public BoardClickHandler(BoardController controller, Move moveParam) {
     this.controller = controller;
-    this.frame = frame;
+    move = moveParam;
   }
 
   @Override
@@ -30,9 +26,9 @@ public final class BoardClickHandler extends MouseAdapter {
       handleFirstClick(row, col);
     } else {
       handleSecondClick(row, col);
-    }
 
-    frame.getBoard().repaint();
+    }
+    controller.getUiController().refreshBoard();
   }
 
   private void handleFirstClick(int row, int col) {
@@ -44,13 +40,14 @@ public final class BoardClickHandler extends MouseAdapter {
     firstClickCol = col;
     firstClickColor = controller.getBoardState().getPiece(row, col);
     controller.getBoardState().setSelected(row, col);
+
     firstClick = false;
   }
 
   private void handleSecondClick(int row, int col) {
-    controller.clearChosenTile();
+    controller.getBoardState().setSelected(GameConstants.BOARD_SIZE, GameConstants.BOARD_SIZE);
 
-    if (controller.mustTake()) {
+    if (controller.getMoveService().mustTake()) {
       handleTakeClick(row, col);
     } else {
       handleNormalClick(row, col);
@@ -60,26 +57,37 @@ public final class BoardClickHandler extends MouseAdapter {
   }
 
   private void handleNormalClick(int row, int col) {
-    if (controller.isLegalNormalMove(row, col, firstClickCol, firstClickRow, firstClickColor)) {
-      controller.movePiece(row, col, firstClickCol, firstClickRow, firstClickColor);
+    if (controller.getMoveService().isLegalMove(row, col, firstClickCol, firstClickRow, firstClickColor)
+        && controller.getBoardState().getPiece(row, col) == GameConstants.EMPTY) {
+
+      controller.getMoveExecutor().executeNormalMove(firstClickRow, firstClickCol, row, col, firstClickColor, controller.getBoardState());
       controller.getPromotionService().promoteIfNeeded(row, col, firstClickColor);
-      controller.setCurrentColor();
+      controller.getTurnManager().switchTurn();
+
+      if (controller.getTurnManager().isCurrentPlayerBot()) {
+        controller.executeBotTurn();
+      }
     }
   }
 
   private void handleTakeClick(int row, int col) {
-    if (!controller.getMove().legalTakeMove(col, row, firstClickCol, firstClickRow,
-        firstClickColor)) {
+    if (!move.legalTakeMove(col, row, firstClickCol, firstClickRow, firstClickColor)) {
       return;
     }
 
     if (controller.getPromotionService().isQueen(firstClickColor)) {
-      controller.attemptQueenTake(row, col, firstClickCol, firstClickRow);
+      controller.getMoveExecutor().executeQueenCapture(firstClickRow, firstClickCol, row, col,
+          controller.getTurnManager().getCurrentKingColor(), controller.getBoardState());
     } else {
-      controller.attemptNormalTake(row, col, firstClickCol, firstClickRow);
+      controller.getMoveExecutor().executeCapture(firstClickRow, firstClickCol, row, col,
+          controller.getTurnManager().getCurrentColor(), controller.getBoardState());
     }
 
     controller.getPromotionService().promoteIfNeeded(row, col, firstClickColor);
-    controller.setCurrentColor();
+    controller.getTurnManager().switchTurn();
+
+    if (controller.getTurnManager().isCurrentPlayerBot()) {
+      controller.executeBotTurn();
+    }
   }
 }

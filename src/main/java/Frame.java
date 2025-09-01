@@ -19,12 +19,6 @@ public class Frame extends JFrame {
 
   private final BoardState state;
 
-
-  /**
-   * Returns the board associated with this frame.
-   *
-   * @return the game board
-   */
   public BoardPanel getBoard() {
     return board;
   }

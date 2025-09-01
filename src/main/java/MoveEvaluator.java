@@ -1,10 +1,16 @@
 package checkers.src.main.java;
 
 public class MoveEvaluator {
-  private final BoardController boardController;
+  private final Move move;
+  private final PlayerConfiguration playerConfiguration;
+  private final MoveExecutor moveExecutor;
 
-  public MoveEvaluator(BoardController boardController) {
-    this.boardController = boardController;
+  public MoveEvaluator(Move moveParam,
+                       PlayerConfiguration playerConfigurationParam,
+                       MoveExecutor moveExecutorParam) {
+    move = moveParam;
+    playerConfiguration = playerConfigurationParam;
+    moveExecutor = moveExecutorParam;
   }
 
   public int evaluateMove(int[] moveArray, BoardState boardState) {
@@ -24,15 +30,15 @@ public class MoveEvaluator {
     }
 
     int movedPiece = boardState.getPiece(moveArray[2], moveArray[3]);
-    return boardController.getMove().isKing(movedPiece)
+    return move.isKing(movedPiece)
         ? -GameConstants.SCORE_PLAYER_THREAT_KING
         : -GameConstants.SCORE_PLAYER_THREAT;
   }
 
   private boolean playerCanTakeAfterMove(BoardState boardState) {
-    return boardController.getMove().checkAllPiecesPossibleTakes(
-        boardController.getPlayersColor(),
-        boardController.getPlayersKingColor(),
+    return move.checkAllPiecesPossibleTakes(
+        playerConfiguration.getHumanColor(),
+        playerConfiguration.getHumanKingColor(),
         boardState);
   }
 
@@ -44,9 +50,9 @@ public class MoveEvaluator {
   }
 
   private boolean botCanTakeAfterMove(BoardState boardState) {
-    return boardController.getMove().checkAllPiecesPossibleTakes(
-        boardController.getBotsColor(),
-        boardController.getBotsKingColor(),
+    return move.checkAllPiecesPossibleTakes(
+        playerConfiguration.getBotColor(),
+        playerConfiguration.getBotKingColor(),
         boardState);
   }
 
@@ -63,7 +69,7 @@ public class MoveEvaluator {
   private boolean canPromoteToQueen(BoardState boardState,
                                     int movedPiece) {
     return isChanceForQueen(
-        boardController.getBotsColor(),
+        playerConfiguration.getBotColor(),
         boardState,
         movedPiece);
   }
@@ -75,40 +81,20 @@ public class MoveEvaluator {
 
     switch (moveType) {
       case GameConstants.MOVE:
-        executeRegularMove(fromRow, fromCol, toRow, toCol, boardState);
+        moveExecutor.executeNormalMove(fromRow, fromCol, toRow, toCol,playerConfiguration.getBotColor() , boardState);
         break;
       case GameConstants.TAKE:
-        executeCapture(fromRow, fromCol, toRow, toCol, boardState);
+        moveExecutor.executeCapture(fromRow, fromCol, toRow, toCol, playerConfiguration.getBotColor(), boardState);
         break;
       case GameConstants.QUEEN_TAKE:
-        executeQueenCapture(fromRow, fromCol, toRow, toCol, boardState);
+        moveExecutor.executeQueenCapture(fromRow, fromCol, toRow, toCol, playerConfiguration.getBotKingColor(), boardState);
         break;
     }
   }
 
-  private void executeCapture(int fromRow, int fromCol, int toRow, int toCol,
-                              BoardState boardState) {
-    boardController.take(fromRow, fromCol, toRow, toCol,
-        boardController.getBotsColor(), boardState);
-  }
-
-  private void executeQueenCapture(int fromRow, int fromCol, int toRow,
-                                   int toCol, BoardState boardState) {
-    boardController.queenTake(fromRow, fromCol, toRow, toCol,
-        boardController.getBotsKingColor(), boardState);
-  }
-
-  private void executeRegularMove(int fromRow, int fromCol, int toRow,
-                                  int toCol, BoardState boardState) {
-    int piece = boardState.getPiece(fromRow, fromCol);
-
-    boardState.setPiece(fromRow, fromCol, GameConstants.EMPTY);
-    boardState.setPiece(toRow, toCol, piece);
-  }
-
   public boolean isChanceForQueen(int colorToCheck, BoardState boardState,
                                   int pieceType) {
-    if (isAlreadyKing(pieceType)) {
+    if (move.isKing(pieceType)) {
       return false;
     }
 
@@ -116,9 +102,6 @@ public class MoveEvaluator {
     return hasPieceOnPromotionRow(boardState, colorToCheck, promotionRow);
   }
 
-  private boolean isAlreadyKing(int pieceType) {
-    return boardController.getMove().isKing(pieceType);
-  }
 
   private int getPromotionRow(int colorToCheck) {
     return (colorToCheck == GameConstants.BLACK)

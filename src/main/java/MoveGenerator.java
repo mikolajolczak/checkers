@@ -3,16 +3,19 @@ package checkers.src.main.java;
 import java.util.ArrayList;
 
 public class MoveGenerator {
-  private final BoardController boardController;
+  private final Move move;
+  private final PlayerConfiguration playerConfiguration;
   private final ArrayList<int[]> possibleMoves = new ArrayList<>();
-  public MoveGenerator(BoardController boardControllerParam) {
-    boardController = boardControllerParam;
+  public MoveGenerator(Move moveParam,
+                       PlayerConfiguration playerConfigurationParam) {
+    move = moveParam;
+    playerConfiguration = playerConfigurationParam;
   }
 
   public ArrayList<int[]> getPossibleMoves(BoardState boardState) {
     possibleMoves.clear();
-    boolean mustTake = boardController.getMove().checkAllPiecesPossibleTakes(
-        boardController.getBotsColor(), boardController.getBotsKingColor(),
+    boolean mustTake = move.checkAllPiecesPossibleTakes(
+        playerConfiguration.getBotColor(), playerConfiguration.getBotKingColor(),
         boardState);
 
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
@@ -23,10 +26,10 @@ public class MoveGenerator {
           continue;
         }
 
-        if (mustTake && boardController.getMove()
+        if (mustTake && move
             .canITake(col, row, boardState)) {
           findCaptureMoves(row, col, piece);
-        } else if (!mustTake && boardController.getMove().canIMove(col, row)) {
+        } else if (!mustTake && move.canIMove(col, row)) {
           findRegularMoves(row, col, piece);
         }
       }
@@ -34,19 +37,19 @@ public class MoveGenerator {
     return possibleMoves;
   }
   private void findCaptureMoves(int row, int col, int piece) {
-    if (boardController.getMove().isKing(piece)) {
+    if (move.isKing(piece)) {
       findKingCaptures(row, col, piece);
     } else {
       findRegularCaptures(row, col, piece);
     }
   }
   private boolean isBotPiece(int piece) {
-    return piece == boardController.getBotsColor() ||
-        piece == boardController.getBotsKingColor();
+    return piece == playerConfiguration.getBotColor() ||
+        piece == playerConfiguration.getBotKingColor();
   }
 
   private void findRegularMoves(int row, int col, int piece) {
-    if (boardController.getMove().isKing(piece)) {
+    if (move.isKing(piece)) {
       findKingMoves(row, col, piece);
     } else {
       findRegularPieceMoves(row, col, piece);
@@ -61,8 +64,8 @@ public class MoveGenerator {
       int newRow = row + 2 * dir[0];
       int newCol = col + 2 * dir[1];
 
-      if (boardController.getMove().isValidPosition(newRow, newCol) &&
-          boardController.getMove()
+      if (move.isValidPosition(newRow, newCol) &&
+          move
               .legalTakeMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
             new int[]{row, col, newRow, newCol, GameConstants.TAKE});
@@ -77,8 +80,8 @@ public class MoveGenerator {
       int newRow = row + dir[0];
       int newCol = col + dir[1];
 
-      if (boardController.getMove().isValidPosition(newRow, newCol) &&
-          boardController.getMove()
+      if (move.isValidPosition(newRow, newCol) &&
+          move
               .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
             new int[]{row, col, newRow, newCol, GameConstants.MOVE});
@@ -92,11 +95,11 @@ public class MoveGenerator {
         int newRow = row + dist * dir[0];
         int newCol = col + dist * dir[1];
 
-        if (!boardController.getMove().isValidPosition(newRow, newCol)) {
+        if (!move.isValidPosition(newRow, newCol)) {
           break;
         }
 
-        if (boardController.getMove()
+        if (move
             .legalTakeMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
@@ -113,11 +116,11 @@ public class MoveGenerator {
         int newRow = row + dist * dir[0];
         int newCol = col + dist * dir[1];
 
-        if (!boardController.getMove().isValidPosition(newRow, newCol)) {
+        if (!move.isValidPosition(newRow, newCol)) {
           break;
         }
 
-        if (boardController.getMove()
+        if (move
             .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
@@ -134,10 +137,10 @@ public class MoveGenerator {
 
     if (Math.abs(toRow - fromRow) > 1) {
       return
-          !boardController.getMove()
+          !move
               .checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
               &&
-              !boardController.getMove()
+              !move
                   .checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
                       toRow);
     }
