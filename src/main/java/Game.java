@@ -33,9 +33,11 @@ public final class Game {
     BoardState boardState = new BoardState();
     BoardPanel boardPanel = new BoardPanel(boardState);
     Frame boardFrame = new Frame(boardState, boardPanel);
+
     Move move = new Move(boardState);
     BoardController controller = new BoardController(boardFrame, move, boardState);
-
+    BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardState, boardFrame);
+    boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
     JLabel chooseColor = new JLabel("Choose your color");
