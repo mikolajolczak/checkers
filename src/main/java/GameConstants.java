@@ -94,6 +94,8 @@ public class GameConstants {
    * Width of the window in pixels.
    */
   public static final int WINDOW_WIDTH = 416;
+  public static final int[][] DIRECTIONS =
+      {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
   /**
    * Height of the window in pixels.

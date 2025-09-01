@@ -195,7 +195,7 @@ public class Move {
     boolean result = false;
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
-        if (canITake(col, row)) {
+        if (canITake(col, row, boardState)) {
           if (boardState.getPiece(row, col) == color
               || boardState.getPiece(row, col) == colorQueen) {
             result = true;
@@ -401,148 +401,81 @@ public class Move {
    * @param row    the row of the piece
    * @return true if a capture is possible, false otherwise
    */
-  public boolean canITake(final int column, final int row) {
-    boolean result = false;
-    int i;
-    int j;
-    int colorofpiece = boardState.getPiece(row, column);
-    switch (colorofpiece) {
-      case GameConstants.RED:
-        if (row >= 2) {
-          if (column < GameConstants.MAX_COLUMN_OFFSET) {
-            if ((isItBlackKing(column + 1, row - 1) || isItBlack(column + 1,
-                row - 1)) && isItEmpty(column + 2, row - 2)) {
-              result = true;
-            }
-          }
-          if (column > 1) {
-            if ((isItBlackKing(column - 1, row - 1) || isItBlack(column - 1,
-                row - 1)) && isItEmpty(column - 2, row - 2)) {
-              result = true;
-            }
-          }
-        }
-        break;
-      case GameConstants.BLACK:
-        if (row <= GameConstants.MAX_ROW_OFFSET) {
-          if (column < GameConstants.MAX_COLUMN_OFFSET) {
-            if ((isItRedKing(column + 1, row + 1) || isItRed(column + 1,
-                row + 1)) && isItEmpty(column + 2, row + 2)) {
-              result = true;
-            }
-          }
-          if (column > 1) {
-            if ((isItRedKing(column - 1, row + 1) || isItRed(column - 1,
-                row + 1)) && isItEmpty(column - 2, row + 2)) {
-              result = true;
-            }
-          }
-        }
-        break;
-      case GameConstants.BLACK_KING:
-        for (i = row - 1, j = column - 1; i > 0 && j > 0; i--, j--) {
-          if (!checkLeftTopDiagonalEmptySpaces(column, row, j - 1, i - 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.RED_KING
-                || boardState.getPiece(i, j) == GameConstants.RED) {
-              if (boardState.getPiece(i - 1, j - 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        for (i = row + 1, j = column - 1; i < GameConstants.LAST_ROW_INDEX && j > 0;
-             i++, j--) {
-          if (!checkLeftBotDiagonalEmptySpaces(column, row, j - 1, i + 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.RED_KING
-                || boardState.getPiece(i, j) == GameConstants.RED) {
-              if (boardState.getPiece(i + 1, j - 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        for (i = row - 1, j = column + 1; i > 0 && j < GameConstants.LAST_ROW_INDEX;
-             i--, j++) {
-          if (!checkRightTopDiagonalEmptySpaces(column, row, j + 1, i - 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.RED_KING
-                || boardState.getPiece(i, j) == GameConstants.RED) {
-              if (boardState.getPiece(i - 1, j + 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        for (i = row + 1, j = column + 1;
-             i < GameConstants.LAST_ROW_INDEX && j < GameConstants.LAST_ROW_INDEX; i++, j++) {
-          if (!checkRightBotDiagonalEmptySpaces(column, row, j + 1, i + 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.RED_KING
-                || boardState.getPiece(i, j) == GameConstants.RED) {
-              if (boardState.getPiece(i + 1, j + 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        break;
-      case GameConstants.RED_KING:
-        for (i = row - 1, j = column - 1; i > 0 && j > 0; i--, j--) {
-          if (!checkLeftTopDiagonalEmptySpaces(column, row, j - 1, i - 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
-                || boardState.getPiece(i, j) == GameConstants.BLACK) {
-              if (boardState.getPiece(i - 1, j - 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        for (i = row + 1, j = column - 1; i < GameConstants.LAST_ROW_INDEX && j > 0;
-             i++, j--) {
-          if (!checkLeftBotDiagonalEmptySpaces(column, row, j - 1, i + 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
-                || boardState.getPiece(i, j) == GameConstants.BLACK) {
-              if (boardState.getPiece(i + 1, j - 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        for (i = row - 1, j = column + 1; i > 0 && j < GameConstants.LAST_ROW_INDEX;
-             i--, j++) {
-          if (!checkRightTopDiagonalEmptySpaces(column, row, j + 1, i - 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
-                || boardState.getPiece(i, j) == GameConstants.BLACK) {
-              if (boardState.getPiece(i - 1, j + 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        for (i = row + 1, j = column + 1;
-             i < GameConstants.LAST_ROW_INDEX && j < GameConstants.LAST_ROW_INDEX; i++, j++) {
-          if (!checkRightBotDiagonalEmptySpaces(column, row, j + 1, i + 1)) {
-            if (boardState.getPiece(i, j) == GameConstants.BLACK_KING
-                || boardState.getPiece(i, j) == GameConstants.BLACK) {
-              if (boardState.getPiece(i + 1, j + 1)
-                  == GameConstants.EMPTY) {
-                result = true;
-              }
-            }
-          }
-        }
-        break;
-      default:
-        break;
-    }
-    return result;
-  }
+  public boolean canITake(int column, int row, BoardState boardStateParam) {
+    int piece = boardStateParam.getPiece(row, column);
 
+    if (isKing(piece)) {
+      return canKingTake(row, column, piece, boardStateParam);
+    } else {
+      return canRegularPieceTake(row, column, piece, boardStateParam);
+    }
+  }
+  public boolean isKing(int piece) {
+    return piece == GameConstants.BLACK_KING || piece == GameConstants.RED_KING;
+  }
+  public boolean canKingTake(int row, int col, int piece, BoardState boardStateParam) {
+    int enemyColor1 = (piece == GameConstants.RED_KING) ? GameConstants.BLACK
+        : GameConstants.RED;
+    int enemyColor2 =
+        (piece == GameConstants.RED_KING) ? GameConstants.BLACK_KING
+            : GameConstants.RED_KING;
+
+    for (int[] dir : GameConstants.DIRECTIONS) {
+      for (int dist = 1; dist < GameConstants.BOARD_SIZE - 1; dist++) {
+        int checkRow = row + dist * dir[0];
+        int checkCol = col + dist * dir[1];
+
+        if (!isValidPosition(checkRow, checkCol)) {
+          break;
+        }
+
+        int checkPiece = boardStateParam.getPiece(checkRow, checkCol);
+        if (checkPiece == enemyColor1 || checkPiece == enemyColor2) {
+
+          int landRow = checkRow + dir[0];
+          int landCol = checkCol + dir[1];
+
+          if (isValidPosition(landRow, landCol) &&
+              boardStateParam.getPiece(landRow, landCol) == GameConstants.EMPTY) {
+            return true;
+          }
+          break;
+        } else if (checkPiece != GameConstants.EMPTY) {
+          break;
+        }
+      }
+    }
+    return false;
+  }
+  public boolean canRegularPieceTake(int row, int col, int piece,
+                                      BoardState boardStateParam) {
+    int direction = (piece == GameConstants.RED) ? -1 : 1;
+    int enemyColor1 =
+        (piece == GameConstants.RED) ? GameConstants.BLACK : GameConstants.RED;
+    int enemyColor2 = (piece == GameConstants.RED) ? GameConstants.BLACK_KING
+        : GameConstants.RED_KING;
+
+    for (int colDir : new int[]{-1, 1}) {
+      int jumpRow = row + 2 * direction;
+      int jumpCol = col + 2 * colDir;
+      int enemyRow = row + direction;
+      int enemyCol = col + colDir;
+
+      if (isValidPosition(jumpRow, jumpCol) && isValidPosition(enemyRow,
+          enemyCol)) {
+        int enemyPiece = boardStateParam.getPiece(enemyRow, enemyCol);
+        if ((enemyPiece == enemyColor1 || enemyPiece == enemyColor2) &&
+            boardStateParam.getPiece(jumpRow, jumpCol)== GameConstants.EMPTY) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  public boolean isValidPosition(int row, int col) {
+    return row >= 0 && row < GameConstants.BOARD_SIZE &&
+        col >= 0 && col < GameConstants.BOARD_SIZE;
+  }
   /**
    * Checks if the second click in a move is legal.
    *

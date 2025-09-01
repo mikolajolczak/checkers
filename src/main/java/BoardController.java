@@ -107,6 +107,7 @@ public final class BoardController {
         : GameConstants.RED;
 
     if (currentColor == botsColor && bot != null) {
+      frame.isGameFinished();
       bot.analyze();
       bot.simulate();
       new Thread(() -> {
@@ -127,7 +128,7 @@ public final class BoardController {
     boolean isCurrentPiece = value == getCurrentColor()
         || value == getCurrentColorKing();
     return isCurrentPiece && (move.canIMove(col, row) || move.canITake(col,
-        row));
+        row, boardState));
   }
   public boolean isLegalNormalMove(int row, int col, int firstClickCol, int firstClickRow, int firstClickColor) {
     return move.isItLegalSecondClickMove(col, row, firstClickCol, firstClickRow,
@@ -148,15 +149,17 @@ public final class BoardController {
   }
 
   public void queenTake(int firstRow, int firstColumn, int secondRow,
-                        int secondColumn, int color) {
-    boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
-    boardState.setPiece(secondRow, secondColumn, color);
+                        int secondColumn,
+                        int currentColor, BoardState boardStateParam) {
+    boardStateParam.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
+    boardStateParam.setPiece(secondRow, secondColumn, currentColor);
 
-    int dRow = secondRow - firstRow;
-    int dCol = secondColumn - firstColumn;
+    int rowDir = Integer.signum(secondRow - firstRow);
+    int colDir = Integer.signum(secondColumn - firstColumn);
 
-    boardState.setPiece(secondRow - Integer.signum(dRow),
-        secondColumn - Integer.signum(dCol), GameConstants.EMPTY);
+    int capturedRow = secondRow - rowDir;
+    int capturedCol = secondColumn - colDir;
+    boardStateParam.setPiece(capturedRow, capturedCol, GameConstants.EMPTY);
   }
   public void movePiece(int row, int col, int firstClickCol, int firstClickRow, int firstClickColor) {
     boardState.setPiece(firstClickRow, firstClickCol, GameConstants.EMPTY);
@@ -169,6 +172,6 @@ public final class BoardController {
 
   public void attemptQueenTake(int row, int col, int firstClickCol, int firstClickRow) {
     queenTake(firstClickRow, firstClickCol, row, col,
-        getCurrentColorKing());
+        getCurrentColorKing(), boardState);
   }
 }

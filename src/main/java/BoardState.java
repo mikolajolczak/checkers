@@ -1,6 +1,16 @@
 package checkers.src.main.java;
 
 public class BoardState {
+  public int[][] getPieces() {
+    return pieces;
+  }
+  public BoardState(int[][] pieces) {
+    this.pieces = new int[pieces.length][];
+
+    for (int i = 0; i < pieces.length; i++) {
+      this.pieces[i] = pieces[i].clone();
+    }
+  }
   private final int[][] pieces;
   private int selectedRow = -1;
   private int selectedColumn = -1;
