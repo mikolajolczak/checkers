@@ -78,8 +78,9 @@ public final class Game {
     });
 
     colorChoiceFrame.setVisible(true);
-
-    Bot bot = new Bot(controller, boardState);
+    MoveEvaluator moveEvaluator = new MoveEvaluator(controller);
+    MoveGenerator moveGenerator = new MoveGenerator(controller);
+    Bot bot = new Bot(controller, boardState,moveGenerator ,moveEvaluator);
     controller.setBot(bot);
   }
 }
