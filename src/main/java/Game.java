@@ -35,11 +35,12 @@ public final class Game {
     Frame boardFrame = new Frame(boardState, boardPanel);
 
     Move move = new Move(boardState);
-    BoardController controller = new BoardController(boardFrame, boardState);
-    MoveValidator moveValidator = new MoveValidator(boardState, controller, move);
-    MoveExecutor moveExecutor = new MoveExecutor(boardState, controller);
-    PromotionService promotionService = new PromotionService(boardState);
-    BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardState, boardFrame, moveValidator, moveExecutor, promotionService);
+    var promotionService = new PromotionService(boardState);
+    BoardController controller = new BoardController(boardFrame, boardState, promotionService, move);
+
+    BoardClickHandler clickHandler = new BoardClickHandler(controller,
+        boardFrame
+    );
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
@@ -78,7 +79,7 @@ public final class Game {
 
     colorChoiceFrame.setVisible(true);
 
-    Bot bot = new Bot(boardFrame.getBoard(), move, controller, boardState);
+    Bot bot = new Bot(controller, boardState);
     controller.setBot(bot);
   }
 }

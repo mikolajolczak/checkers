@@ -15,14 +15,31 @@ public final class BoardController {
   private final Frame frame;
   private Bot bot;
   private final BoardState boardState;
+  private final PromotionService promotionService;
+  private final Move move;
+
+  public BoardState getBoardState() {
+    return boardState;
+  }
+
+  public PromotionService getPromotionService() {
+    return promotionService;
+  }
+
+  public Move getMove() {
+    return move;
+  }
 
   private int currentColor = GameConstants.BLACK;
   private int currentColorKing = GameConstants.BLACK_KING;
 
   public BoardController(final Frame frameParam,
-                         final BoardState boardStateParam) {
+                         final BoardState boardStateParam,
+                         PromotionService promotionServiceParam, Move moveParam) {
     this.frame = frameParam;
     this.boardState = boardStateParam;
+    promotionService = promotionServiceParam;
+    move = moveParam;
   }
 
   public Frame getFrame() {
@@ -105,7 +122,22 @@ public final class BoardController {
       currentColorKing = playersKingColor;
     }
   }
-
+  public boolean canSelectPiece(int row, int col) {
+    int value = boardState.getPiece(row, col);
+    boolean isCurrentPiece = value == getCurrentColor()
+        || value == getCurrentColorKing();
+    return isCurrentPiece && (move.canIMove(col, row) || move.canITake(col,
+        row));
+  }
+  public boolean isLegalNormalMove(int row, int col, int firstClickCol, int firstClickRow, int firstClickColor) {
+    return move.isItLegalSecondClickMove(col, row, firstClickCol, firstClickRow,
+        firstClickColor)
+        && boardState.getPiece(row, col) == GameConstants.EMPTY;
+  }
+  public boolean mustTake() {
+    return move.checkAllPiecesPossibleTakes(getCurrentColor(),
+        getCurrentColorKing());
+  }
   public void take(int firstRow, int firstColumn, int secondRow,
                    int secondColumn, int color) {
     boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
@@ -125,5 +157,18 @@ public final class BoardController {
 
     boardState.setPiece(secondRow - Integer.signum(dRow),
         secondColumn - Integer.signum(dCol), GameConstants.EMPTY);
+  }
+  public void movePiece(int row, int col, int firstClickCol, int firstClickRow, int firstClickColor) {
+    boardState.setPiece(firstClickRow, firstClickCol, GameConstants.EMPTY);
+    boardState.setPiece(row, col, firstClickColor);
+  }
+  public void attemptNormalTake(int row, int col, int firstClickCol, int firstClickRow) {
+    take(firstClickRow, firstClickCol, row, col,
+        getCurrentColor());
+  }
+
+  public void attemptQueenTake(int row, int col, int firstClickCol, int firstClickRow) {
+    queenTake(firstClickRow, firstClickCol, row, col,
+        getCurrentColorKing());
   }
 }

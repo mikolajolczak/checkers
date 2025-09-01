@@ -6,30 +6,19 @@ import java.awt.event.MouseEvent;
 public final class BoardClickHandler extends MouseAdapter {
 
   private final BoardController controller;
-  private final Move move;
-  private final BoardState boardState;
+
+
   private final Frame frame;
-  private final MoveValidator moveValidator;
-  private final MoveExecutor moveExecutor;
-  private final PromotionService promotionService;
 
   private boolean firstClick = true;
   private int firstClickRow = GameConstants.BOARD_SIZE;
   private int firstClickCol = GameConstants.BOARD_SIZE;
   private int firstClickColor;
 
-  public BoardClickHandler(BoardController controller, Move move,
-                           BoardState boardState, Frame frame,
-                           MoveValidator moveValidatorParam,
-                           MoveExecutor moveExecutorParam,
-                           PromotionService promotionServiceParam) {
+  public BoardClickHandler(BoardController controller,
+                           Frame frame) {
     this.controller = controller;
-    this.move = move;
-    this.boardState = boardState;
     this.frame = frame;
-    moveValidator = moveValidatorParam;
-    moveExecutor = moveExecutorParam;
-    promotionService = promotionServiceParam;
   }
 
   @Override
@@ -47,21 +36,21 @@ public final class BoardClickHandler extends MouseAdapter {
   }
 
   private void handleFirstClick(int row, int col) {
-    if (!moveValidator.canSelectPiece(row, col)) {
+    if (!controller.canSelectPiece(row, col)) {
       return;
     }
 
     firstClickRow = row;
     firstClickCol = col;
-    firstClickColor = boardState.getPiece(row, col);
-    boardState.setSelected(row, col);
+    firstClickColor = controller.getBoardState().getPiece(row, col);
+    controller.getBoardState().setSelected(row, col);
     firstClick = false;
   }
 
   private void handleSecondClick(int row, int col) {
     controller.clearChosenTile();
 
-    if (moveValidator.mustTake()) {
+    if (controller.mustTake()) {
       handleTakeClick(row, col);
     } else {
       handleNormalClick(row, col);
@@ -71,26 +60,26 @@ public final class BoardClickHandler extends MouseAdapter {
   }
 
   private void handleNormalClick(int row, int col) {
-    if (moveValidator.isLegalNormalMove(row, col, firstClickCol, firstClickRow, firstClickColor)) {
-      moveExecutor.movePiece(row, col, firstClickCol, firstClickRow, firstClickColor);
-      promotionService.promoteIfNeeded(row, col, firstClickColor);
+    if (controller.isLegalNormalMove(row, col, firstClickCol, firstClickRow, firstClickColor)) {
+      controller.movePiece(row, col, firstClickCol, firstClickRow, firstClickColor);
+      controller.getPromotionService().promoteIfNeeded(row, col, firstClickColor);
       controller.setCurrentColor();
     }
   }
 
   private void handleTakeClick(int row, int col) {
-    if (!move.legalTakeMove(col, row, firstClickCol, firstClickRow,
+    if (!controller.getMove().legalTakeMove(col, row, firstClickCol, firstClickRow,
         firstClickColor)) {
       return;
     }
 
-    if (promotionService.isQueen(firstClickColor)) {
-      moveExecutor.attemptQueenTake(row, col, firstClickCol, firstClickRow);
+    if (controller.getPromotionService().isQueen(firstClickColor)) {
+      controller.attemptQueenTake(row, col, firstClickCol, firstClickRow);
     } else {
-      moveExecutor.attemptNormalTake(row, col, firstClickCol, firstClickRow);
+      controller.attemptNormalTake(row, col, firstClickCol, firstClickRow);
     }
 
-    promotionService.promoteIfNeeded(row, col, firstClickColor);
+    controller.getPromotionService().promoteIfNeeded(row, col, firstClickColor);
     controller.setCurrentColor();
   }
 }

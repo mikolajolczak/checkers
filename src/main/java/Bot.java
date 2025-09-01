@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Bot {
-  private final BoardPanel board;
   private final BoardState boardState;
-  private final Move move;
   private final BoardController boardController;
   private final ArrayList<int[]> possibleMoves = new ArrayList<>();
   private int[] bestMove = new int[GameConstants.MOVE_ARRAY_LENGTH];
@@ -15,10 +13,7 @@ public class Bot {
   private static final int[][] DIRECTIONS =
       {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
-  public Bot(BoardPanel boardParam, Move moveParam,
-             BoardController boardControllerParam, BoardState boardStateParam) {
-    this.board = boardParam;
-    this.move = moveParam;
+  public Bot(BoardController boardControllerParam, BoardState boardStateParam) {
     this.boardController = boardControllerParam;
     this.boardState = boardStateParam;
   }
@@ -40,7 +35,7 @@ public class Bot {
   public void analyze() {
     possibleMoves.clear();
 
-    boolean mustTake = move.checkAllPiecesPossibleTakes(
+    boolean mustTake = boardController.getMove().checkAllPiecesPossibleTakes(
         boardController.getBotsColor(), boardController.getBotsKingColor());
 
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
@@ -51,9 +46,9 @@ public class Bot {
           continue;
         }
 
-        if (mustTake && move.canITake(col, row)) {
+        if (mustTake && boardController.getMove().canITake(col, row)) {
           findCaptureMoves(row, col, piece);
-        } else if (!mustTake && move.canIMove(col, row)) {
+        } else if (!mustTake && boardController.getMove().canIMove(col, row)) {
           findRegularMoves(row, col, piece);
         }
       }
@@ -93,7 +88,7 @@ public class Bot {
       int newCol = col + 2 * dir[1];
 
       if (isValidPosition(newRow, newCol) &&
-          move.legalTakeMove(newCol, newRow, col, row, piece)) {
+          boardController.getMove().legalTakeMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
             new int[]{row, col, newRow, newCol, GameConstants.TAKE});
       }
@@ -108,7 +103,7 @@ public class Bot {
       int newCol = col + dir[1];
 
       if (isValidPosition(newRow, newCol) &&
-          move.isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
+          boardController.getMove().isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
             new int[]{row, col, newRow, newCol, GameConstants.MOVE});
       }
@@ -125,7 +120,7 @@ public class Bot {
           break;
         }
 
-        if (move.legalTakeMove(newCol, newRow, col, row, piece)) {
+        if (boardController.getMove().legalTakeMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
                 new int[]{row, col, newRow, newCol, GameConstants.QUEEN_TAKE});
@@ -145,7 +140,7 @@ public class Bot {
           break;
         }
 
-        if (move.isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
+        if (boardController.getMove().isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
                 new int[]{row, col, newRow, newCol, GameConstants.MOVE});
@@ -163,9 +158,9 @@ public class Bot {
 
     if (Math.abs(toRow - fromRow) > 1) {
       return
-          !move.checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
+          !boardController.getMove().checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
               &&
-              !move.checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
+              !boardController.getMove().checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
                   toRow);
     }
     return true;
@@ -296,7 +291,7 @@ public class Bot {
 
     promoteToKingIfNeeded(toRow, toCol);
 
-    board.repaint();
+    boardController.getFrame().getBoard().repaint();
     possibleMoves.clear();
     Arrays.fill(bestMove, 0);
     boardController.getFrame().isGameFinished();
