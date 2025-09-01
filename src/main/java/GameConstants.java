@@ -85,8 +85,6 @@ public class GameConstants {
   public static final int TAKE = 1;
   public static final int QUEEN_TAKE = 2;
   public static final int LAST_ROW_INDEX = GameConstants.BOARD_SIZE - 1;
-  public static final int SECOND_LAST_INDEX = GameConstants.BOARD_SIZE - 2;
-  public static final int TO_COL = 3;
   public static final int MOVE_TYPE = 4;
   public static final int SCORE_PLAYER_THREAT = 20;
   public static final int SCORE_PLAYER_THREAT_KING = 30;

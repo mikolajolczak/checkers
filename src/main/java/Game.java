@@ -36,7 +36,10 @@ public final class Game {
 
     Move move = new Move(boardState);
     BoardController controller = new BoardController(boardFrame, boardState);
-    BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardState, boardFrame);
+    MoveValidator moveValidator = new MoveValidator(boardState, controller, move);
+    MoveExecutor moveExecutor = new MoveExecutor(boardState, controller);
+    PromotionService promotionService = new PromotionService(boardState);
+    BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardState, boardFrame, moveValidator, moveExecutor, promotionService);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
