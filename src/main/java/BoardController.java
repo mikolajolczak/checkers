@@ -1,7 +1,5 @@
 package checkers.src.main.java;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * Controller class for managing the Checkers game board, handling player
@@ -15,17 +13,15 @@ public final class BoardController {
   private int playersKingColor = GameConstants.RED_KING;
 
   private final Frame frame;
-  private final Move move;
   private Bot bot;
   private final BoardState boardState;
 
   private int currentColor = GameConstants.BLACK;
   private int currentColorKing = GameConstants.BLACK_KING;
 
-  public BoardController(final Frame frameParam, final Move moveParam,
+  public BoardController(final Frame frameParam,
                          final BoardState boardStateParam) {
     this.frame = frameParam;
-    this.move = moveParam;
     this.boardState = boardStateParam;
   }
 
@@ -110,7 +106,8 @@ public final class BoardController {
     }
   }
 
-  public void take(int firstRow, int firstColumn, int secondRow, int secondColumn, int color) {
+  public void take(int firstRow, int firstColumn, int secondRow,
+                   int secondColumn, int color) {
     boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
     boardState.setPiece(secondRow, secondColumn, color);
     int rowBetween = (firstRow + secondRow) / 2;
@@ -118,13 +115,15 @@ public final class BoardController {
     boardState.setPiece(rowBetween, colBetween, GameConstants.EMPTY);
   }
 
-  public void queenTake(int firstRow, int firstColumn, int secondRow, int secondColumn, int color) {
+  public void queenTake(int firstRow, int firstColumn, int secondRow,
+                        int secondColumn, int color) {
     boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
     boardState.setPiece(secondRow, secondColumn, color);
 
     int dRow = secondRow - firstRow;
     int dCol = secondColumn - firstColumn;
 
-    boardState.setPiece(secondRow - Integer.signum(dRow), secondColumn - Integer.signum(dCol), GameConstants.EMPTY);
+    boardState.setPiece(secondRow - Integer.signum(dRow),
+        secondColumn - Integer.signum(dCol), GameConstants.EMPTY);
   }
 }

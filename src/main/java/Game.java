@@ -35,7 +35,7 @@ public final class Game {
     Frame boardFrame = new Frame(boardState, boardPanel);
 
     Move move = new Move(boardState);
-    BoardController controller = new BoardController(boardFrame, move, boardState);
+    BoardController controller = new BoardController(boardFrame, boardState);
     BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardState, boardFrame);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
