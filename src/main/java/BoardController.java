@@ -137,15 +137,17 @@ public final class BoardController {
   }
   public boolean mustTake() {
     return move.checkAllPiecesPossibleTakes(getCurrentColor(),
-        getCurrentColorKing());
+        getCurrentColorKing(), boardState);
   }
   public void take(int firstRow, int firstColumn, int secondRow,
-                   int secondColumn, int color) {
-    boardState.setPiece(firstRow, firstColumn, GameConstants.EMPTY);
-    boardState.setPiece(secondRow, secondColumn, color);
-    int rowBetween = (firstRow + secondRow) / 2;
-    int colBetween = (firstColumn + secondColumn) / 2;
-    boardState.setPiece(rowBetween, colBetween, GameConstants.EMPTY);
+                   int secondColumn,
+                   int currentColor, BoardState boardState) {
+    boardState.setPiece(firstRow, firstColumn,GameConstants.EMPTY);
+    boardState.setPiece(secondRow, secondColumn,currentColor);
+
+    int capturedRow = (firstRow + secondRow) / 2;
+    int capturedCol = (firstColumn + secondColumn) / 2;
+    boardState.setPiece(capturedRow, capturedCol, GameConstants.EMPTY);
   }
 
   public void queenTake(int firstRow, int firstColumn, int secondRow,
@@ -167,7 +169,7 @@ public final class BoardController {
   }
   public void attemptNormalTake(int row, int col, int firstClickCol, int firstClickRow) {
     take(firstClickRow, firstClickCol, row, col,
-        getCurrentColor());
+        getCurrentColor(), boardState);
   }
 
   public void attemptQueenTake(int row, int col, int firstClickCol, int firstClickRow) {

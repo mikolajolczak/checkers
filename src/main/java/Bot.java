@@ -11,31 +11,16 @@ public class Bot {
   private BoardState boardStateCopy;
 
 
-
   public Bot(BoardController boardControllerParam, BoardState boardStateParam) {
     this.boardController = boardControllerParam;
     this.boardState = boardStateParam;
-  }
-
-  public boolean checkAllPiecesPossibleTakes(int color, int colorQueen,
-                                             BoardState boardStateParam) {
-    for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
-      for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
-        int piece = boardStateParam.getPiece(row, col);
-        if ((piece == color || piece == colorQueen) && boardController.getMove().canITake(col, row,
-            boardStateParam)) {//tu cos moze byc
-          return true;
-        }
-      }
-    }
-    return false;
   }
 
   public void analyze() {
     possibleMoves.clear();
 
     boolean mustTake = boardController.getMove().checkAllPiecesPossibleTakes(
-        boardController.getBotsColor(), boardController.getBotsKingColor());
+        boardController.getBotsColor(), boardController.getBotsKingColor(), boardState);
 
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
@@ -45,7 +30,8 @@ public class Bot {
           continue;
         }
 
-        if (mustTake && boardController.getMove().canITake(col, row, boardState)) {//tu cos moze byc
+        if (mustTake && boardController.getMove()
+            .canITake(col, row, boardState)) {
           findCaptureMoves(row, col, piece);
         } else if (!mustTake && boardController.getMove().canIMove(col, row)) {
           findRegularMoves(row, col, piece);
@@ -76,7 +62,6 @@ public class Bot {
   }
 
 
-
   private void findRegularCaptures(int row, int col, int piece) {
     int direction = (piece == GameConstants.RED) ? -1 : 1;
 
@@ -85,7 +70,8 @@ public class Bot {
       int newCol = col + 2 * dir[1];
 
       if (boardController.getMove().isValidPosition(newRow, newCol) &&
-          boardController.getMove().legalTakeMove(newCol, newRow, col, row, piece)) {
+          boardController.getMove()
+              .legalTakeMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
             new int[]{row, col, newRow, newCol, GameConstants.TAKE});
       }
@@ -100,7 +86,8 @@ public class Bot {
       int newCol = col + dir[1];
 
       if (boardController.getMove().isValidPosition(newRow, newCol) &&
-          boardController.getMove().isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
+          boardController.getMove()
+              .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
             new int[]{row, col, newRow, newCol, GameConstants.MOVE});
       }
@@ -117,7 +104,8 @@ public class Bot {
           break;
         }
 
-        if (boardController.getMove().legalTakeMove(newCol, newRow, col, row, piece)) {
+        if (boardController.getMove()
+            .legalTakeMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
                 new int[]{row, col, newRow, newCol, GameConstants.QUEEN_TAKE});
@@ -137,7 +125,8 @@ public class Bot {
           break;
         }
 
-        if (boardController.getMove().isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
+        if (boardController.getMove()
+            .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
                 new int[]{row, col, newRow, newCol, GameConstants.MOVE});
@@ -155,10 +144,12 @@ public class Bot {
 
     if (Math.abs(toRow - fromRow) > 1) {
       return
-          !boardController.getMove().checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
+          !boardController.getMove()
+              .checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
               &&
-              !boardController.getMove().checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
-                  toRow);
+              !boardController.getMove()
+                  .checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
+                      toRow);
     }
     return true;
   }
@@ -187,20 +178,21 @@ public class Bot {
 
     int score = 0;
 
-    if (checkAllPiecesPossibleTakes(boardController.getPlayersColor(),
+    if (boardController.getMove().checkAllPiecesPossibleTakes(boardController.getPlayersColor(),
         boardController.getPlayersKingColor(), boardState)) {
-      int movedPiece = boardState.getPiece(moveArray[2],moveArray[3]);
-      score -= boardController.getMove().isKing(movedPiece) ? GameConstants.SCORE_PLAYER_THREAT_KING :
+      int movedPiece = boardState.getPiece(moveArray[2], moveArray[3]);
+      score -= boardController.getMove().isKing(movedPiece)
+          ? GameConstants.SCORE_PLAYER_THREAT_KING :
           GameConstants.SCORE_PLAYER_THREAT;
     }
 
-    if (checkAllPiecesPossibleTakes(boardController.getBotsColor(),
+    if (boardController.getMove().checkAllPiecesPossibleTakes(boardController.getBotsColor(),
         boardController.getBotsKingColor(), boardState)) {
       score += GameConstants.SCORE_TAKE_POSSIBLE;
     }
 
     if (isChanceForQueen(boardController.getBotsColor(), boardState,
-        boardState.getPiece(moveArray[2],moveArray[3]))) {
+        boardState.getPiece(moveArray[2], moveArray[3]))) {
       score += GameConstants.SCORE_CHANCE_FOR_QUEEN;
     }
 
@@ -217,7 +209,8 @@ public class Bot {
         executeRegularMove(fromRow, fromCol, toRow, toCol, boardStateParam);
         break;
       case GameConstants.TAKE:
-        take(fromRow, fromCol, toRow, toCol, boardController.getBotsColor(),
+        boardController.take(fromRow, fromCol, toRow, toCol,
+            boardController.getBotsColor(),
             boardStateParam);
         break;
       case GameConstants.QUEEN_TAKE:
@@ -272,7 +265,7 @@ public class Bot {
         break;
       case GameConstants.TAKE:
         boardController.take(fromRow, fromCol, toRow, toCol,
-            boardController.getBotsColor());
+            boardController.getBotsColor(), boardState);
         break;
       case GameConstants.QUEEN_TAKE:
         boardController.queenTake(fromRow, fromCol, toRow, toCol,
@@ -308,25 +301,6 @@ public class Bot {
       boardState.setPiece(row, col, GameConstants.RED_KING);
     }
   }
-
-  public void take(int firstRow, int firstColumn, int secondRow,
-                   int secondColumn,
-                   int currentColor, BoardState boardState) {
-    boardState.setPiece(firstRow, firstColumn,GameConstants.EMPTY);
-    boardState.setPiece(secondRow, secondColumn,currentColor);
-
-    int capturedRow = (firstRow + secondRow) / 2;
-    int capturedCol = (firstColumn + secondColumn) / 2;
-    boardState.setPiece(capturedRow, capturedCol, GameConstants.EMPTY);
-  }
-
-
-
-
-
-
-
-
 
 
 }

@@ -190,20 +190,18 @@ public class Move {
    * @param colorQueen the color of the king piece
    * @return true if a capture is possible, false otherwise
    */
-  public boolean checkAllPiecesPossibleTakes(final int color,
-                                             final int colorQueen) {
-    boolean result = false;
+  public boolean checkAllPiecesPossibleTakes(int color, int colorQueen,
+                                             BoardState boardStateParam) {
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
-        if (canITake(col, row, boardState)) {
-          if (boardState.getPiece(row, col) == color
-              || boardState.getPiece(row, col) == colorQueen) {
-            result = true;
-          }
+        int piece = boardStateParam.getPiece(row, col);
+        if ((piece == color || piece == colorQueen) && canITake(col, row,
+                boardStateParam)) {//tu cos moze byc
+          return true;
         }
       }
     }
-    return result;
+    return false;
   }
 
   /**
