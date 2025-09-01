@@ -109,5 +109,6 @@ public class GameConstants {
    * Maximum column offset used in move calculations.
    */
   public static final int MAX_COLUMN_OFFSET = GameConstants.BOARD_SIZE - 2;
+  public static final int BOT_MOVE_DELAY_MS = 500;
 
 }

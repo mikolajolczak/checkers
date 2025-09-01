@@ -54,20 +54,6 @@ public final class BoardController {
    */
   private int currentColorKing = GameConstants.BLACK_KING;
 
-  /**
-   * Delay in milliseconds before the bot makes a move.
-   */
-  private static final int BOT_MOVE_DELAY_MS = 500;
-
-  /**
-   * Size of each tile on the board in pixels.
-   */
-  private static final int TILE_SIZE = 50;
-
-  /**
-   * Index of the last row on the board.
-   */
-  private static final int LAST_ROW_INDEX = GameConstants.BOARD_SIZE - 1;
 
   private final BoardState boardState;
 
@@ -197,7 +183,7 @@ public final class BoardController {
       bot.simulate();
       new Thread(() -> {
         try {
-          Thread.sleep(BOT_MOVE_DELAY_MS);
+          Thread.sleep(GameConstants.BOT_MOVE_DELAY_MS);
         } catch (InterruptedException e) {
           System.err.println("Thread was interrupted: " + e.getMessage());
         }
@@ -310,7 +296,7 @@ public final class BoardController {
                                  final int color) {
       if (color == GameConstants.RED && row == 0) {
         boardState.setPiece(row, col, GameConstants.RED_KING);
-      } else if (color == GameConstants.BLACK && row == LAST_ROW_INDEX) {
+      } else if (color == GameConstants.BLACK && row == GameConstants.LAST_ROW_INDEX) {
         boardState.setPiece(row, col, GameConstants.BLACK_KING);
       }
     }
@@ -318,8 +304,8 @@ public final class BoardController {
     @Override
     public void mouseReleased(final MouseEvent e) {
       if (firstclick) {
-        firstClickColumnNumber = e.getX() / TILE_SIZE;
-        firstClickRowNumber = e.getY() / TILE_SIZE;
+        firstClickColumnNumber = e.getX() / GameConstants.SQUARE_SIZE;
+        firstClickRowNumber = e.getY() / GameConstants.SQUARE_SIZE;
         if (move.canIMove(firstClickColumnNumber, firstClickRowNumber)
             || move.canITake(firstClickColumnNumber, firstClickRowNumber)) {
           int value = boardState.getPiece(firstClickRowNumber,
@@ -333,8 +319,8 @@ public final class BoardController {
         }
       } else {
         clearChosenTile();
-        int columnsecond = e.getX() / TILE_SIZE;
-        int rowsecond = e.getY() / TILE_SIZE;
+        int columnsecond = e.getX() / GameConstants.SQUARE_SIZE;
+        int rowsecond = e.getY() / GameConstants.SQUARE_SIZE;
 
         if (!move.checkAllPiecesPossibleTakes(getCurrentColor(),
             getCurrentColorKing())) {
