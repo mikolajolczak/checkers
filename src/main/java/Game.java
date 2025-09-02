@@ -46,9 +46,9 @@ public final class Game {
 
     MoveGenerator moveGenerator = new MoveGenerator(playerConfiguration);
     MoveService moveService = new MoveService(turnManager, boardState, moveGenerator);
-
-    Bot bot = new Bot(boardState, moveService, playerConfiguration);
-    BotDecisionService botDecisionService = new BotDecisionService(bot);
+    BotState botState = new BotState(boardState, playerConfiguration);
+    BotAI bot = new BotAI(moveService);
+    BotDecisionService botDecisionService = new BotDecisionService(bot, botState);
     BotMoveExecutor botMoveExecutor = new BotMoveExecutor(promotionService, boardState, playerConfiguration);
     BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
     BotController botController = new BotController(botDecisionService, botMoveExecutor, botUIHandler);
