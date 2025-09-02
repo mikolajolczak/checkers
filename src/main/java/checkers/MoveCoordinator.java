@@ -1,0 +1,22 @@
+package checkers;
+
+public record MoveCoordinator(MovePerformer performer, MoveValidator validator,
+                              UIController uiController,
+                              TurnManager turnManager,
+                              BotController botController) {
+
+  public void handleMove(final int fromRow, final int fromCol, final int toRow,
+                         final int toCol) {
+    if (!validator.isLegalMove(fromRow, fromCol, toRow, toCol)) {
+      return;
+    }
+
+    performer.performMove(fromRow, fromCol, toRow, toCol);
+    turnManager.switchTurn();
+    uiController.refreshBoard();
+
+    if (turnManager.isCurrentPlayerBot()) {
+      botController.executeTurn();
+    }
+  }
+}
