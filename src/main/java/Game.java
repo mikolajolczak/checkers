@@ -70,7 +70,8 @@ public final class Game {
         positionValidator, boardState);
     MoveCoordinator moveCoordinator =
         new MoveCoordinator(movePerformer, moveValidator, uiController, turnManager, botController);
-    ClickHandler clickHandler = new ClickHandler(moveValidator, captureHandler, selectionState, uiController, moveCoordinator);
+    MouseInputHandler mouseInputHandler = new MouseInputHandler(moveValidator, captureHandler, selectionState, uiController, moveCoordinator);
+    ClickHandler clickHandler = new ClickHandler(mouseInputHandler);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
