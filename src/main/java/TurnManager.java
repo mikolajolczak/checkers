@@ -1,11 +1,12 @@
 package checkers.src.main.java;
 
 public class TurnManager {
+  private final PlayerConfiguration playerConfig;
   private int currentColor;
   private int currentKingColor;
-  private final PlayerConfiguration playerConfig;
 
-  public TurnManager(PlayerConfiguration playerConfigParam, int currentColorParam, int  currentKingColorParam) {
+  public TurnManager(PlayerConfiguration playerConfigParam,
+                     int currentColorParam, int currentKingColorParam) {
     currentColor = currentColorParam;
     currentKingColor = currentKingColorParam;
     playerConfig = playerConfigParam;

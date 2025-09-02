@@ -9,7 +9,8 @@ public final class CaptureHandler {
   private final BotController botController;
   private final Move move;
 
-  public CaptureHandler(MoveExecutor moveExecutor, PromotionService promotionService,
+  public CaptureHandler(MoveExecutor moveExecutor,
+                        PromotionService promotionService,
                         TurnManager turnManager, BoardState boardState,
                         BotController botController, Move move) {
     this.moveExecutor = moveExecutor;
@@ -23,7 +24,9 @@ public final class CaptureHandler {
   public void handleCapture(int fromRow, int fromCol, int toRow, int toCol) {
     int pieceColor = boardState.getPiece(fromRow, fromCol);
 
-    if (!move.legalTakeMove(toCol, toRow, fromCol, fromRow, pieceColor)) return;
+    if (!move.legalTakeMove(toCol, toRow, fromCol, fromRow, pieceColor)) {
+      return;
+    }
 
     if (boardState.isItKing(pieceColor)) {
       moveExecutor.executeQueenCapture(fromRow, fromCol, toRow, toCol,

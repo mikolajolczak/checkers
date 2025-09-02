@@ -10,8 +10,10 @@ public final class MoveHandler {
   private final MoveService moveService;
   private final UIController uiController;
 
-  public MoveHandler(MoveExecutor moveExecutor, PromotionService promotionService,
-                     TurnManager turnManager, BoardState boardState, BotController botController,
+  public MoveHandler(MoveExecutor moveExecutor,
+                     PromotionService promotionService,
+                     TurnManager turnManager, BoardState boardState,
+                     BotController botController,
                      MoveService moveServiceParam,
                      UIController uiControllerParam) {
     this.moveExecutor = moveExecutor;
@@ -25,8 +27,11 @@ public final class MoveHandler {
 
   public void handleMove(int fromRow, int fromCol, int toRow, int toCol) {
     int pieceColor = boardState.getPiece(fromRow, fromCol);
-    if (!moveService.isLegalMove(toRow, toCol, fromCol, fromRow, pieceColor)) return;
-    moveExecutor.executeNormalMove(fromRow, fromCol, toRow, toCol, pieceColor, boardState);
+    if (!moveService.isLegalMove(toRow, toCol, fromCol, fromRow, pieceColor)) {
+      return;
+    }
+    moveExecutor.executeNormalMove(fromRow, fromCol, toRow, toCol, pieceColor,
+        boardState);
     promotionService.promoteIfNeeded(toRow, toCol, pieceColor);
     turnManager.switchTurn();
 
@@ -41,7 +46,7 @@ public final class MoveHandler {
   }
 
   public boolean canSelectPiece(int row, int col) {
-    return moveService.canSelectPiece(row,col, boardState);
+    return moveService.canSelectPiece(row, col, boardState);
   }
 
   public boolean mustTake() {

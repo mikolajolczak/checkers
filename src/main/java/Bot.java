@@ -7,7 +7,8 @@ public class Bot {
   private final MoveService moveService;
   private final MoveEvaluator moveEvaluator;
 
-  public Bot(BoardState board, MoveService analyzer, MoveEvaluator decisionMaker) {
+  public Bot(BoardState board, MoveService analyzer,
+             MoveEvaluator decisionMaker) {
     this.board = board;
     this.moveService = analyzer;
     this.moveEvaluator = decisionMaker;

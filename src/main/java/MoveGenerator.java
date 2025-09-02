@@ -7,6 +7,7 @@ public class MoveGenerator {
   private final PlayerConfiguration playerConfiguration;
   private final ArrayList<BotDecision> possibleMoves = new ArrayList<>();
   private final BoardState boardState;
+
   public MoveGenerator(Move moveParam,
                        PlayerConfiguration playerConfigurationParam,
                        BoardState boardStateParam) {
@@ -18,7 +19,8 @@ public class MoveGenerator {
   public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
     possibleMoves.clear();
     boolean mustTake = move.checkAllPiecesPossibleTakes(
-        playerConfiguration.getBotColor(), playerConfiguration.getBotKingColor(),
+        playerConfiguration.getBotColor(),
+        playerConfiguration.getBotKingColor(),
         boardState);
 
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
@@ -39,6 +41,7 @@ public class MoveGenerator {
     }
     return possibleMoves;
   }
+
   private void findCaptureMoves(int row, int col, int piece) {
     if (boardState.isItKing(piece)) {
       findKingCaptures(row, col, piece);
@@ -46,6 +49,7 @@ public class MoveGenerator {
       findRegularCaptures(row, col, piece);
     }
   }
+
   private boolean isBotPiece(int piece) {
     return piece == playerConfiguration.getBotColor() ||
         piece == playerConfiguration.getBotKingColor();
@@ -106,7 +110,8 @@ public class MoveGenerator {
             .legalTakeMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
-                new BotDecision(row, col, newRow, newCol, GameConstants.QUEEN_TAKE));
+                new BotDecision(row, col, newRow, newCol,
+                    GameConstants.QUEEN_TAKE));
           }
         }
       }
@@ -135,6 +140,7 @@ public class MoveGenerator {
       }
     }
   }
+
   private boolean hasObstaclesBetween(int fromCol, int fromRow, int toCol,
                                       int toRow) {
 
@@ -145,7 +151,7 @@ public class MoveGenerator {
               &&
               !move
                   .diagonalHasPieces(fromCol, fromRow, toCol,
-                      toRow, +1,+1);
+                      toRow, +1, +1);
     }
     return true;
   }

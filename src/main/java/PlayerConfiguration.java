@@ -11,28 +11,28 @@ public class PlayerConfiguration {
     return humanColor;
   }
 
-  public int getHumanKingColor() {
-    return humanKingColor;
-  }
-
-  public int getBotColor() {
-    return botColor;
-  }
-
-  public int getBotKingColor() {
-    return botKingColor;
-  }
-
   public void setHumanColor(int humanColorParam) {
     humanColor = humanColorParam;
+  }
+
+  public int getHumanKingColor() {
+    return humanKingColor;
   }
 
   public void setHumanKingColor(int humanKingColorParam) {
     humanKingColor = humanKingColorParam;
   }
 
+  public int getBotColor() {
+    return botColor;
+  }
+
   public void setBotColor(int botColorParam) {
     botColor = botColorParam;
+  }
+
+  public int getBotKingColor() {
+    return botKingColor;
   }
 
   public void setBotKingColor(int botKingColorParam) {

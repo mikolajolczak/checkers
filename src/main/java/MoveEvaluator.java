@@ -16,7 +16,8 @@ public class MoveEvaluator {
   }
 
   public int evaluateMove(BotDecision decisionParam, BoardState boardState) {
-    moveExecutor.applyMoveToBoard(decisionParam, boardState, playerConfiguration);
+    moveExecutor.applyMoveToBoard(decisionParam, boardState,
+        playerConfiguration);
 
     int score = 0;
     score += evaluatePlayerThreats(decisionParam, boardState);
@@ -26,12 +27,14 @@ public class MoveEvaluator {
     return score;
   }
 
-  private int evaluatePlayerThreats(BotDecision decisionParam, BoardState boardState) {
+  private int evaluatePlayerThreats(BotDecision decisionParam,
+                                    BoardState boardState) {
     if (!playerCanTakeAfterMove(boardState)) {
       return 0;
     }
 
-    int movedPiece = boardState.getPiece(decisionParam.toRow(), decisionParam.toCol());
+    int movedPiece =
+        boardState.getPiece(decisionParam.toRow(), decisionParam.toCol());
     return boardState.isItKing(movedPiece)
         ? -GameConstants.SCORE_PLAYER_THREAT_KING
         : -GameConstants.SCORE_PLAYER_THREAT;
@@ -60,7 +63,8 @@ public class MoveEvaluator {
 
   private int evaluateQueenPromotionChance(BotDecision botDecisionParam,
                                            BoardState boardState) {
-    int movedPiece = boardState.getPiece(botDecisionParam.toRow(),botDecisionParam.toCol());
+    int movedPiece =
+        boardState.getPiece(botDecisionParam.toRow(), botDecisionParam.toCol());
 
     if (canPromoteToQueen(boardState, movedPiece)) {
       return GameConstants.SCORE_CHANCE_FOR_QUEEN;
@@ -102,7 +106,9 @@ public class MoveEvaluator {
     }
     return false;
   }
-  public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves, BoardState boardState) {
+
+  public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,
+                                    BoardState boardState) {
     BotDecision bestMove = new BotDecision(-1, -1, -1, -1, -1);
     int bestScore = GameConstants.INITIAL_SUM_MAX;
     for (BotDecision move : possibleMoves) {

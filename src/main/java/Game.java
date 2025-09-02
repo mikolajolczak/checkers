@@ -20,28 +20,40 @@ public final class Game {
     SelectionState selectionState = new SelectionState();
     BoardPanel boardPanel = new BoardPanel();
     Frame boardFrame = new Frame(boardState, boardPanel);
-    Runnable refreshBoardPanel = () ->{
-      boardPanel.setPiecesToDraw(boardState.toPieceViews(selectionState));
-    };
+
+    Runnable refreshBoardPanel = () -> boardPanel.setPiecesToDraw(
+        BoardViewMapper.toPieceViews(boardState, selectionState));
     refreshBoardPanel.run();
     PromotionService promotionService = new PromotionService(boardState);
     Move move = new Move(boardState);
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
-    TurnManager turnManager = new TurnManager(playerConfiguration, GameConstants.RED, GameConstants.RED_KING);
+    TurnManager turnManager =
+        new TurnManager(playerConfiguration, GameConstants.RED,
+            GameConstants.RED_KING);
 
     MoveExecutor moveExecutor = new MoveExecutor();
     UIController uiController = new UIController(boardFrame);
     uiController.setRefreshBoardPanel(refreshBoardPanel);
-    MoveEvaluator moveEvaluator = new MoveEvaluator(move,playerConfiguration,moveExecutor);
-    MoveGenerator moveGenerator = new MoveGenerator(move, playerConfiguration, boardState);
-    MoveService moveService = new MoveService(move, turnManager, boardState, moveGenerator);
+    MoveEvaluator moveEvaluator =
+        new MoveEvaluator(move, playerConfiguration, moveExecutor);
+    MoveGenerator moveGenerator =
+        new MoveGenerator(move, playerConfiguration, boardState);
+    MoveService moveService =
+        new MoveService(move, turnManager, boardState, moveGenerator);
     Bot bot = new Bot(boardState, moveService, moveEvaluator);
     BotDecisionService botDecisionService = new BotDecisionService(bot);
-    BotMoveExecutor botMoveExecutor = new BotMoveExecutor(moveExecutor, promotionService, boardState, playerConfiguration);
+    BotMoveExecutor botMoveExecutor =
+        new BotMoveExecutor(moveExecutor, promotionService, boardState,
+            playerConfiguration);
     BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
-    BotController botController = new BotController(botDecisionService, botMoveExecutor, botUIHandler);
-    CaptureHandler captureHandler = new CaptureHandler(moveExecutor, promotionService, turnManager, boardState, botController, move);
-    MoveHandler moveHandler = new MoveHandler(moveExecutor, promotionService, turnManager, boardState, botController, moveService, uiController);
+    BotController botController =
+        new BotController(botDecisionService, botMoveExecutor, botUIHandler);
+    CaptureHandler captureHandler =
+        new CaptureHandler(moveExecutor, promotionService, turnManager,
+            boardState, botController, move);
+    MoveHandler moveHandler =
+        new MoveHandler(moveExecutor, promotionService, turnManager, boardState,
+            botController, moveService, uiController);
     ClickHandler clickHandler = new ClickHandler(moveHandler,
         captureHandler, selectionState);
     boardFrame.addBoardListener(clickHandler);

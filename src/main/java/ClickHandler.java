@@ -24,7 +24,9 @@ public final class ClickHandler extends MouseAdapter {
     int col = e.getX() / GameConstants.SQUARE_SIZE;
     int row = e.getY() / GameConstants.SQUARE_SIZE;
 
-    if (!moveHandler.isValidPosition(row, col)) return;
+    if (!moveHandler.isValidPosition(row, col)) {
+      return;
+    }
 
     if (firstClick) {
       handleFirstClick(row, col);
@@ -35,7 +37,9 @@ public final class ClickHandler extends MouseAdapter {
   }
 
   private void handleFirstClick(int row, int col) {
-    if (!moveHandler.canSelectPiece(row, col)) return;
+    if (!moveHandler.canSelectPiece(row, col)) {
+      return;
+    }
 
     firstClickRow = row;
     firstClickCol = col;

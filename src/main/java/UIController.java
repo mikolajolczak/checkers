@@ -9,7 +9,7 @@ public class UIController {
   }
 
   public void refreshBoard() {
-    if (refreshBoardPanel!=null){
+    if (refreshBoardPanel != null) {
       refreshBoardPanel.run();
     }
   }

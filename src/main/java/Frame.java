@@ -13,10 +13,6 @@ public class Frame extends JFrame {
 
   private final BoardState state;
 
-  public void addBoardListener(final MouseListener listenForClick) {
-    board.addMouseListener(listenForClick);
-  }
-
   public Frame(BoardState state, BoardPanel board) {
     this.setSize(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
     this.setLocationRelativeTo(null);
@@ -27,16 +23,20 @@ public class Frame extends JFrame {
     this.add(board);
   }
 
+  public void addBoardListener(final MouseListener listenForClick) {
+    board.addMouseListener(listenForClick);
+  }
+
   public void isGameFinished() {
     int sumOfReds = 0;
     int sumOfBlacks = 0;
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
-        if (state.getPiece(row,col) == GameConstants.RED
-            || state.getPiece(row,col) == GameConstants.RED_KING) {
+        if (state.getPiece(row, col) == GameConstants.RED
+            || state.getPiece(row, col) == GameConstants.RED_KING) {
           sumOfReds++;
-        } else if (state.getPiece(row,col) == GameConstants.BLACK
-            || state.getPiece(row,col) == GameConstants.BLACK_KING) {
+        } else if (state.getPiece(row, col) == GameConstants.BLACK
+            || state.getPiece(row, col) == GameConstants.BLACK_KING) {
           sumOfBlacks++;
         }
       }
