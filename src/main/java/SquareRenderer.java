@@ -5,8 +5,12 @@ import java.awt.Graphics;
 
 public final class SquareRenderer {
 
-  public static void drawSquare(Graphics g, int row, int col, boolean selected,
-                         int squareSize) {
+  private SquareRenderer() {
+  }
+
+  public static void drawSquare(final Graphics g, final int row, final int col,
+                                final boolean selected,
+                                final int squareSize) {
     if (selected) {
       g.setColor(Color.DARK_GRAY);
     } else {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public record MoveGenerator(PlayerConfiguration playerConfiguration) {
 
-  public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
+  public ArrayList<BotDecision> getPossibleMoves(final BoardState boardState) {
     ArrayList<BotDecision> possibleMoves = new ArrayList<>();
 
     boolean mustTake = CaptureRules.checkAllPiecesPossibleCaptures(
@@ -31,14 +31,15 @@ public record MoveGenerator(PlayerConfiguration playerConfiguration) {
     return possibleMoves;
   }
 
-  private boolean isBotPiece(int piece) {
-    return piece == playerConfiguration.getBotColor() ||
-        piece == playerConfiguration.getBotKingColor();
+  private boolean isBotPiece(final int piece) {
+    return piece == playerConfiguration.getBotColor()
+        || piece == playerConfiguration.getBotKingColor();
   }
 
-  private void generateCaptureMoves(int row, int col, int piece,
-                                    ArrayList<BotDecision> moves,
-                                    BoardState boardState) {
+  private void generateCaptureMoves(final int row, final int col,
+                                    final int piece,
+                                    final ArrayList<BotDecision> moves,
+                                    final BoardState boardState) {
     if (PieceRules.isKing(piece)) {
       CaptureGenerator.findKingCaptures(row, col, piece, moves, boardState);
     } else {
@@ -46,9 +47,10 @@ public record MoveGenerator(PlayerConfiguration playerConfiguration) {
     }
   }
 
-  private void generateRegularMoves(int row, int col, int piece,
-                                    ArrayList<BotDecision> moves,
-                                    BoardState boardState) {
+  private void generateRegularMoves(final int row, final int col,
+                                    final int piece,
+                                    final ArrayList<BotDecision> moves,
+                                    final BoardState boardState) {
     if (PieceRules.isKing(piece)) {
       KingMoveGenerator.findKingMoves(row, col, piece, moves, boardState);
     } else {

@@ -4,8 +4,13 @@ import java.util.ArrayList;
 
 public final class KingMoveGenerator {
 
-  public static void findKingMoves(int row, int col, int piece,
-                            ArrayList<BotDecision> moves, BoardState boardState) {
+  private KingMoveGenerator() {
+  }
+
+  public static void findKingMoves(final int row, final int col,
+                                   final int piece,
+                                   final ArrayList<BotDecision> moves,
+                                   final BoardState boardState) {
     for (int[] dir : GameConstants.DIRECTIONS) {
       for (int dist = 1; dist < GameConstants.BOARD_SIZE; dist++) {
         int newRow = row + dist * dir[0];
@@ -15,9 +20,12 @@ public final class KingMoveGenerator {
           break;
         }
 
-        if (MoveRules.isLegalMove(newCol, newRow, col, row, piece, boardState)) {
-          if (DiagonalValidator.hasObstaclesBetween(col, row, newCol, newRow, boardState)) {
-            moves.add(new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
+        if (MoveRules.isLegalMove(newCol, newRow, col, row, piece,
+            boardState)) {
+          if (DiagonalValidator.hasObstaclesBetween(col, row, newCol, newRow,
+              boardState)) {
+            moves.add(
+                new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
           }
         } else {
           break;

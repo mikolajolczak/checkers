@@ -13,9 +13,11 @@ public final class Game {
 
   public static void main(final String[] args) {
     JFrame colorChoiceFrame = new JFrame();
-    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X, GameConstants.COLOR_CHOICE_Y);
+    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
+        GameConstants.COLOR_CHOICE_Y);
     colorChoiceFrame.setLayout(new FlowLayout());
-    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH, GameConstants.COLOR_CHOICE_HEIGHT);
+    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH,
+        GameConstants.COLOR_CHOICE_HEIGHT);
     colorChoiceFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     JLabel chooseColor = new JLabel("Choose your color");
@@ -33,35 +35,49 @@ public final class Game {
     Frame boardFrame = new Frame(boardState, boardPanel);
 
     Runnable refreshBoardPanel = () ->
-        boardPanel.setPiecesToDraw(BoardViewMapper.toPieceViews(boardState, selectionState));
+        boardPanel.setPiecesToDraw(
+            BoardViewMapper.toPieceViews(boardState, selectionState));
     refreshBoardPanel.run();
 
     PromotionService promotionService = new PromotionService(boardState);
 
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
-    TurnManager turnManager = new TurnManager(playerConfiguration, GameConstants.RED, GameConstants.RED_KING);
+    TurnManager turnManager =
+        new TurnManager(playerConfiguration, GameConstants.RED,
+            GameConstants.RED_KING);
 
     UIController uiController = new UIController(boardFrame);
     uiController.setRefreshBoardPanel(refreshBoardPanel);
 
     MoveGenerator moveGenerator = new MoveGenerator(playerConfiguration);
-    MoveService moveService = new MoveService(turnManager, boardState, moveGenerator);
+    MoveService moveService =
+        new MoveService(turnManager, boardState, moveGenerator);
     BotState botState = new BotState(boardState, playerConfiguration);
     BotAI bot = new BotAI(moveService);
-    BotDecisionService botDecisionService = new BotDecisionService(bot, botState);
-    BotMoveExecutor botMoveExecutor = new BotMoveExecutor(promotionService, boardState, playerConfiguration);
+    BotDecisionService botDecisionService =
+        new BotDecisionService(bot, botState);
+    BotMoveExecutor botMoveExecutor =
+        new BotMoveExecutor(promotionService, boardState, playerConfiguration);
     BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
-    BotController botController = new BotController(botDecisionService, botMoveExecutor, botUIHandler);
+    BotController botController =
+        new BotController(botDecisionService, botMoveExecutor, botUIHandler);
 
     CaptureExecutor captureExecutor = new CaptureExecutor(promotionService);
-    TurnFlowManager turnFlowManager = new TurnFlowManager(turnManager, botController);
-    CaptureHandler captureHandler = new CaptureHandler(captureExecutor, turnFlowManager, boardState);
+    TurnFlowManager turnFlowManager =
+        new TurnFlowManager(turnManager, botController);
+    CaptureHandler captureHandler =
+        new CaptureHandler(captureExecutor, turnFlowManager, boardState);
 
-    MovePerformer movePerformer = new MovePerformer(promotionService, boardState);
+    MovePerformer movePerformer =
+        new MovePerformer(promotionService, boardState);
     MoveValidator moveValidator = new MoveValidator(moveService, boardState);
-    MoveCoordinator moveCoordinator = new MoveCoordinator(movePerformer, moveValidator, uiController, turnManager, botController);
+    MoveCoordinator moveCoordinator =
+        new MoveCoordinator(movePerformer, moveValidator, uiController,
+            turnManager, botController);
 
-    MouseInputHandler mouseInputHandler = new MouseInputHandler(moveValidator, captureHandler, selectionState, uiController, moveCoordinator);
+    MouseInputHandler mouseInputHandler =
+        new MouseInputHandler(moveValidator, captureHandler, selectionState,
+            uiController, moveCoordinator);
     ClickHandler clickHandler = new ClickHandler(mouseInputHandler);
     boardFrame.addBoardListener(clickHandler);
 

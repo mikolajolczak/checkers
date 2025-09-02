@@ -1,6 +1,10 @@
 package checkers.src.main.java;
 
 public class GameConstants {
+
+  private GameConstants() {
+  }
+
   public static final int EMPTY = 0;
   public static final int RED = 1;
   public static final int BLACK = 2;

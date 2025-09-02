@@ -4,7 +4,7 @@ public class UIController {
   private final Frame frame;
   private Runnable refreshBoardPanel;
 
-  public UIController(Frame frameParam) {
+  public UIController(final Frame frameParam) {
     frame = frameParam;
   }
 
@@ -14,7 +14,7 @@ public class UIController {
     }
   }
 
-  public void setRefreshBoardPanel(Runnable refreshBoardPanelParam) {
+  public void setRefreshBoardPanel(final Runnable refreshBoardPanelParam) {
     refreshBoardPanel = refreshBoardPanelParam;
   }
 

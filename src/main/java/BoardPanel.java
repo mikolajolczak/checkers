@@ -8,13 +8,13 @@ public class BoardPanel extends JPanel {
 
   private List<PieceView> piecesToDraw;
 
-  public void setPiecesToDraw(List<PieceView> piecesToDraw) {
-    this.piecesToDraw = piecesToDraw;
+  public void setPiecesToDraw(final List<PieceView> piecesToDrawParam) {
+    this.piecesToDraw = piecesToDrawParam;
     repaint();
   }
 
   @Override
-  protected void paintComponent(Graphics g) {
+  protected void paintComponent(final Graphics g) {
     super.paintComponent(g);
     if (piecesToDraw == null) {
       return;

@@ -2,7 +2,7 @@ package checkers.src.main.java;
 
 public record PromotionService(BoardState boardState) {
 
-  public void promoteIfNeeded(int row, int col, int color) {
+  public void promoteIfNeeded(final int row, final int col, final int color) {
     if (color == GameConstants.RED && row == 0) {
       boardState.setPiece(row, col, GameConstants.RED_KING);
     } else if (color == GameConstants.BLACK

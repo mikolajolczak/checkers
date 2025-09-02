@@ -4,7 +4,10 @@ import java.awt.Graphics;
 
 public final class PieceRenderer {
 
-  public static void drawPiece(Graphics g, PieceView piece) {
+  private PieceRenderer() {
+  }
+
+  public static void drawPiece(final Graphics g, final PieceView piece) {
     if (piece.isEmpty()) {
       return;
     }

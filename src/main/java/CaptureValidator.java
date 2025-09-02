@@ -1,8 +1,16 @@
 package checkers.src.main.java;
 
-public final  class CaptureValidator {
+public final class CaptureValidator {
 
-  public static boolean isValidCapture(BoardState state, int fromRow, int fromCol, int toRow, int toCol, int pieceColor) {
-    return CaptureRules.isLegalCapture(toCol, toRow, fromCol, fromRow, pieceColor, state);
+  private CaptureValidator() {
+  }
+
+  public static boolean isValidCapture(final BoardState state,
+                                       final int fromRow,
+                                       final int fromCol, final int toRow,
+                                       final int toCol,
+                                       final int pieceColor) {
+    return CaptureRules.isLegalCapture(toCol, toRow, fromCol, fromRow,
+        pieceColor, state);
   }
 }

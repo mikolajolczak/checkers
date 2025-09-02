@@ -7,12 +7,12 @@ public final class ClickHandler extends MouseAdapter {
 
   private final MouseInputHandler mouseInputHandler;
 
-  public ClickHandler(MouseInputHandler mouseInputHandler) {
-    this.mouseInputHandler = mouseInputHandler;
+  public ClickHandler(final MouseInputHandler mouseInputHandlerParam) {
+    this.mouseInputHandler = mouseInputHandlerParam;
   }
 
   @Override
-  public void mouseReleased(MouseEvent e) {
+  public void mouseReleased(final MouseEvent e) {
     int col = e.getX() / GameConstants.SQUARE_SIZE;
     int row = e.getY() / GameConstants.SQUARE_SIZE;
 

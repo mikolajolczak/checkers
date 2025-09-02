@@ -11,7 +11,7 @@ public class PlayerConfiguration {
     return humanColor;
   }
 
-  public void setHumanColor(int humanColorParam) {
+  public void setHumanColor(final int humanColorParam) {
     humanColor = humanColorParam;
   }
 
@@ -19,7 +19,7 @@ public class PlayerConfiguration {
     return humanKingColor;
   }
 
-  public void setHumanKingColor(int humanKingColorParam) {
+  public void setHumanKingColor(final int humanKingColorParam) {
     humanKingColor = humanKingColorParam;
   }
 
@@ -27,7 +27,7 @@ public class PlayerConfiguration {
     return botColor;
   }
 
-  public void setBotColor(int botColorParam) {
+  public void setBotColor(final int botColorParam) {
     botColor = botColorParam;
   }
 
@@ -35,7 +35,7 @@ public class PlayerConfiguration {
     return botKingColor;
   }
 
-  public void setBotKingColor(int botKingColorParam) {
+  public void setBotKingColor(final int botKingColorParam) {
     botKingColor = botKingColorParam;
   }
 }

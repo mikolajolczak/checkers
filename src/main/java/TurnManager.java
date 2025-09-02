@@ -5,8 +5,9 @@ public class TurnManager {
   private int currentColor;
   private int currentKingColor;
 
-  public TurnManager(PlayerConfiguration playerConfigParam,
-                     int currentColorParam, int currentKingColorParam) {
+  public TurnManager(final PlayerConfiguration playerConfigParam,
+                     final int currentColorParam,
+                     final int currentKingColorParam) {
     currentColor = currentColorParam;
     currentKingColor = currentKingColorParam;
     playerConfig = playerConfigParam;

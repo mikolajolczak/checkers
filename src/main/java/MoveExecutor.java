@@ -2,14 +2,22 @@ package checkers.src.main.java;
 
 public final class MoveExecutor {
 
-  public static void executeNormalMove(int fromRow, int fromCol, int toRow, int toCol,
-                                int color, BoardState board) {
+  private MoveExecutor() {
+  }
+
+  public static void executeNormalMove(final int fromRow, final int fromCol,
+                                       final int toRow,
+                                       final int toCol,
+                                       final int color,
+                                       final BoardState board) {
     board.setPiece(fromRow, fromCol, GameConstants.EMPTY);
     board.setPiece(toRow, toCol, color);
   }
 
-  public static void executeCapture(int fromRow, int fromCol, int toRow, int toCol,
-                             int color, BoardState board) {
+  public static void executeCapture(final int fromRow, final int fromCol,
+                                    final int toRow,
+                                    final int toCol,
+                                    final int color, final BoardState board) {
     executeNormalMove(fromRow, fromCol, toRow, toCol, color, board);
 
     int capturedRow = (fromRow + toRow) / 2;
@@ -17,8 +25,10 @@ public final class MoveExecutor {
     board.setPiece(capturedRow, capturedCol, GameConstants.EMPTY);
   }
 
-  public static void executeQueenCapture(int fromRow, int fromCol, int toRow,
-                                  int toCol, int color, BoardState board) {
+  public static void executeQueenCapture(final int fromRow, final int fromCol,
+                                         final int toRow,
+                                         final int toCol, final int color,
+                                         final BoardState board) {
     executeNormalMove(fromRow, fromCol, toRow, toCol, color, board);
 
     int rowDir = Integer.signum(toRow - fromRow);
@@ -29,8 +39,9 @@ public final class MoveExecutor {
     board.setPiece(capturedRow, capturedCol, GameConstants.EMPTY);
   }
 
-  public static  void applyMoveToBoard(BotDecision decision, BoardState boardState,
-                               PlayerConfiguration playerConfiguration) {
+  public static void applyMoveToBoard(final BotDecision decision,
+                                      final BoardState boardState,
+                                      final PlayerConfiguration playerConfiguration) {
     switch (decision.moveType()) {
       case GameConstants.MOVE:
         int color = boardState.getPiece(decision.fromRow(), decision.fromCol());
@@ -46,6 +57,8 @@ public final class MoveExecutor {
         executeQueenCapture(decision.fromRow(), decision.fromCol(),
             decision.toRow(), decision.toCol(),
             playerConfiguration.getBotKingColor(), boardState);
+        break;
+      default:
         break;
     }
   }

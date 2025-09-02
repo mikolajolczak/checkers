@@ -5,7 +5,8 @@ public record MoveCoordinator(MovePerformer performer, MoveValidator validator,
                               TurnManager turnManager,
                               BotController botController) {
 
-  public void handleMove(int fromRow, int fromCol, int toRow, int toCol) {
+  public void handleMove(final int fromRow, final int fromCol, final int toRow,
+                         final int toCol) {
     if (!validator.isLegalMove(fromRow, fromCol, toRow, toCol)) {
       return;
     }

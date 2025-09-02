@@ -1,8 +1,12 @@
 package checkers.src.main.java;
 
 public final class MoveEvaluator {
-  public static int evaluateMove(BotDecision decision, BoardState boardState,
-                                  PlayerConfiguration playerConfiguration) {
+  private MoveEvaluator() {
+  }
+
+  public static int evaluateMove(final BotDecision decision,
+                                 final BoardState boardState,
+                                 final PlayerConfiguration playerConfiguration) {
     MoveExecutor.applyMoveToBoard(decision, boardState, playerConfiguration);
 
     int score = 0;

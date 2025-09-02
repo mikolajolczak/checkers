@@ -5,8 +5,11 @@ import java.util.List;
 
 public final class BoardViewMapper {
 
-  public static List<PieceView> toPieceViews(BoardState boardState,
-                                             SelectionState selectionState) {
+  private BoardViewMapper() {
+  }
+
+  public static List<PieceView> toPieceViews(final BoardState boardState,
+                                             final SelectionState selectionState) {
     List<PieceView> pieces = new ArrayList<>();
 
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {

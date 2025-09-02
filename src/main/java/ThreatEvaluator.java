@@ -2,8 +2,12 @@ package checkers.src.main.java;
 
 public final class ThreatEvaluator {
 
-  public static int evaluatePlayerThreats(BotDecision decision, BoardState boardState,
-                                   PlayerConfiguration playerConfiguration) {
+  private ThreatEvaluator() {
+  }
+
+  public static int evaluatePlayerThreats(final BotDecision decision,
+                                          final BoardState boardState,
+                                          final PlayerConfiguration playerConfiguration) {
     if (!playerCanCaptureAfterMove(boardState, playerConfiguration)) {
       return 0;
     }
@@ -14,8 +18,8 @@ public final class ThreatEvaluator {
         : -GameConstants.SCORE_PLAYER_THREAT;
   }
 
-  private static boolean playerCanCaptureAfterMove(BoardState boardState,
-                                            PlayerConfiguration playerConfiguration) {
+  private static boolean playerCanCaptureAfterMove(final BoardState boardState,
+                                                   final PlayerConfiguration playerConfiguration) {
     return CaptureRules.checkAllPiecesPossibleCaptures(
         playerConfiguration.getHumanColor(),
         playerConfiguration.getHumanKingColor(),

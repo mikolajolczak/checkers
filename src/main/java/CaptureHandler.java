@@ -3,7 +3,8 @@ package checkers.src.main.java;
 public record CaptureHandler(CaptureExecutor executor, TurnFlowManager turnFlow,
                              BoardState boardState) {
 
-  public void handleCapture(int fromRow, int fromCol, int toRow, int toCol) {
+  public void handleCapture(final int fromRow, final int fromCol,
+                            final int toRow, final int toCol) {
     int pieceColor = boardState.getPiece(fromRow, fromCol);
     if (!CaptureValidator.isValidCapture(boardState, fromRow, fromCol, toRow,
         toCol, pieceColor)) {

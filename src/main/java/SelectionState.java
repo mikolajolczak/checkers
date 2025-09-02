@@ -8,7 +8,7 @@ public class SelectionState {
     return selectedRow;
   }
 
-  public void setSelectedRow(int row) {
+  public void setSelectedRow(final int row) {
     this.selectedRow = row;
   }
 
@@ -16,7 +16,7 @@ public class SelectionState {
     return selectedColumn;
   }
 
-  public void setSelectedColumn(int col) {
+  public void setSelectedColumn(final int col) {
     this.selectedColumn = col;
   }
 }

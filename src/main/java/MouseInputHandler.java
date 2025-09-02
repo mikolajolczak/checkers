@@ -11,17 +11,19 @@ public class MouseInputHandler {
   private int firstClickRow;
   private int firstClickCol;
 
-  public MouseInputHandler(MoveValidator moveValidator, CaptureHandler captureHandler,
-                           SelectionState selectionState, UIController uiController,
-                           MoveCoordinator moveCoordinator) {
-    this.moveValidator = moveValidator;
-    this.captureHandler = captureHandler;
-    this.selectionState = selectionState;
-    this.uiController = uiController;
-    this.moveCoordinator = moveCoordinator;
+  public MouseInputHandler(final MoveValidator moveValidatorParam,
+                           final CaptureHandler captureHandlerParam,
+                           final SelectionState selectionStateParam,
+                           final UIController uiControllerParam,
+                           final MoveCoordinator moveCoordinatorParam) {
+    this.moveValidator = moveValidatorParam;
+    this.captureHandler = captureHandlerParam;
+    this.selectionState = selectionStateParam;
+    this.uiController = uiControllerParam;
+    this.moveCoordinator = moveCoordinatorParam;
   }
 
-  public void handleMouseInput(int row, int col) {
+  public void handleMouseInput(final int row, final int col) {
     if (!moveValidator.isValidPosition(row, col)) {
       return;
     }
@@ -34,7 +36,7 @@ public class MouseInputHandler {
     uiController.refreshBoard();
   }
 
-  private void handleFirstClick(int row, int col) {
+  private void handleFirstClick(final int row, final int col) {
     if (!moveValidator.canSelectPiece(row, col)) {
       return;
     }
@@ -48,7 +50,7 @@ public class MouseInputHandler {
     firstClick = false;
   }
 
-  private void handleSecondClick(int row, int col) {
+  private void handleSecondClick(final int row, final int col) {
     selectionState.setSelectedColumn(GameConstants.BOARD_SIZE);
     selectionState.setSelectedRow(GameConstants.BOARD_SIZE);
 

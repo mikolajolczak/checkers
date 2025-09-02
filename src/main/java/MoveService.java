@@ -5,18 +5,20 @@ import java.util.ArrayList;
 public record MoveService(TurnManager turnManager, BoardState boardState,
                           MoveGenerator moveGenerator) {
 
-  public boolean canSelectPiece(int row, int col, BoardState boardStateParam) {
+  public boolean canSelectPiece(final int row, final int col,
+                                final BoardState boardStateParam) {
     int value = boardStateParam.getPiece(row, col);
     boolean isCurrentPiece = value == turnManager.getCurrentColor()
         || value == turnManager.getCurrentKingColor();
 
-    return isCurrentPiece &&
-        (MoveRules.canMove(col, row, boardStateParam) ||
-            CaptureRules.canCapture(col, row, boardStateParam));
+    return isCurrentPiece && (MoveRules.canMove(col, row, boardStateParam)
+        || CaptureRules.canCapture(col, row, boardStateParam));
   }
 
-  public boolean isLegalMove(int row, int col, int firstClickCol,
-                             int firstClickRow, int firstClickColor) {
+  public boolean isLegalMove(final int row, final int col,
+                             final int firstClickCol,
+                             final int firstClickRow,
+                             final int firstClickColor) {
     return MoveRules.isLegalMove(col, row, firstClickCol, firstClickRow,
         firstClickColor, boardState);
   }
@@ -28,7 +30,8 @@ public record MoveService(TurnManager turnManager, BoardState boardState,
         boardState);
   }
 
-  public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
-    return moveGenerator.getPossibleMoves(boardState);
+  public ArrayList<BotDecision> getPossibleMoves(
+      final BoardState boardStateParam) {
+    return moveGenerator.getPossibleMoves(boardStateParam);
   }
 }

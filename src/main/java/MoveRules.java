@@ -2,7 +2,11 @@ package checkers.src.main.java;
 
 public final class MoveRules {
 
-  public static boolean canMove(int col, int row, BoardState boardState) {
+  private MoveRules() {
+  }
+
+  public static boolean canMove(final int col, final int row,
+                                final BoardState boardState) {
     int piece = boardState.getPiece(row, col);
 
     if (piece == GameConstants.RED) {
@@ -14,21 +18,23 @@ public final class MoveRules {
     }
   }
 
-  private static boolean canRedPieceMove(int col, int row, BoardState boardState) {
-    return (col < GameConstants.LAST_ROW_INDEX &&
-        PieceRules.isEmpty(boardState.getPiece(row - 1, col + 1))) ||
-        (col > 0 &&
-            PieceRules.isEmpty(boardState.getPiece(row - 1, col - 1)));
+  private static boolean canRedPieceMove(final int col, final int row,
+                                         final BoardState boardState) {
+    return (col < GameConstants.LAST_ROW_INDEX && PieceRules.isEmpty(
+        boardState.getPiece(row - 1, col + 1))) || (col > 0
+        && PieceRules.isEmpty(boardState.getPiece(row - 1, col - 1)));
   }
 
-  private static boolean canBlackPieceMove(int col, int row, BoardState boardState) {
-    return (col < GameConstants.LAST_ROW_INDEX &&
-        PieceRules.isEmpty(boardState.getPiece(row + 1, col + 1))) ||
-        (col > 0 &&
-            PieceRules.isEmpty(boardState.getPiece(row + 1, col - 1)));
+  private static boolean canBlackPieceMove(final int col, final int row,
+                                           final BoardState boardState) {
+    return (col < GameConstants.LAST_ROW_INDEX && PieceRules.isEmpty(
+        boardState.getPiece(row + 1, col + 1))) || (col > 0
+        && PieceRules.isEmpty(boardState.getPiece(row + 1, col - 1)));
   }
 
-  public static boolean isLegalMove(int c2, int r2, int c1, int r1, int color, BoardState boardState) {
+  public static boolean isLegalMove(final int c2, final int r2, final int c1,
+                                    final int r1, final int color,
+                                    final BoardState boardState) {
     if (!PieceRules.isEmpty(boardState.getPiece(r2, c2))) {
       return false;
     }
@@ -36,15 +42,15 @@ public final class MoveRules {
     return switch (color) {
       case GameConstants.RED_KING, GameConstants.BLACK_KING ->
           isLegalKingMove(c1, r1, c2, r2, boardState);
-      case GameConstants.RED ->
-          Math.abs(c2 - c1) == 1 && r1 - r2 == 1;
-      case GameConstants.BLACK ->
-          Math.abs(c2 - c1) == 1 && r2 - r1 == 1;
+      case GameConstants.RED -> Math.abs(c2 - c1) == 1 && r1 - r2 == 1;
+      case GameConstants.BLACK -> Math.abs(c2 - c1) == 1 && r2 - r1 == 1;
       default -> false;
     };
   }
 
-  private static boolean isLegalKingMove(int c1, int r1, int c2, int r2, BoardState boardState) {
+  private static boolean isLegalKingMove(final int c1, final int r1,
+                                         final int c2, final int r2,
+                                         final BoardState boardState) {
     if (PositionValidator.isNotOnSameDiagonal(c1, r1, c2, r2)) {
       return false;
     }
