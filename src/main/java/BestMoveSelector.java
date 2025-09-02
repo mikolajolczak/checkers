@@ -12,7 +12,7 @@ public final class BestMoveSelector {
 
     for (BotDecision move : possibleMoves) {
       BoardState copy = boardState.copy();
-      int score = evaluateMove(move, copy, playerConfiguration);
+      int score = MoveEvaluator.evaluateMove(move, copy, playerConfiguration);
 
       if (score >= bestScore) {
         bestMove = move;
@@ -20,21 +20,6 @@ public final class BestMoveSelector {
       }
     }
     return bestMove;
-  }
-
-  private static int evaluateMove(BotDecision decision, BoardState boardState,
-                           PlayerConfiguration playerConfiguration) {
-    MoveExecutor.applyMoveToBoard(decision, boardState, playerConfiguration);
-
-    int score = 0;
-    score += ThreatEvaluator.evaluatePlayerThreats(decision, boardState,
-        playerConfiguration);
-    score += CaptureEvaluator.evaluateCaptureOpportunities(boardState,
-        playerConfiguration);
-    score += PromotionEvaluator.evaluatePromotionChance(decision, boardState,
-        playerConfiguration);
-
-    return score;
   }
 }
 

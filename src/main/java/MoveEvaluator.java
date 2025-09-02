@@ -1,12 +1,18 @@
 package checkers.src.main.java;
 
-import java.util.ArrayList;
-
 public final class MoveEvaluator {
+  public static int evaluateMove(BotDecision decision, BoardState boardState,
+                                  PlayerConfiguration playerConfiguration) {
+    MoveExecutor.applyMoveToBoard(decision, boardState, playerConfiguration);
 
-  public static BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,
-                                    BoardState boardState,
-                                    PlayerConfiguration playerConfiguration) {
-    return BestMoveSelector.chooseBestMove(possibleMoves, boardState, playerConfiguration);
+    int score = 0;
+    score += ThreatEvaluator.evaluatePlayerThreats(decision, boardState,
+        playerConfiguration);
+    score += CaptureEvaluator.evaluateCaptureOpportunities(boardState,
+        playerConfiguration);
+    score += PromotionEvaluator.evaluatePromotionChance(decision, boardState,
+        playerConfiguration);
+
+    return score;
   }
 }
