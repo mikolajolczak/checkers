@@ -13,10 +13,6 @@ public class Frame extends JFrame {
 
   private final BoardState state;
 
-  public BoardPanel getBoard() {
-    return board;
-  }
-
   public void addBoardListener(final MouseListener listenForClick) {
     board.addMouseListener(listenForClick);
   }

@@ -2,30 +2,35 @@ package checkers.src.main.java;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.List;
 import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel {
-  private final BoardState state;
-  private final SelectionState selection;
 
-  public BoardPanel(BoardState state, SelectionState selection) {
-    this.state = state;
-    this.selection = selection;
+  private List<PieceView> piecesToDraw;
+
+  public BoardPanel() {
+  }
+
+  public void setPiecesToDraw(List<PieceView> pieces) {
+    this.piecesToDraw = pieces;
+    repaint();
   }
 
   @Override
-  public void paintComponent(Graphics g) {
+  protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
-      for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
-        drawSquare(g, row, col);
-        drawPiece(g, row, col);
-      }
+
+    if (piecesToDraw == null) return;
+
+    for (PieceView piece : piecesToDraw) {
+      drawSquare(g, piece.row, piece.col, piece.selected);
+      drawPiece(g, piece.row, piece.col, piece.type);
     }
   }
 
-  private void drawSquare(Graphics g, int row, int col) {
-    if (col == selection.getSelectedColumn() && row == selection.getSelectedRow()) {
+  private void drawSquare(Graphics g, int row, int col, boolean selected) {
+    if (selected) {
       g.setColor(Color.DARK_GRAY);
     } else {
       g.setColor((row % 2 == col % 2) ? Color.LIGHT_GRAY : Color.GRAY);
@@ -36,18 +41,17 @@ public class BoardPanel extends JPanel {
         GameConstants.SQUARE_SIZE);
   }
 
-  private void drawPiece(Graphics g, int row, int col) {
-    int piece = state.getPiece(row, col);
-    if (piece == GameConstants.EMPTY) return;
+  private void drawPiece(Graphics g, int row, int col, int type) {
+    if (type == GameConstants.EMPTY) return;
 
-    Color color = (piece == GameConstants.RED || piece == GameConstants.RED_KING)
+    Color color = (type == GameConstants.RED || type == GameConstants.RED_KING)
         ? Color.RED : Color.BLACK;
     g.setColor(color);
     g.fillOval(GameConstants.PIECE_PADDING + col * GameConstants.SQUARE_SIZE,
         GameConstants.PIECE_PADDING + row * GameConstants.SQUARE_SIZE,
         GameConstants.PIECE_SIZE, GameConstants.PIECE_SIZE);
 
-    if (piece == GameConstants.RED_KING || piece == GameConstants.BLACK_KING) {
+    if (type == GameConstants.RED_KING || type == GameConstants.BLACK_KING) {
       g.setColor(Color.WHITE);
       g.drawOval(GameConstants.KING_MARKER_PADDING + col * GameConstants.SQUARE_SIZE,
           GameConstants.KING_MARKER_PADDING + row * GameConstants.SQUARE_SIZE,

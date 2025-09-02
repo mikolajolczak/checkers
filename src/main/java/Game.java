@@ -18,10 +18,12 @@ public final class Game {
         GameConstants.COLOR_CHOICE_Y);
     BoardState boardState = new BoardState();
     SelectionState selectionState = new SelectionState();
-    BoardPanel boardPanel = new BoardPanel(boardState, selectionState);
+    BoardPanel boardPanel = new BoardPanel();
     Frame boardFrame = new Frame(boardState, boardPanel);
-
-
+    Runnable refreshBoardPanel = () ->{
+      boardPanel.setPiecesToDraw(boardState.toPieceViews(selectionState));
+    };
+    refreshBoardPanel.run();
     PromotionService promotionService = new PromotionService(boardState);
     Move move = new Move(boardState);
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
@@ -29,6 +31,7 @@ public final class Game {
 
     MoveExecutor moveExecutor = new MoveExecutor();
     UIController uiController = new UIController(boardFrame);
+    uiController.setRefreshBoardPanel(refreshBoardPanel);
     MoveEvaluator moveEvaluator = new MoveEvaluator(move,playerConfiguration,moveExecutor);
     MoveGenerator moveGenerator = new MoveGenerator(move, playerConfiguration, boardState);
     MoveService moveService = new MoveService(move, turnManager, boardState, moveGenerator);

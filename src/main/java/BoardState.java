@@ -1,5 +1,8 @@
 package checkers.src.main.java;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BoardState {
   public BoardState(int[][] pieces) {
     this.pieces = new int[pieces.length][];
@@ -65,5 +68,15 @@ public class BoardState {
   public void setPiece(int row, int col, int piece) {
     pieces[row][col] = piece;
   }
-
+  public List<PieceView> toPieceViews(SelectionState selectionState) {
+    List<PieceView> pieces = new ArrayList<>();
+    for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
+      for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
+        int type = getPiece(row, col);
+        boolean selected = (row == selectionState.getSelectedRow() && col == selectionState.getSelectedColumn());
+        pieces.add(new PieceView(row, col, type, selected));
+      }
+    }
+    return pieces;
+  }
 }
