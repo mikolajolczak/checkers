@@ -17,6 +17,24 @@ public class BoardState {
     pieces = new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
     setUpPawns();
   }
+  public boolean isItRed(int col, int row) {
+    return getPiece(row, col) == GameConstants.RED;
+  }
+  public boolean isItBlack(int col, int row) {
+    return getPiece(row, col) == GameConstants.BLACK;
+  }
+  public boolean isItBlackKing(int col, int row) {
+    return getPiece(row, col) == GameConstants.BLACK_KING;
+  }
+  public boolean isItRedKing(int col, int row) {
+    return getPiece(row, col) == GameConstants.RED_KING;
+  }
+  public boolean isItEmpty(int col, int row) {
+    return getPiece(row, col) == GameConstants.EMPTY;
+  }
+  public boolean isItKing(int color) {
+    return color == GameConstants.BLACK_KING || color == GameConstants.RED_KING;
+  }
 
   public void setUpPawns() {
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {

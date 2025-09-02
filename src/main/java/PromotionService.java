@@ -7,10 +7,6 @@ public class PromotionService {
     boardState = boardStateParam;
   }
 
-  public boolean isQueen(int color) {
-    return color == GameConstants.BLACK_KING || color == GameConstants.RED_KING;
-  }
-
   public void promoteIfNeeded(int row, int col, int color) {
     if (color == GameConstants.RED && row == 0) {
       boardState.setPiece(row, col, GameConstants.RED_KING);

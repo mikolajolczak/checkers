@@ -30,7 +30,7 @@ public class MoveEvaluator {
     }
 
     int movedPiece = boardState.getPiece(decisionParam.toRow(), decisionParam.toCol());
-    return move.getPromotionService().isQueen(movedPiece)
+    return boardState.isItKing(movedPiece)
         ? -GameConstants.SCORE_PLAYER_THREAT_KING
         : -GameConstants.SCORE_PLAYER_THREAT;
   }
@@ -76,7 +76,7 @@ public class MoveEvaluator {
 
   public boolean isChanceForQueen(int colorToCheck, BoardState boardState,
                                   int pieceType) {
-    if (move.getPromotionService().isQueen(pieceType)) {
+    if (boardState.isItKing(pieceType)) {
       return false;
     }
 

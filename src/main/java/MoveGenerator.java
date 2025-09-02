@@ -6,10 +6,13 @@ public class MoveGenerator {
   private final Move move;
   private final PlayerConfiguration playerConfiguration;
   private final ArrayList<BotDecision> possibleMoves = new ArrayList<>();
+  private final BoardState boardState;
   public MoveGenerator(Move moveParam,
-                       PlayerConfiguration playerConfigurationParam) {
+                       PlayerConfiguration playerConfigurationParam,
+                       BoardState boardStateParam) {
     move = moveParam;
     playerConfiguration = playerConfigurationParam;
+    boardState = boardStateParam;
   }
 
   public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
@@ -37,7 +40,7 @@ public class MoveGenerator {
     return possibleMoves;
   }
   private void findCaptureMoves(int row, int col, int piece) {
-    if (move.getPromotionService().isQueen(piece)) {
+    if (boardState.isItKing(piece)) {
       findKingCaptures(row, col, piece);
     } else {
       findRegularCaptures(row, col, piece);
@@ -49,7 +52,7 @@ public class MoveGenerator {
   }
 
   private void findRegularMoves(int row, int col, int piece) {
-    if (move.getPromotionService().isQueen(piece)) {
+    if (boardState.isItKing(piece)) {
       findKingMoves(row, col, piece);
     } else {
       findRegularPieceMoves(row, col, piece);

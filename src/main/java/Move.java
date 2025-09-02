@@ -6,33 +6,11 @@ package checkers.src.main.java;
  */
 public class Move {
   private final BoardState boardState;
-  private final PromotionService promotionService;
 
-  public Move(BoardState boardStateParam,
-              PromotionService promotionServiceParam) {
+  public Move(BoardState boardStateParam) {
     this.boardState = boardStateParam;
-    promotionService = promotionServiceParam;
   }
 
-  public PromotionService getPromotionService() {
-    return promotionService;
-  }
-
-  public boolean isItRed(int col, int row) {
-    return boardState.getPiece(row, col) == GameConstants.RED;
-  }
-  public boolean isItBlack(int col, int row) {
-    return boardState.getPiece(row, col) == GameConstants.BLACK;
-  }
-  public boolean isItBlackKing(int col, int row) {
-    return boardState.getPiece(row, col) == GameConstants.BLACK_KING;
-  }
-  public boolean isItRedKing(int col, int row) {
-    return boardState.getPiece(row, col) == GameConstants.RED_KING;
-  }
-  public boolean isItEmpty(int col, int row) {
-    return boardState.getPiece(row, col) == GameConstants.EMPTY;
-  }
 
   public boolean isItOnTheSameDiagonal(int c1, int r1, int c2, int r2) {
     return Math.abs(r2 - r1) != Math.abs(c2 - c1) && r1 + c1 != c2 + r2;
@@ -65,7 +43,7 @@ public class Move {
   }
 
   public boolean legalTakeMove(int c2, int r2, int c1, int r1, int color) {
-    if (!isItEmpty(c2, r2) || isItOnTheSameDiagonal(c1, r1, c2, r2)) return false;
+    if (!boardState.isItEmpty(c2, r2) || isItOnTheSameDiagonal(c1, r1, c2, r2)) return false;
 
     int midC = (c1 + c2) / 2, midR = (r1 + r2) / 2;
     int dc = Integer.compare(c2, c1), dr = Integer.compare(r2, r1);
@@ -73,17 +51,17 @@ public class Move {
     return switch (color) {
       case GameConstants.RED ->
           Math.abs(c2 - c1) == 2 && Math.abs(r2 - r1) == 2 &&
-              (isItBlack(midC, midR) || isItBlackKing(midC, midR));
+              (boardState.isItBlack(midC, midR) || boardState.isItBlackKing(midC, midR));
       case GameConstants.BLACK ->
           Math.abs(c2 - c1) == 2 && Math.abs(r2 - r1) == 2 &&
-              (isItRed(midC, midR) || isItRedKing(midC, midR));
+              (boardState.isItRed(midC, midR) || boardState.isItRedKing(midC, midR));
       case GameConstants.BLACK_KING -> {
         if (diagonalHasPieces(c1, r1, c2, r2, dc, dr)) yield false;
-        yield isItRed(c2 - dc, r2 - dr) || isItRedKing(c2 - dc, r2 - dr);
+        yield boardState.isItRed(c2 - dc, r2 - dr) || boardState.isItRedKing(c2 - dc, r2 - dr);
       }
       case GameConstants.RED_KING -> {
         if (diagonalHasPieces(c1, r1, c2, r2, dc, dr)) yield false;
-        yield isItBlack(c2 - dc, r2 - dr) || isItBlackKing(c2 - dc, r2 - dr);
+        yield boardState.isItBlack(c2 - dc, r2 - dr) || boardState.isItBlackKing(c2 - dc, r2 - dr);
       }
       default -> false;
     };
@@ -92,17 +70,17 @@ public class Move {
   public boolean canIMove(int col, int row) {
     int piece = boardState.getPiece(row, col);
     if (piece == GameConstants.RED) {
-      return (col < GameConstants.LAST_ROW_INDEX && isItEmpty(col + 1, row - 1)) ||
-          (col > 0 && isItEmpty(col - 1, row - 1));
+      return (col < GameConstants.LAST_ROW_INDEX && boardState.isItEmpty(col + 1, row - 1)) ||
+          (col > 0 && boardState.isItEmpty(col - 1, row - 1));
     } else if (piece == GameConstants.BLACK) {
-      return (col < GameConstants.LAST_ROW_INDEX && isItEmpty(col + 1, row + 1)) ||
-          (col > 0 && isItEmpty(col - 1, row + 1));
-    } else return promotionService.isQueen(piece);
+      return (col < GameConstants.LAST_ROW_INDEX && boardState.isItEmpty(col + 1, row + 1)) ||
+          (col > 0 && boardState.isItEmpty(col - 1, row + 1));
+    } else return boardState.isItKing(piece);
   }
 
   public boolean canITake(int col, int row, BoardState bs) {
     int piece = bs.getPiece(row, col);
-    return promotionService.isQueen(piece) ? canKingTake(row, col, piece, bs)
+    return boardState.isItKing(piece) ? canKingTake(row, col, piece, bs)
         : canRegularPieceTake(row, col, piece, bs);
   }
 
@@ -146,7 +124,7 @@ public class Move {
   }
 
   public boolean isItLegalSecondClickMove(int c2, int r2, int c1, int r1, int color) {
-    if (!isItEmpty(c2, r2)) return false;
+    if (!boardState.isItEmpty(c2, r2)) return false;
 
     switch (color) {
       case GameConstants.RED_KING:

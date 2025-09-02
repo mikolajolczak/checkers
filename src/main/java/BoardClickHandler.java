@@ -96,7 +96,7 @@ public final class BoardClickHandler extends MouseAdapter {
       return;
     }
 
-    if (promotionService.isQueen(firstClickColor)) {
+    if (boardState.isItKing(firstClickColor)) {
       moveExecutor.executeQueenCapture(firstClickRow, firstClickCol, row, col,
           turnManager.getCurrentKingColor(), boardState);
     } else {
