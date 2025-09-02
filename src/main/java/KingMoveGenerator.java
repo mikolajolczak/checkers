@@ -8,11 +8,10 @@ public class KingMoveGenerator {
   private final PositionValidator positionValidator;
   private final DiagonalValidator diagonalValidator;
 
-  public KingMoveGenerator(MoveRules moveRules, PositionValidator positionValidator,
-                           DiagonalValidator diagonalValidator) {
-    this.moveRules = moveRules;
-    this.positionValidator = positionValidator;
-    this.diagonalValidator = diagonalValidator;
+  public KingMoveGenerator() {
+    this.moveRules = new MoveRules();
+    this.positionValidator = new PositionValidator();
+    this.diagonalValidator = new DiagonalValidator();
   }
 
   public void findKingMoves(int row, int col, int piece,

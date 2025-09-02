@@ -9,11 +9,10 @@ public class Bot {
   private final PlayerConfiguration playerConfiguration;
 
   public Bot(BoardState board, MoveService analyzer,
-             MoveEvaluator decisionMaker,
              PlayerConfiguration playerConfigurationParam) {
     this.board = board;
     this.moveService = analyzer;
-    this.moveEvaluator = decisionMaker;
+    this.moveEvaluator = new MoveEvaluator();
     playerConfiguration = playerConfigurationParam;
   }
 

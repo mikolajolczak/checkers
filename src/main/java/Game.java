@@ -8,86 +8,66 @@ import javax.swing.WindowConstants;
 
 public final class Game {
 
-
   private Game() {
   }
 
   public static void main(final String[] args) {
     JFrame colorChoiceFrame = new JFrame();
-    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
-        GameConstants.COLOR_CHOICE_Y);
+    colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X, GameConstants.COLOR_CHOICE_Y);
+    colorChoiceFrame.setLayout(new FlowLayout());
+    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH, GameConstants.COLOR_CHOICE_HEIGHT);
+    colorChoiceFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+    JLabel chooseColor = new JLabel("Choose your color");
+    JButton redButton = new JButton("Red");
+    JButton blackButton = new JButton("Black");
+
+    colorChoiceFrame.add(chooseColor);
+    colorChoiceFrame.add(redButton);
+    colorChoiceFrame.add(blackButton);
+
     BoardState boardState = new BoardState();
     BoardInitializer.setUpPawns(boardState);
     SelectionState selectionState = new SelectionState();
     BoardPanel boardPanel = new BoardPanel();
     Frame boardFrame = new Frame(boardState, boardPanel);
 
-    Runnable refreshBoardPanel = () -> boardPanel.setPiecesToDraw(
-        BoardViewMapper.toPieceViews(boardState, selectionState));
+    Runnable refreshBoardPanel = () ->
+        boardPanel.setPiecesToDraw(BoardViewMapper.toPieceViews(boardState, selectionState));
     refreshBoardPanel.run();
+
     PromotionService promotionService = new PromotionService(boardState);
 
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
-    TurnManager turnManager =
-        new TurnManager(playerConfiguration, GameConstants.RED,
-            GameConstants.RED_KING);
+    TurnManager turnManager = new TurnManager(playerConfiguration, GameConstants.RED, GameConstants.RED_KING);
 
-    MoveExecutor moveExecutor = new MoveExecutor();
     UIController uiController = new UIController(boardFrame);
     uiController.setRefreshBoardPanel(refreshBoardPanel);
-    PositionValidator positionValidator = new PositionValidator();
-    DiagonalValidator diagonalValidator = new DiagonalValidator(positionValidator);
-    CaptureRules captureRules = new CaptureRules(positionValidator,diagonalValidator);
-    ThreatEvaluator threatEvaluator = new ThreatEvaluator(captureRules);
-    CaptureEvaluator captureEvaluator = new CaptureEvaluator(captureRules);
-    PromotionEvaluator promotionEvaluator = new PromotionEvaluator();
-    BestMoveSelector bestMoveSelector = new BestMoveSelector(threatEvaluator, captureEvaluator, promotionEvaluator,moveExecutor);
-    MoveRules moveRules = new MoveRules(positionValidator);
-    RegularMoveGenerator regularMoveGenerator = new RegularMoveGenerator(moveRules,positionValidator);
-    KingMoveGenerator kingMoveGenerator = new KingMoveGenerator(moveRules, positionValidator, diagonalValidator);
-    CaptureGenerator captureGenerator = new CaptureGenerator(captureRules, positionValidator, diagonalValidator);
-    MoveEvaluator moveEvaluator =
-        new MoveEvaluator(bestMoveSelector);
-    MoveGenerator moveGenerator =
-        new MoveGenerator(captureRules, moveRules, regularMoveGenerator, kingMoveGenerator, captureGenerator,playerConfiguration);
-    MoveService moveService =
-        new MoveService(moveRules, captureRules, turnManager, boardState, moveGenerator);
-    Bot bot = new Bot(boardState, moveService, moveEvaluator, playerConfiguration);
+
+    MoveGenerator moveGenerator = new MoveGenerator(playerConfiguration);
+    MoveService moveService = new MoveService(turnManager, boardState, moveGenerator);
+
+    Bot bot = new Bot(boardState, moveService, playerConfiguration);
     BotDecisionService botDecisionService = new BotDecisionService(bot);
-    BotMoveExecutor botMoveExecutor =
-        new BotMoveExecutor(moveExecutor, promotionService, boardState,
-            playerConfiguration);
+    BotMoveExecutor botMoveExecutor = new BotMoveExecutor(promotionService, boardState, playerConfiguration);
     BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
-    BotController botController =
-        new BotController(botDecisionService, botMoveExecutor, botUIHandler);
-    CaptureValidator captureValidator = new CaptureValidator(captureRules);
-    CaptureExecutor captureExecutor = new CaptureExecutor(moveExecutor, promotionService);
+    BotController botController = new BotController(botDecisionService, botMoveExecutor, botUIHandler);
+
+    CaptureExecutor captureExecutor = new CaptureExecutor(promotionService);
     TurnFlowManager turnFlowManager = new TurnFlowManager(turnManager, botController);
-    CaptureHandler captureHandler = new CaptureHandler(captureValidator, captureExecutor, turnFlowManager, boardState);
-    MovePerformer movePerformer = new MovePerformer(moveExecutor,
-        promotionService, boardState);
-    MoveValidator moveValidator = new MoveValidator(moveService,
-        positionValidator, boardState);
-    MoveCoordinator moveCoordinator =
-        new MoveCoordinator(movePerformer, moveValidator, uiController, turnManager, botController);
+    CaptureHandler captureHandler = new CaptureHandler(captureExecutor, turnFlowManager, boardState);
+
+    MovePerformer movePerformer = new MovePerformer(promotionService, boardState);
+    MoveValidator moveValidator = new MoveValidator(moveService, boardState);
+    MoveCoordinator moveCoordinator = new MoveCoordinator(movePerformer, moveValidator, uiController, turnManager, botController);
+
     MouseInputHandler mouseInputHandler = new MouseInputHandler(moveValidator, captureHandler, selectionState, uiController, moveCoordinator);
     ClickHandler clickHandler = new ClickHandler(mouseInputHandler);
     boardFrame.addBoardListener(clickHandler);
-    JButton red = new JButton("Red");
-    JButton black = new JButton("Black");
-    JLabel chooseColor = new JLabel("Choose your color");
 
-    colorChoiceFrame.setLayout(new FlowLayout());
-    colorChoiceFrame.setSize(GameConstants.COLOR_CHOICE_WIDTH,
-        GameConstants.COLOR_CHOICE_HEIGHT);
-    colorChoiceFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     boardFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    colorChoiceFrame.add(chooseColor);
-    colorChoiceFrame.add(red);
-    colorChoiceFrame.add(black);
-
-    red.addActionListener(_ -> {
+    redButton.addActionListener(_ -> {
       playerConfiguration.setBotColor(GameConstants.BLACK);
       playerConfiguration.setBotKingColor(GameConstants.BLACK_KING);
       playerConfiguration.setHumanColor(GameConstants.RED);
@@ -96,7 +76,7 @@ public final class Game {
       boardFrame.setVisible(true);
     });
 
-    black.addActionListener(_ -> {
+    blackButton.addActionListener(_ -> {
       playerConfiguration.setBotColor(GameConstants.RED);
       playerConfiguration.setBotKingColor(GameConstants.RED_KING);
       playerConfiguration.setHumanColor(GameConstants.BLACK);
@@ -109,6 +89,5 @@ public final class Game {
     });
 
     colorChoiceFrame.setVisible(true);
-
   }
 }

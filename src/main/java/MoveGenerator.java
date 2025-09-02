@@ -11,16 +11,12 @@ public class MoveGenerator {
   private final CaptureGenerator captureGenerator;
   private final PlayerConfiguration playerConfiguration;
 
-  public MoveGenerator(CaptureRules captureRules, MoveRules moveRules,
-                       RegularMoveGenerator regularMoveGenerator,
-                       KingMoveGenerator kingMoveGenerator,
-                       CaptureGenerator captureGenerator,
-                       PlayerConfiguration playerConfiguration) {
-    this.captureRules = captureRules;
-    this.moveRules = moveRules;
-    this.regularMoveGenerator = regularMoveGenerator;
-    this.kingMoveGenerator = kingMoveGenerator;
-    this.captureGenerator = captureGenerator;
+  public MoveGenerator(PlayerConfiguration playerConfiguration) {
+    this.captureRules = new CaptureRules();
+    this.moveRules = new MoveRules();
+    this.regularMoveGenerator = new RegularMoveGenerator();
+    this.kingMoveGenerator = new KingMoveGenerator();
+    this.captureGenerator = new CaptureGenerator();
     this.playerConfiguration = playerConfiguration;
   }
 

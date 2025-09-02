@@ -6,8 +6,8 @@ public class MoveEvaluator {
 
   private final BestMoveSelector bestMoveSelector;
 
-  public MoveEvaluator(BestMoveSelector bestMoveSelector) {
-    this.bestMoveSelector = bestMoveSelector;
+  public MoveEvaluator() {
+    this.bestMoveSelector = new BestMoveSelector();
   }
 
   public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,

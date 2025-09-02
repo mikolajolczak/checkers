@@ -4,8 +4,8 @@ public class MoveRules {
 
   private final PositionValidator positionValidator;
 
-  public MoveRules(PositionValidator positionValidator) {
-    this.positionValidator = positionValidator;
+  public MoveRules() {
+    this.positionValidator = new PositionValidator();
   }
 
   public boolean canMove(int col, int row, BoardState boardState) {

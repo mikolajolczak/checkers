@@ -6,10 +6,10 @@ public class MoveValidator {
   private final PositionValidator positionValidator;
   private final BoardState boardState;
 
-  public MoveValidator(MoveService moveService, PositionValidator positionValidator,
+  public MoveValidator(MoveService moveService,
                        BoardState boardState) {
     this.moveService = moveService;
-    this.positionValidator = positionValidator;
+    this.positionValidator = new PositionValidator();
     this.boardState = boardState;
   }
 

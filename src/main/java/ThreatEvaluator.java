@@ -4,8 +4,8 @@ public class ThreatEvaluator {
 
   private final CaptureRules captureRules;
 
-  public ThreatEvaluator(CaptureRules captureRules) {
-    this.captureRules = captureRules;
+  public ThreatEvaluator() {
+    this.captureRules = new CaptureRules();
   }
 
   public int evaluatePlayerThreats(BotDecision decision, BoardState boardState,

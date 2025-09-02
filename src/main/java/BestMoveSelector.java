@@ -9,14 +9,11 @@ public class BestMoveSelector {
   private final PromotionEvaluator promotionEvaluator;
   private final MoveExecutor moveExecutor;
 
-  public BestMoveSelector(ThreatEvaluator threatEvaluator,
-                          CaptureEvaluator captureEvaluator,
-                          PromotionEvaluator promotionEvaluator,
-                          MoveExecutor moveExecutor) {
-    this.threatEvaluator = threatEvaluator;
-    this.captureEvaluator = captureEvaluator;
-    this.promotionEvaluator = promotionEvaluator;
-    this.moveExecutor = moveExecutor;
+  public BestMoveSelector() {
+    this.threatEvaluator = new ThreatEvaluator();
+    this.captureEvaluator = new CaptureEvaluator();
+    this.promotionEvaluator = new PromotionEvaluator();
+    this.moveExecutor = new MoveExecutor();
   }
 
   public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,

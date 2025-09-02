@@ -4,8 +4,8 @@ public class CaptureExecutor {
   private final MoveExecutor moveExecutor;
   private final PromotionService promotionService;
 
-  public CaptureExecutor(MoveExecutor moveExecutor, PromotionService promotionService) {
-    this.moveExecutor = moveExecutor;
+  public CaptureExecutor(PromotionService promotionService) {
+    this.moveExecutor = new MoveExecutor();
     this.promotionService = promotionService;
   }
 

@@ -8,11 +8,10 @@ public class CaptureGenerator {
   private final PositionValidator positionValidator;
   private final DiagonalValidator diagonalValidator;
 
-  public CaptureGenerator(CaptureRules captureRules, PositionValidator positionValidator,
-                          DiagonalValidator diagonalValidator) {
-    this.captureRules = captureRules;
-    this.positionValidator = positionValidator;
-    this.diagonalValidator = diagonalValidator;
+  public CaptureGenerator() {
+    this.captureRules = new CaptureRules();
+    this.positionValidator = new PositionValidator();
+    this.diagonalValidator = new DiagonalValidator();
   }
 
   public void findRegularCaptures(int row, int col, int piece,

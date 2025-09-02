@@ -7,9 +7,9 @@ public class RegularMoveGenerator {
   private final MoveRules moveRules;
   private final PositionValidator positionValidator;
 
-  public RegularMoveGenerator(MoveRules moveRules, PositionValidator positionValidator) {
-    this.moveRules = moveRules;
-    this.positionValidator = positionValidator;
+  public RegularMoveGenerator() {
+    this.moveRules = new MoveRules();
+    this.positionValidator = new PositionValidator();
   }
 
   public void findRegularPieceMoves(int row, int col, int piece,

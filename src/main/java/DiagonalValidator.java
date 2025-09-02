@@ -4,8 +4,8 @@ public class DiagonalValidator {
 
   private final PositionValidator positionValidator;
 
-  public DiagonalValidator(PositionValidator positionValidator) {
-    this.positionValidator = positionValidator;
+  public DiagonalValidator() {
+    this.positionValidator = new PositionValidator();
   }
 
   public boolean diagonalHasPieces(int c1, int r1, int c2, int r2, int dc,

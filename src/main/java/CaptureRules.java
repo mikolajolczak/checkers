@@ -5,9 +5,9 @@ public class CaptureRules {
   private final PositionValidator positionValidator;
   private final DiagonalValidator diagonalValidator;
 
-  public CaptureRules(PositionValidator positionValidator, DiagonalValidator diagonalValidator) {
-    this.positionValidator = positionValidator;
-    this.diagonalValidator = diagonalValidator;
+  public CaptureRules() {
+    this.positionValidator = new PositionValidator();
+    this.diagonalValidator = new DiagonalValidator();
   }
 
   public boolean canCapture(int col, int row, BoardState boardState) {

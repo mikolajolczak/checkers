@@ -6,11 +6,10 @@ public class BotMoveExecutor {
   private final BoardState boardState;
   private final PlayerConfiguration playerConfig;
 
-  public BotMoveExecutor(MoveExecutor moveExecutor,
-                         PromotionService promotionService,
+  public BotMoveExecutor(PromotionService promotionService,
                          BoardState boardState,
                          PlayerConfiguration playerConfig) {
-    this.moveExecutor = moveExecutor;
+    this.moveExecutor = new MoveExecutor();
     this.promotionService = promotionService;
     this.boardState = boardState;
     this.playerConfig = playerConfig;

@@ -10,11 +10,10 @@ public class MoveService {
   private final BoardState boardState;
   private final MoveGenerator moveGenerator;
 
-  public MoveService(MoveRules moveRules, CaptureRules captureRules,
-                     TurnManager turnManager, BoardState boardState,
+  public MoveService(TurnManager turnManager, BoardState boardState,
                      MoveGenerator moveGenerator) {
-    this.moveRules = moveRules;
-    this.captureRules = captureRules;
+    this.moveRules = new MoveRules();
+    this.captureRules = new CaptureRules();
     this.turnManager = turnManager;
     this.boardState = boardState;
     this.moveGenerator = moveGenerator;

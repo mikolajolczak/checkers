@@ -6,11 +6,10 @@ public final class CaptureHandler {
   private final TurnFlowManager turnFlow;
   private final BoardState boardState;
 
-  public CaptureHandler(CaptureValidator validator,
-                        CaptureExecutor executor,
+  public CaptureHandler(CaptureExecutor executor,
                         TurnFlowManager turnFlow,
                         BoardState boardState) {
-    this.validator = validator;
+    this.validator = new CaptureValidator();
     this.executor = executor;
     this.turnFlow = turnFlow;
     this.boardState = boardState;

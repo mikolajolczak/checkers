@@ -4,8 +4,8 @@ public class CaptureEvaluator {
 
   private final CaptureRules captureRules;
 
-  public CaptureEvaluator(CaptureRules captureRules) {
-    this.captureRules = captureRules;
+  public CaptureEvaluator() {
+    this.captureRules = new CaptureRules();
   }
 
   public int evaluateCaptureOpportunities(BoardState boardState,

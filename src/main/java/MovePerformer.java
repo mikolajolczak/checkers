@@ -6,8 +6,8 @@ public class MovePerformer {
   private final PromotionService promotionService;
   private final BoardState boardState;
 
-  public MovePerformer(MoveExecutor moveExecutor, PromotionService promotionService, BoardState boardState) {
-    this.moveExecutor = moveExecutor;
+  public MovePerformer(PromotionService promotionService, BoardState boardState) {
+    this.moveExecutor = new MoveExecutor();
     this.promotionService = promotionService;
     this.boardState = boardState;
   }
