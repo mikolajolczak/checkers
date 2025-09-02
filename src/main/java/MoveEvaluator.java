@@ -1,5 +1,7 @@
 package checkers.src.main.java;
 
+import java.util.ArrayList;
+
 public class MoveEvaluator {
   private final Move move;
   private final PlayerConfiguration playerConfiguration;
@@ -99,5 +101,18 @@ public class MoveEvaluator {
       }
     }
     return false;
+  }
+  public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves, BoardState boardState) {
+    BotDecision bestMove = new BotDecision(-1, -1, -1, -1, -1);
+    int bestScore = GameConstants.INITIAL_SUM_MAX;
+    for (BotDecision move : possibleMoves) {
+      BoardState copy = boardState.copy();
+      int score = evaluateMove(move, copy);
+      if (score >= bestScore) {
+        bestMove = move;
+        bestScore = score;
+      }
+    }
+    return bestMove;
   }
 }

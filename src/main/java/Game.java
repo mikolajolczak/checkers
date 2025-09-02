@@ -26,12 +26,13 @@ public final class Game {
     Move move = new Move(boardState);
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
     TurnManager turnManager = new TurnManager(playerConfiguration, GameConstants.RED, GameConstants.RED_KING);
-    MoveService moveService = new MoveService(move, turnManager, boardState);
+
     MoveExecutor moveExecutor = new MoveExecutor();
     UIController uiController = new UIController(boardFrame);
     MoveEvaluator moveEvaluator = new MoveEvaluator(move,playerConfiguration,moveExecutor);
     MoveGenerator moveGenerator = new MoveGenerator(move, playerConfiguration, boardState);
-    Bot bot = new Bot(boardState, moveGenerator, moveEvaluator);
+    MoveService moveService = new MoveService(move, turnManager, boardState, moveGenerator);
+    Bot bot = new Bot(boardState, moveService, moveEvaluator);
     BotDecisionService botDecisionService = new BotDecisionService(bot);
     BotMoveExecutor botMoveExecutor = new BotMoveExecutor(moveExecutor, promotionService, boardState, playerConfiguration);
     BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);

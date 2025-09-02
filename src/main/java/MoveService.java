@@ -1,15 +1,20 @@
 package checkers.src.main.java;
 
+import java.util.ArrayList;
+
 public class MoveService {
   private final Move move;
   private final TurnManager turnManager;
   private final BoardState boardState;
+  private final MoveGenerator moveGenerator;
 
   public MoveService(Move moveParam, TurnManager turnManagerParam,
-                     BoardState boardStateParam) {
+                     BoardState boardStateParam,
+                     MoveGenerator moveGeneratorParam) {
     move = moveParam;
     turnManager = turnManagerParam;
     boardState = boardStateParam;
+    moveGenerator = moveGeneratorParam;
   }
 
   public boolean canSelectPiece(int row, int col, BoardState boardStateParam) {
@@ -24,5 +29,8 @@ public class MoveService {
 
   public boolean mustTake() {
     return move.checkAllPiecesPossibleTakes(turnManager.getCurrentColor(), turnManager.getCurrentKingColor(), boardState);
+  }
+  public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
+    return moveGenerator.getPossibleMoves(boardState);
   }
 }
