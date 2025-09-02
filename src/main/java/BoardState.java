@@ -1,9 +1,6 @@
 package checkers.src.main.java;
 
 public class BoardState {
-  public int[][] getPieces() {
-    return pieces;
-  }
   public BoardState(int[][] pieces) {
     this.pieces = new int[pieces.length][];
 
@@ -34,6 +31,10 @@ public class BoardState {
   }
   public boolean isItKing(int color) {
     return color == GameConstants.BLACK_KING || color == GameConstants.RED_KING;
+  }
+
+  public BoardState copy() {
+    return new BoardState(pieces);
   }
 
   public void setUpPawns() {

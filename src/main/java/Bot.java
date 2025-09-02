@@ -7,7 +7,6 @@ public class Bot {
   private ArrayList<BotDecision> possibleMoves = new ArrayList<>();
   private final MoveGenerator moveGenerator;
   private BotDecision bestMove = new BotDecision(-1, -1, -1,-1, -1);
-  private BoardState boardStateCopy;
   private final MoveEvaluator moveEvaluator;
 
 
@@ -30,7 +29,7 @@ public class Bot {
     int bestScore = GameConstants.INITIAL_SUM_MAX;
 
     for (BotDecision moveArray : possibleMoves) {
-      copyBoard();
+      BoardState boardStateCopy = boardState.copy();
       int score = moveEvaluator.evaluateMove(moveArray, boardStateCopy);
 
       if (score >= bestScore) {
@@ -43,9 +42,6 @@ public class Bot {
     }
   }
 
-  private void copyBoard() {
-    this.boardStateCopy = new BoardState(boardState.getPieces());
-  }
 
   public BotDecision makeMove() {
     analyze();
