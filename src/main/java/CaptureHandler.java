@@ -1,47 +1,27 @@
 package checkers.src.main.java;
 
 public final class CaptureHandler {
-
-  private final MoveExecutor moveExecutor;
-  private final PromotionService promotionService;
-  private final TurnManager turnManager;
+  private final CaptureValidator validator;
+  private final CaptureExecutor executor;
+  private final TurnFlowManager turnFlow;
   private final BoardState boardState;
-  private final BotController botController;
-  private final CaptureRules captureRules;
 
-  public CaptureHandler(MoveExecutor moveExecutor,
-                        PromotionService promotionService,
-                        TurnManager turnManager, BoardState boardState,
-                        BotController botController,
-                        CaptureRules captureRulesParam) {
-    this.moveExecutor = moveExecutor;
-    this.promotionService = promotionService;
-    this.turnManager = turnManager;
+  public CaptureHandler(CaptureValidator validator,
+                        CaptureExecutor executor,
+                        TurnFlowManager turnFlow,
+                        BoardState boardState) {
+    this.validator = validator;
+    this.executor = executor;
+    this.turnFlow = turnFlow;
     this.boardState = boardState;
-    this.botController = botController;
-    captureRules = captureRulesParam;
   }
 
   public void handleCapture(int fromRow, int fromCol, int toRow, int toCol) {
     int pieceColor = boardState.getPiece(fromRow, fromCol);
-
-    if (!captureRules.isLegalCapture(toCol, toRow, fromCol, fromRow, pieceColor, boardState)) {
+    if (!validator.isValidCapture(boardState, fromRow, fromCol, toRow, toCol, pieceColor)) {
       return;
     }
-
-    if (PieceRules.isKing(pieceColor)) {
-      moveExecutor.executeQueenCapture(fromRow, fromCol, toRow, toCol,
-          turnManager.getCurrentKingColor(), boardState);
-    } else {
-      moveExecutor.executeCapture(fromRow, fromCol, toRow, toCol,
-          turnManager.getCurrentColor(), boardState);
-    }
-
-    promotionService.promoteIfNeeded(toRow, toCol, pieceColor);
-    turnManager.switchTurn();
-
-    if (turnManager.isCurrentPlayerBot()) {
-      botController.executeTurn();
-    }
+    executor.execute(boardState, fromRow, fromCol, toRow, toCol, pieceColor, turnFlow.getTurnManager());
+    turnFlow.afterMove();
   }
 }

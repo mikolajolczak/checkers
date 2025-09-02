@@ -60,9 +60,10 @@ public final class Game {
     BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
     BotController botController =
         new BotController(botDecisionService, botMoveExecutor, botUIHandler);
-    CaptureHandler captureHandler =
-        new CaptureHandler(moveExecutor, promotionService, turnManager,
-            boardState, botController, captureRules);
+    CaptureValidator captureValidator = new CaptureValidator(captureRules);
+    CaptureExecutor captureExecutor = new CaptureExecutor(moveExecutor, promotionService);
+    TurnFlowManager turnFlowManager = new TurnFlowManager(turnManager, botController);
+    CaptureHandler captureHandler = new CaptureHandler(captureValidator, captureExecutor, turnFlowManager, boardState);
     MovePerformer movePerformer = new MovePerformer(moveExecutor,
         promotionService, boardState);
     MoveValidator moveValidator = new MoveValidator(moveService,
