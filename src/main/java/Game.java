@@ -32,7 +32,8 @@ public final class Game {
     colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
         GameConstants.COLOR_CHOICE_Y);
     BoardState boardState = new BoardState();
-    BoardPanel boardPanel = new BoardPanel(boardState);
+    SelectionState selectionState = new SelectionState();
+    BoardPanel boardPanel = new BoardPanel(boardState, selectionState);
     Frame boardFrame = new Frame(boardState, boardPanel);
 
 
@@ -49,7 +50,10 @@ public final class Game {
 
     BotController botController = new BotController(bot, moveExecutor, boardState,
         promotionService, uiController, playerConfiguration, turnManager);
-    BoardClickHandler clickHandler = new BoardClickHandler(botController, move, boardPanel, moveService, turnManager, uiController, boardState, moveExecutor, promotionService);
+    CaptureHandler captureHandler = new CaptureHandler(moveExecutor, promotionService, turnManager, boardState, botController, move);
+    MoveHandler moveHandler = new MoveHandler(moveExecutor, promotionService, turnManager, boardState, botController, moveService, uiController);
+    ClickHandler clickHandler = new ClickHandler(boardPanel, moveHandler,
+        captureHandler, selectionState);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");

@@ -12,41 +12,16 @@ import javax.swing.JPanel;
  */
 public class BoardPanel extends JPanel {
   private final BoardState state;
+  private final SelectionState selection;
 
-  public BoardPanel(BoardState state) {
+  public BoardPanel(BoardState state, SelectionState selection) {
     this.state = state;
-  }
-  private int selectedColumn = GameConstants.BOARD_SIZE;
-  private int selectedRow = GameConstants.BOARD_SIZE;
-
-  public int getSelectedColumn() {
-    return selectedColumn;
+    this.selection = selection;
   }
 
-  public void setSelectedColumn(int selectedColumnParam) {
-    selectedColumn = selectedColumnParam;
-  }
-
-  public int getSelectedRow() {
-    return selectedRow;
-  }
-
-  public void setSelectedRow(int selectedRowParam) {
-    selectedRow = selectedRowParam;
-  }
-
-  /**
-   * Paints the checkers board and pieces.
-   *
-   * @param g the Graphics object
-   */
   @Override
-  public void paintComponent(final Graphics g) {
+  public void paintComponent(Graphics g) {
     super.paintComponent(g);
-    Graphics2D g2 = (Graphics2D) g;
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON);
-
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
         drawSquare(g, row, col);
@@ -56,7 +31,7 @@ public class BoardPanel extends JPanel {
   }
 
   private void drawSquare(Graphics g, int row, int col) {
-    if (col == getSelectedColumn() && row == getSelectedRow()) {
+    if (col == selection.getSelectedColumn() && row == selection.getSelectedRow()) {
       g.setColor(Color.DARK_GRAY);
     } else {
       g.setColor((row % 2 == col % 2) ? Color.LIGHT_GRAY : Color.GRAY);
@@ -69,14 +44,10 @@ public class BoardPanel extends JPanel {
 
   private void drawPiece(Graphics g, int row, int col) {
     int piece = state.getPiece(row, col);
-    if (piece == GameConstants.EMPTY) {
-      return;
-    }
+    if (piece == GameConstants.EMPTY) return;
 
-    Color color =
-        (piece == GameConstants.RED || piece == GameConstants.RED_KING)
-            ? Color.RED : Color.BLACK;
-
+    Color color = (piece == GameConstants.RED || piece == GameConstants.RED_KING)
+        ? Color.RED : Color.BLACK;
     g.setColor(color);
     g.fillOval(GameConstants.PIECE_PADDING + col * GameConstants.SQUARE_SIZE,
         GameConstants.PIECE_PADDING + row * GameConstants.SQUARE_SIZE,
@@ -84,8 +55,7 @@ public class BoardPanel extends JPanel {
 
     if (piece == GameConstants.RED_KING || piece == GameConstants.BLACK_KING) {
       g.setColor(Color.WHITE);
-      g.drawOval(
-          GameConstants.KING_MARKER_PADDING + col * GameConstants.SQUARE_SIZE,
+      g.drawOval(GameConstants.KING_MARKER_PADDING + col * GameConstants.SQUARE_SIZE,
           GameConstants.KING_MARKER_PADDING + row * GameConstants.SQUARE_SIZE,
           GameConstants.KING_MARKER_SIZE, GameConstants.KING_MARKER_SIZE);
     }
