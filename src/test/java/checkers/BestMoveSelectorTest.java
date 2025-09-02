@@ -186,10 +186,8 @@ class BestMoveSelectorTest {
 
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class);
-         MockedStatic<GameConstants> gameConstantsMock = Mockito.mockStatic(
+         MockedStatic<GameConstants> _ = Mockito.mockStatic(
              GameConstants.class)) {
-      gameConstantsMock.when(GameConstants::getInitialSumMax)
-          .thenReturn(1000);
 
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
               mockPlayerConfiguration))
@@ -220,10 +218,8 @@ class BestMoveSelectorTest {
 
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class);
-         MockedStatic<GameConstants> gameConstantsMock = Mockito.mockStatic(
+         MockedStatic<GameConstants> _ = Mockito.mockStatic(
              GameConstants.class)) {
-
-      gameConstantsMock.when(GameConstants::getInitialSumMax).thenReturn(0);
 
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
               mockPlayerConfiguration))
@@ -288,11 +284,8 @@ class BestMoveSelectorTest {
 
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class);
-         MockedStatic<GameConstants> gameConstantsMock = Mockito.mockStatic(
+         MockedStatic<GameConstants> _ = Mockito.mockStatic(
              GameConstants.class)) {
-
-      gameConstantsMock.when(GameConstants::getInitialSumMax)
-          .thenReturn(100);
 
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
               mockPlayerConfiguration))

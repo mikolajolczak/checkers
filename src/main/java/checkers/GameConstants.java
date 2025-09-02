@@ -51,33 +51,4 @@ public class GameConstants {
   public static final int WINDOW_HEIGHT = 436;
 
   public static final int BOT_MOVE_DELAY_MS = 500;
-  public static int getEmpty() { return EMPTY; }
-  public static int getRed() { return RED; }
-  public static int getBlack() { return BLACK; }
-  public static int getRedKing() { return RED_KING; }
-  public static int getBlackKing() { return BLACK_KING; }
-  public static int getBoardSize() { return BOARD_SIZE; }
-  public static int getSquareSize() { return SQUARE_SIZE; }
-  public static int getPiecePadding() { return PIECE_PADDING; }
-  public static int getPieceSize() { return PIECE_SIZE; }
-  public static int getKingMarkerPadding() { return KING_MARKER_PADDING; }
-  public static int getKingMarkerSize() { return KING_MARKER_SIZE; }
-  public static int getNumStartingRows() { return NUM_STARTING_ROWS; }
-  public static int getColorChoiceX() { return COLOR_CHOICE_X; }
-  public static int getColorChoiceY() { return COLOR_CHOICE_Y; }
-  public static int getColorChoiceWidth() { return COLOR_CHOICE_WIDTH; }
-  public static int getColorChoiceHeight() { return COLOR_CHOICE_HEIGHT; }
-  public static int getInitialSumMax() { return INITIAL_SUM_MAX; }
-  public static int getMove() { return MOVE; }
-  public static int getTake() { return TAKE; }
-  public static int getQueenTake() { return QUEEN_TAKE; }
-  public static int getLastRowIndex() { return LAST_ROW_INDEX; }
-  public static int getScorePlayerThreat() { return SCORE_PLAYER_THREAT; }
-  public static int getScorePlayerThreatKing() { return SCORE_PLAYER_THREAT_KING; }
-  public static int getScoreTakePossible() { return SCORE_TAKE_POSSIBLE; }
-  public static int getScoreChanceForQueen() { return SCORE_CHANCE_FOR_QUEEN; }
-  public static int getWindowWidth() { return WINDOW_WIDTH; }
-  public static int getWindowHeight() { return WINDOW_HEIGHT; }
-  public static int getBotMoveDelayMs() { return BOT_MOVE_DELAY_MS; }
-  public static int[][] getDirections() { return DIRECTIONS; }
 }
