@@ -19,6 +19,6 @@ public class UIController {
   }
 
   public void checkGameEnd() {
-    frame.isGameFinished();
+    frame.checkGameFinished();
   }
 }
