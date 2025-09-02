@@ -16,6 +16,24 @@ public class BoardPanel extends JPanel {
   public BoardPanel(BoardState state) {
     this.state = state;
   }
+  private int selectedColumn = GameConstants.BOARD_SIZE;
+  private int selectedRow = GameConstants.BOARD_SIZE;
+
+  public int getSelectedColumn() {
+    return selectedColumn;
+  }
+
+  public void setSelectedColumn(int selectedColumnParam) {
+    selectedColumn = selectedColumnParam;
+  }
+
+  public int getSelectedRow() {
+    return selectedRow;
+  }
+
+  public void setSelectedRow(int selectedRowParam) {
+    selectedRow = selectedRowParam;
+  }
 
   /**
    * Paints the checkers board and pieces.
@@ -38,7 +56,7 @@ public class BoardPanel extends JPanel {
   }
 
   private void drawSquare(Graphics g, int row, int col) {
-    if (col == state.getSelectedColumn() && row == state.getSelectedRow()) {
+    if (col == getSelectedColumn() && row == getSelectedRow()) {
       g.setColor(Color.DARK_GRAY);
     } else {
       g.setColor((row % 2 == col % 2) ? Color.LIGHT_GRAY : Color.GRAY);

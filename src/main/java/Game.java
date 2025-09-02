@@ -51,7 +51,7 @@ public final class Game {
             moveService, moveExecutor, uiController, boardState,
             promotionService);
 
-    BoardClickHandler clickHandler = new BoardClickHandler(controller, move);
+    BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardPanel);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");

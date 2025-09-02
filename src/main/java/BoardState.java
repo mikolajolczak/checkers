@@ -12,8 +12,6 @@ public class BoardState {
     }
   }
   private final int[][] pieces;
-  private int selectedRow = -1;
-  private int selectedColumn = -1;
 
   public BoardState() {
     pieces = new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
@@ -49,16 +47,4 @@ public class BoardState {
     pieces[row][col] = piece;
   }
 
-  public void setSelected(int row, int col) {
-    this.selectedRow = row;
-    this.selectedColumn = col;
-  }
-
-  public int getSelectedRow() {
-    return selectedRow;
-  }
-
-  public int getSelectedColumn() {
-    return selectedColumn;
-  }
 }
