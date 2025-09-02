@@ -141,11 +141,11 @@ public class MoveGenerator {
     if (Math.abs(toRow - fromRow) > 1) {
       return
           !move
-              .checkRightTopDiagonalEmptySpaces(fromCol, fromRow, toCol, toRow)
+              .diagonalHasPieces(fromCol, fromRow, toCol, toRow, +1, -1)
               &&
               !move
-                  .checkRightBotDiagonalEmptySpaces(fromCol, fromRow, toCol,
-                      toRow);
+                  .diagonalHasPieces(fromCol, fromRow, toCol,
+                      toRow, +1,+1);
     }
     return true;
   }

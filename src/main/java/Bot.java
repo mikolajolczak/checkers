@@ -33,12 +33,15 @@ public class Bot {
       int score = moveEvaluator.evaluateMove(moveArray, boardStateCopy);
 
       if (score >= bestScore) {
-        bestMove = new BotDecision(moveArray);
+        bestMove = new BotDecision(moveArray.fromRow(),  moveArray.fromCol(), moveArray.toRow(), moveArray.toCol(),
+            moveArray.moveType());
         bestScore = score;
       }
     }
     if (bestMove.equals(new BotDecision(-1, -1, -1,-1, -1))) {
-      bestMove = new BotDecision(possibleMoves.getFirst());
+      BotDecision firstMove = possibleMoves.getFirst();
+      bestMove = new BotDecision(firstMove.fromRow(), firstMove.fromCol(),
+          firstMove.toRow(), firstMove.toCol(), firstMove.moveType());
     }
   }
 
@@ -46,7 +49,7 @@ public class Bot {
   public BotDecision makeMove() {
     analyze();
     simulate();
-    return new BotDecision(bestMove);
+    return new BotDecision(bestMove.fromRow(), bestMove.fromCol(),  bestMove.toRow(), bestMove.toCol(), bestMove.moveType());
   }
 
 

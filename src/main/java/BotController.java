@@ -24,8 +24,6 @@ public class BotController {
     turnManager = turnManagerParam;
   }
   public void executeTurn() {
-    bot.analyze();
-    bot.simulate();
     new Thread(() -> {
       try {
         Thread.sleep(GameConstants.BOT_MOVE_DELAY_MS);

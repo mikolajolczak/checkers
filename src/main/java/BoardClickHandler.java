@@ -41,7 +41,7 @@ public final class BoardClickHandler extends MouseAdapter {
   public void mouseReleased(MouseEvent e) {
     int col = e.getX() / GameConstants.SQUARE_SIZE;
     int row = e.getY() / GameConstants.SQUARE_SIZE;
-
+    if (!move.isValidPosition(row, col)) return;
     if (firstClick) {
       handleFirstClick(row, col);
     } else {

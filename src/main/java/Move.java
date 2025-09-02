@@ -16,20 +16,13 @@ public class Move {
     return Math.abs(r2 - r1) != Math.abs(c2 - c1) && r1 + c1 != c2 + r2;
   }
 
-  private boolean diagonalHasPieces(int c1, int r1, int c2, int r2, int dc, int dr) {
+  public boolean diagonalHasPieces(int c1, int r1, int c2, int r2, int dc, int dr) {
     for (int i = r1 + dr, j = c1 + dc; i != r2 && j != c2; i += dr, j += dc) {
       if (!isValidPosition(i, j)) break;
       if (Math.abs(i - r2) <= 1 && Math.abs(j - c2) <= 1) break;
       if (boardState.getPiece(i, j) != GameConstants.EMPTY) return true;
     }
     return false;
-  }
-
-  public boolean checkRightTopDiagonalEmptySpaces(int c1, int r1, int c2, int r2) {
-    return diagonalHasPieces(c1, r1, c2, r2, +1, -1);
-  }
-  public boolean checkRightBotDiagonalEmptySpaces(int c1, int r1, int c2, int r2) {
-    return diagonalHasPieces(c1, r1, c2, r2, +1, +1);
   }
 
   public boolean checkAllPiecesPossibleTakes(int color, int colorQueen, BoardState bs) {
@@ -102,18 +95,22 @@ public class Move {
     }
     return false;
   }
-
+  private int[] getEnemyPieces(int piece) {
+    boolean isRed = (piece == GameConstants.RED || piece == GameConstants.RED_KING);
+    return isRed ?
+        new int[]{GameConstants.BLACK, GameConstants.BLACK_KING} :
+        new int[]{GameConstants.RED, GameConstants.RED_KING};
+  }
   public boolean canRegularPieceTake(int row, int col, int piece, BoardState bs) {
     int dir = (piece == GameConstants.RED) ? -1 : 1;
-    int enemy1 = (piece == GameConstants.RED) ? GameConstants.BLACK : GameConstants.RED;
-    int enemy2 = (piece == GameConstants.RED) ? GameConstants.BLACK_KING : GameConstants.RED_KING;
+    int[]enemyPieces = getEnemyPieces(piece);
 
     for (int dc : new int[]{-1, 1}) {
       int jumpR = row + 2 * dir, jumpC = col + 2 * dc;
       int enemyR = row + dir, enemyC = col + dc;
       if (isValidPosition(jumpR, jumpC) && isValidPosition(enemyR, enemyC)) {
         int enemyPiece = bs.getPiece(enemyR, enemyC);
-        if ((enemyPiece == enemy1 || enemyPiece == enemy2) && bs.getPiece(jumpR, jumpC) == GameConstants.EMPTY) return true;
+        if ((enemyPiece == enemyPieces[0] || enemyPiece == enemyPieces[1]) && bs.getPiece(jumpR, jumpC) == GameConstants.EMPTY) return true;
       }
     }
     return false;
