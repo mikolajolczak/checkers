@@ -1,9 +1,5 @@
 package checkers.src.main.java;
 
-/**
- * Represents a move in a checkers game. Provides methods to check piece types,
- * legal moves, captures, and diagonals on the board.
- */
 public class Move {
   private final BoardState boardState;
 

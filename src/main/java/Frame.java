@@ -5,16 +5,10 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-/**
- * Main frame for the Checkers game.
- * Holds the board and manages basic game functionality.
- */
+
 public class Frame extends JFrame {
 
 
-  /**
-   * The main board for the game.
-   */
   private final BoardPanel board;
 
   private final BoardState state;
@@ -23,18 +17,10 @@ public class Frame extends JFrame {
     return board;
   }
 
-  /**
-   * Adds a mouse listener to the board.
-   *
-   * @param listenForClick the mouse listener to add
-   */
   public void addBoardListener(final MouseListener listenForClick) {
     board.addMouseListener(listenForClick);
   }
 
-  /**
-   * Constructor: initializes the frame and adds the board.
-   */
   public Frame(BoardState state, BoardPanel board) {
     this.setSize(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
     this.setLocationRelativeTo(null);
@@ -45,9 +31,6 @@ public class Frame extends JFrame {
     this.add(board);
   }
 
-  /**
-   * Checks if the game has finished and shows a message if a player has won.
-   */
   public void isGameFinished() {
     int sumOfReds = 0;
     int sumOfBlacks = 0;

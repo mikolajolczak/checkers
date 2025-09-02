@@ -2,14 +2,8 @@ package checkers.src.main.java;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import javax.swing.JPanel;
 
-/**
- * Represents a checkers game board with pieces and selection state.
- * Responsible for drawing the board and managing piece positions.
- */
 public class BoardPanel extends JPanel {
   private final BoardState state;
   private final SelectionState selection;

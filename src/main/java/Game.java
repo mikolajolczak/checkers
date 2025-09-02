@@ -6,27 +6,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
-/**
- * The Game class is the entry point for the Checkers game.
- * It handles the initial color selection for the player and
- * initializes the game board, controller, and bot.
- */
 public final class Game {
 
 
-  /**
-   * Private constructor to prevent instantiation of this utility class.
-   */
   private Game() {
   }
 
-  /**
-   * Main method to start the Checkers game.
-   * It displays a color selection frame for the player, sets up the game board,
-   * initializes the controller, and starts the bot.
-   *
-   * @param args command-line arguments (not used)
-   */
   public static void main(final String[] args) {
     JFrame colorChoiceFrame = new JFrame();
     colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
@@ -47,12 +32,13 @@ public final class Game {
     MoveEvaluator moveEvaluator = new MoveEvaluator(move,playerConfiguration,moveExecutor);
     MoveGenerator moveGenerator = new MoveGenerator(move, playerConfiguration, boardState);
     Bot bot = new Bot(boardState, moveGenerator, moveEvaluator);
-
-    BotController botController = new BotController(bot, moveExecutor, boardState,
-        promotionService, uiController, playerConfiguration, turnManager);
+    BotDecisionService botDecisionService = new BotDecisionService(bot);
+    BotMoveExecutor botMoveExecutor = new BotMoveExecutor(moveExecutor, promotionService, boardState, playerConfiguration);
+    BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
+    BotController botController = new BotController(botDecisionService, botMoveExecutor, botUIHandler);
     CaptureHandler captureHandler = new CaptureHandler(moveExecutor, promotionService, turnManager, boardState, botController, move);
     MoveHandler moveHandler = new MoveHandler(moveExecutor, promotionService, turnManager, boardState, botController, moveService, uiController);
-    ClickHandler clickHandler = new ClickHandler(boardPanel, moveHandler,
+    ClickHandler clickHandler = new ClickHandler(moveHandler,
         captureHandler, selectionState);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");

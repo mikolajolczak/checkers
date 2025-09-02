@@ -7,15 +7,13 @@ public final class ClickHandler extends MouseAdapter {
 
   private final MoveHandler moveHandler;
   private final CaptureHandler captureHandler;
-  private final BoardPanel panel;
   private final SelectionState selectionState;
   private boolean firstClick = true;
   private int firstClickRow;
   private int firstClickCol;
 
-  public ClickHandler(BoardPanel panel, MoveHandler moveHandler, CaptureHandler captureHandler,
+  public ClickHandler(MoveHandler moveHandler, CaptureHandler captureHandler,
                       SelectionState selectionStateParam) {
-    this.panel = panel;
     this.moveHandler = moveHandler;
     this.captureHandler = captureHandler;
     selectionState = selectionStateParam;
