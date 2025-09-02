@@ -51,11 +51,12 @@ public final class Game {
     CaptureHandler captureHandler =
         new CaptureHandler(moveExecutor, promotionService, turnManager,
             boardState, botController, move);
-    MoveHandler moveHandler =
-        new MoveHandler(moveExecutor, promotionService, turnManager, boardState,
-            botController, moveService, uiController);
-    ClickHandler clickHandler = new ClickHandler(moveHandler,
-        captureHandler, selectionState);
+    MovePerformer movePerformer = new MovePerformer(moveExecutor,
+        promotionService, boardState);
+    MoveValidator moveValidator = new MoveValidator(moveService, boardState);
+    MoveCoordinator moveCoordinator =
+        new MoveCoordinator(movePerformer, moveValidator, uiController, turnManager, botController);
+    ClickHandler clickHandler = new ClickHandler(moveValidator, captureHandler, selectionState, uiController, moveCoordinator);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
