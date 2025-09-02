@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class MoveGenerator {
   private final Move move;
   private final PlayerConfiguration playerConfiguration;
-  private final ArrayList<int[]> possibleMoves = new ArrayList<>();
+  private final ArrayList<BotDecision> possibleMoves = new ArrayList<>();
   public MoveGenerator(Move moveParam,
                        PlayerConfiguration playerConfigurationParam) {
     move = moveParam;
     playerConfiguration = playerConfigurationParam;
   }
 
-  public ArrayList<int[]> getPossibleMoves(BoardState boardState) {
+  public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
     possibleMoves.clear();
     boolean mustTake = move.checkAllPiecesPossibleTakes(
         playerConfiguration.getBotColor(), playerConfiguration.getBotKingColor(),
@@ -68,7 +68,7 @@ public class MoveGenerator {
           move
               .legalTakeMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
-            new int[]{row, col, newRow, newCol, GameConstants.TAKE});
+            new BotDecision(row, col, newRow, newCol, GameConstants.TAKE));
       }
     }
   }
@@ -84,7 +84,7 @@ public class MoveGenerator {
           move
               .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
         possibleMoves.add(
-            new int[]{row, col, newRow, newCol, GameConstants.MOVE});
+            new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
       }
     }
   }
@@ -103,7 +103,7 @@ public class MoveGenerator {
             .legalTakeMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
-                new int[]{row, col, newRow, newCol, GameConstants.QUEEN_TAKE});
+                new BotDecision(row, col, newRow, newCol, GameConstants.QUEEN_TAKE));
           }
         }
       }
@@ -124,7 +124,7 @@ public class MoveGenerator {
             .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
           if (hasObstaclesBetween(col, row, newCol, newRow)) {
             possibleMoves.add(
-                new int[]{row, col, newRow, newCol, GameConstants.MOVE});
+                new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
           }
         } else {
           break;

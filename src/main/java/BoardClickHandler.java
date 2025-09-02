@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 
 public final class BoardClickHandler extends MouseAdapter {
 
-  private final BoardController controller;
   private final BotController botController;
   private final Move move;
   private final BoardPanel panel;
@@ -14,15 +13,28 @@ public final class BoardClickHandler extends MouseAdapter {
   private int firstClickCol = GameConstants.BOARD_SIZE;
   private int firstClickColor;
   private final MoveService moveService;
+  private final TurnManager turnManager;
+  private final UIController uiController;
+  private final BoardState boardState;
+  private final MoveExecutor moveExecutor;
+  private final PromotionService promotionService;
 
-  public BoardClickHandler(BoardController controller,
-                           BotController botControllerParam, Move moveParam,
-                           BoardPanel panelParam, MoveService moveServiceParam) {
-    this.controller = controller;
+  public BoardClickHandler(BotController botControllerParam, Move moveParam,
+                           BoardPanel panelParam, MoveService moveServiceParam,
+                           TurnManager turnManagerParam,
+                           UIController uiControllerParam,
+                           BoardState boardStateParam,
+                           MoveExecutor moveExecutorParam,
+                           PromotionService promotionServiceParam) {
     botController = botControllerParam;
     move = moveParam;
     panel = panelParam;
     moveService = moveServiceParam;
+    turnManager = turnManagerParam;
+    uiController = uiControllerParam;
+    boardState = boardStateParam;
+    moveExecutor = moveExecutorParam;
+    promotionService = promotionServiceParam;
   }
 
   @Override
@@ -36,17 +48,17 @@ public final class BoardClickHandler extends MouseAdapter {
       handleSecondClick(row, col);
 
     }
-    controller.getUiController().refreshBoard();
+    uiController.refreshBoard();
   }
 
   private void handleFirstClick(int row, int col) {
-    if (!moveService.canSelectPiece(row, col, controller.getBoardState())) {
+    if (!moveService.canSelectPiece(row, col, boardState)) {
       return;
     }
 
     firstClickRow = row;
     firstClickCol = col;
-    firstClickColor = controller.getBoardState().getPiece(row, col);
+    firstClickColor = boardState.getPiece(row, col);
     panel.setSelectedColumn(col);
     panel.setSelectedRow(row);
 
@@ -56,7 +68,7 @@ public final class BoardClickHandler extends MouseAdapter {
   private void handleSecondClick(int row, int col) {
     panel.setSelectedColumn(GameConstants.BOARD_SIZE);
     panel.setSelectedRow(GameConstants.BOARD_SIZE);
-    if (controller.getMoveService().mustTake()) {
+    if (moveService.mustTake()) {
       handleTakeClick(row, col);
     } else {
       handleNormalClick(row, col);
@@ -66,14 +78,14 @@ public final class BoardClickHandler extends MouseAdapter {
   }
 
   private void handleNormalClick(int row, int col) {
-    if (controller.getMoveService().isLegalMove(row, col, firstClickCol, firstClickRow, firstClickColor)
-        && controller.getBoardState().getPiece(row, col) == GameConstants.EMPTY) {
+    if (moveService.isLegalMove(row, col, firstClickCol, firstClickRow, firstClickColor)
+        && boardState.getPiece(row, col) == GameConstants.EMPTY) {
 
-      controller.getMoveExecutor().executeNormalMove(firstClickRow, firstClickCol, row, col, firstClickColor, controller.getBoardState());
-      controller.getPromotionService().promoteIfNeeded(row, col, firstClickColor);
-      controller.getTurnManager().switchTurn();
+      moveExecutor.executeNormalMove(firstClickRow, firstClickCol, row, col, firstClickColor, boardState);
+      promotionService.promoteIfNeeded(row, col, firstClickColor);
+      turnManager.switchTurn();
 
-      if (controller.getTurnManager().isCurrentPlayerBot()) {
+      if (turnManager.isCurrentPlayerBot()) {
         botController.executeTurn();
       }
     }
@@ -84,18 +96,18 @@ public final class BoardClickHandler extends MouseAdapter {
       return;
     }
 
-    if (controller.getPromotionService().isQueen(firstClickColor)) {
-      controller.getMoveExecutor().executeQueenCapture(firstClickRow, firstClickCol, row, col,
-          controller.getTurnManager().getCurrentKingColor(), controller.getBoardState());
+    if (promotionService.isQueen(firstClickColor)) {
+      moveExecutor.executeQueenCapture(firstClickRow, firstClickCol, row, col,
+          turnManager.getCurrentKingColor(), boardState);
     } else {
-      controller.getMoveExecutor().executeCapture(firstClickRow, firstClickCol, row, col,
-          controller.getTurnManager().getCurrentColor(), controller.getBoardState());
+      moveExecutor.executeCapture(firstClickRow, firstClickCol, row, col,
+          turnManager.getCurrentColor(), boardState);
     }
 
-    controller.getPromotionService().promoteIfNeeded(row, col, firstClickColor);
-    controller.getTurnManager().switchTurn();
+    promotionService.promoteIfNeeded(row, col, firstClickColor);
+    turnManager.switchTurn();
 
-    if (controller.getTurnManager().isCurrentPlayerBot()) {
+    if (turnManager.isCurrentPlayerBot()) {
       botController.executeTurn();
     }
   }

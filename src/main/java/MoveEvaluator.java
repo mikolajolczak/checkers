@@ -13,23 +13,23 @@ public class MoveEvaluator {
     moveExecutor = moveExecutorParam;
   }
 
-  public int evaluateMove(int[] moveArray, BoardState boardState) {
-    applyMoveToBoard(moveArray, boardState);
+  public int evaluateMove(BotDecision decisionParam, BoardState boardState) {
+    moveExecutor.applyMoveToBoard(decisionParam, boardState, playerConfiguration);
 
     int score = 0;
-    score += evaluatePlayerThreats(moveArray, boardState);
+    score += evaluatePlayerThreats(decisionParam, boardState);
     score += evaluateTakeOpportunities(boardState);
-    score += evaluateQueenPromotionChance(moveArray, boardState);
+    score += evaluateQueenPromotionChance(decisionParam, boardState);
 
     return score;
   }
 
-  private int evaluatePlayerThreats(int[] moveArray, BoardState boardState) {
+  private int evaluatePlayerThreats(BotDecision decisionParam, BoardState boardState) {
     if (!playerCanTakeAfterMove(boardState)) {
       return 0;
     }
 
-    int movedPiece = boardState.getPiece(moveArray[2], moveArray[3]);
+    int movedPiece = boardState.getPiece(decisionParam.toRow(), decisionParam.toCol());
     return move.getPromotionService().isQueen(movedPiece)
         ? -GameConstants.SCORE_PLAYER_THREAT_KING
         : -GameConstants.SCORE_PLAYER_THREAT;
@@ -56,9 +56,9 @@ public class MoveEvaluator {
         boardState);
   }
 
-  private int evaluateQueenPromotionChance(int[] moveArray,
+  private int evaluateQueenPromotionChance(BotDecision botDecisionParam,
                                            BoardState boardState) {
-    int movedPiece = boardState.getPiece(moveArray[2], moveArray[3]);
+    int movedPiece = boardState.getPiece(botDecisionParam.toRow(),botDecisionParam.toCol());
 
     if (canPromoteToQueen(boardState, movedPiece)) {
       return GameConstants.SCORE_CHANCE_FOR_QUEEN;
@@ -72,24 +72,6 @@ public class MoveEvaluator {
         playerConfiguration.getBotColor(),
         boardState,
         movedPiece);
-  }
-
-  private void applyMoveToBoard(int[] moveArray, BoardState boardState) {
-    int moveType = moveArray[GameConstants.MOVE_TYPE];
-    int fromRow = moveArray[0], fromCol = moveArray[1];
-    int toRow = moveArray[2], toCol = moveArray[3];
-
-    switch (moveType) {
-      case GameConstants.MOVE:
-        moveExecutor.executeNormalMove(fromRow, fromCol, toRow, toCol,playerConfiguration.getBotColor() , boardState);
-        break;
-      case GameConstants.TAKE:
-        moveExecutor.executeCapture(fromRow, fromCol, toRow, toCol, playerConfiguration.getBotColor(), boardState);
-        break;
-      case GameConstants.QUEEN_TAKE:
-        moveExecutor.executeQueenCapture(fromRow, fromCol, toRow, toCol, playerConfiguration.getBotKingColor(), boardState);
-        break;
-    }
   }
 
   public boolean isChanceForQueen(int colorToCheck, BoardState boardState,

@@ -27,4 +27,21 @@ public class MoveExecutor {
     int capturedCol = toCol - colDir;
     board.setPiece(capturedRow, capturedCol, GameConstants.EMPTY);
   }
+  public void applyMoveToBoard(BotDecision decision, BoardState boardState, PlayerConfiguration playerConfiguration) {
+    switch (decision.moveType()) {
+      case GameConstants.MOVE:
+        int color = boardState.getPiece(decision.fromRow(), decision.fromCol());
+        executeNormalMove(decision.fromRow(), decision.fromCol(),
+            decision.toRow(), decision.toCol(), color, boardState);
+        break;
+      case GameConstants.TAKE:
+        executeCapture(decision.fromRow(), decision.fromCol(),
+            decision.toRow(), decision.toCol(), playerConfiguration.getBotColor(), boardState);
+        break;
+      case GameConstants.QUEEN_TAKE:
+        executeQueenCapture(decision.fromRow(), decision.fromCol(),
+            decision.toRow(), decision.toCol(), playerConfiguration.getBotKingColor(), boardState);
+        break;
+    }
+  }
 }

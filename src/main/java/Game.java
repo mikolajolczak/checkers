@@ -46,12 +46,10 @@ public final class Game {
     MoveEvaluator moveEvaluator = new MoveEvaluator(move,playerConfiguration,moveExecutor);
     MoveGenerator moveGenerator = new MoveGenerator(move, playerConfiguration);
     Bot bot = new Bot(boardState, moveGenerator, moveEvaluator);
-    BoardController controller =
-        new BoardController(turnManager,
-            moveService, moveExecutor, uiController, boardState,
-            promotionService);
-    BotController botController = new BotController(bot, moveExecutor, boardState, promotionService, uiController, playerConfiguration, turnManager);
-    BoardClickHandler clickHandler = new BoardClickHandler(controller,botController ,move, boardPanel, moveService);
+
+    BotController botController = new BotController(bot, moveExecutor, boardState,
+        promotionService, uiController, playerConfiguration, turnManager);
+    BoardClickHandler clickHandler = new BoardClickHandler(botController, move, boardPanel, moveService, turnManager, uiController, boardState, moveExecutor, promotionService);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");

@@ -77,7 +77,6 @@ public class GameConstants {
    * Height of the color choice frame.
    */
   public static final int COLOR_CHOICE_HEIGHT = 90;
-  public static final int MOVE_ARRAY_LENGTH = 5;
   public static final int INITIAL_SUM_MAX = -100;
 
 
@@ -85,7 +84,6 @@ public class GameConstants {
   public static final int TAKE = 1;
   public static final int QUEEN_TAKE = 2;
   public static final int LAST_ROW_INDEX = GameConstants.BOARD_SIZE - 1;
-  public static final int MOVE_TYPE = 4;
   public static final int SCORE_PLAYER_THREAT = 20;
   public static final int SCORE_PLAYER_THREAT_KING = 30;
   public static final int SCORE_TAKE_POSSIBLE = 10;
