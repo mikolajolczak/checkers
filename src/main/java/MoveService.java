@@ -12,9 +12,9 @@ public class MoveService {
     boardState = boardStateParam;
   }
 
-  public boolean canSelectPiece(int row, int col, int currentColor, int currentKingColor, BoardState boardStateParam) {
+  public boolean canSelectPiece(int row, int col, BoardState boardStateParam) {
     int value = boardStateParam.getPiece(row, col);
-    boolean isCurrentPiece = value == currentColor || value == currentKingColor;
+    boolean isCurrentPiece = value == turnManager.getCurrentColor() || value == turnManager.getCurrentKingColor();
     return isCurrentPiece && (move.canIMove(col, row) || move.canITake(col, row, boardStateParam));
   }
 

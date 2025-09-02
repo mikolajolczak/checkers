@@ -13,14 +13,16 @@ public final class BoardClickHandler extends MouseAdapter {
   private int firstClickRow = GameConstants.BOARD_SIZE;
   private int firstClickCol = GameConstants.BOARD_SIZE;
   private int firstClickColor;
+  private final MoveService moveService;
 
   public BoardClickHandler(BoardController controller,
                            BotController botControllerParam, Move moveParam,
-                           BoardPanel panelParam) {
+                           BoardPanel panelParam, MoveService moveServiceParam) {
     this.controller = controller;
     botController = botControllerParam;
     move = moveParam;
     panel = panelParam;
+    moveService = moveServiceParam;
   }
 
   @Override
@@ -38,7 +40,7 @@ public final class BoardClickHandler extends MouseAdapter {
   }
 
   private void handleFirstClick(int row, int col) {
-    if (!controller.canSelectPiece(row, col)) {
+    if (!moveService.canSelectPiece(row, col, controller.getBoardState())) {
       return;
     }
 

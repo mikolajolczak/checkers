@@ -6,8 +6,6 @@ package checkers.src.main.java;
  * and bot moves, and interacting with the game frame.
  */
 public final class BoardController {
-  private final PlayerConfiguration playerConfig;
-  private final Bot bot;
   private final TurnManager turnManager;
   private final MoveService moveService;
   private final MoveExecutor moveExecutor;
@@ -39,26 +37,17 @@ public final class BoardController {
     return promotionService;
   }
 
-  public BoardController(PlayerConfiguration playerConfigParam, Bot botParam,
-                         TurnManager turnManagerParam,
+  public BoardController(TurnManager turnManagerParam,
                          MoveService moveServiceParam,
                          MoveExecutor moveExecutorParam,
                          UIController uiControllerParam,
                          BoardState boardStateParam,
                          PromotionService promotionServiceParam) {
-    playerConfig = playerConfigParam;
-    bot = botParam;
     turnManager = turnManagerParam;
     moveService = moveServiceParam;
     moveExecutor = moveExecutorParam;
     uiController = uiControllerParam;
     boardState = boardStateParam;
     promotionService = promotionServiceParam;
-  }
-
-  public boolean canSelectPiece(int row, int col) {
-    return moveService.canSelectPiece(row, col,
-        turnManager.getCurrentColor(),
-        turnManager.getCurrentKingColor(), boardState);
   }
 }
