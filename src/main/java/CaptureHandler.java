@@ -28,7 +28,7 @@ public final class CaptureHandler {
       return;
     }
 
-    if (boardState.isItKing(pieceColor)) {
+    if (PieceRules.isKing(pieceColor)) {
       moveExecutor.executeQueenCapture(fromRow, fromCol, toRow, toCol,
           turnManager.getCurrentKingColor(), boardState);
     } else {

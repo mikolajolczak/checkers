@@ -17,6 +17,7 @@ public final class Game {
     colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
         GameConstants.COLOR_CHOICE_Y);
     BoardState boardState = new BoardState();
+    BoardInitializer.setUpPawns(boardState);
     SelectionState selectionState = new SelectionState();
     BoardPanel boardPanel = new BoardPanel();
     Frame boardFrame = new Frame(boardState, boardPanel);

@@ -42,7 +42,7 @@ public class Move {
   }
 
   public boolean legalTakeMove(int c2, int r2, int c1, int r1, int color) {
-    if (!boardState.isItEmpty(c2, r2) || isItOnTheSameDiagonal(c1, r1, c2,
+    if (!PieceRules.isEmpty(boardState.getPiece(r2,c2)) || isItOnTheSameDiagonal(c1, r1, c2,
         r2)) {
       return false;
     }
@@ -53,25 +53,23 @@ public class Move {
     return switch (color) {
       case GameConstants.RED ->
           Math.abs(c2 - c1) == 2 && Math.abs(r2 - r1) == 2 &&
-              (boardState.isItBlack(midC, midR) || boardState.isItBlackKing(
-                  midC, midR));
+              (PieceRules.isBlack(boardState.getPiece(midR, midC)) || PieceRules.isBlackKing(
+                  boardState.getPiece(midR, midC)));
       case GameConstants.BLACK ->
           Math.abs(c2 - c1) == 2 && Math.abs(r2 - r1) == 2 &&
-              (boardState.isItRed(midC, midR) || boardState.isItRedKing(midC,
-                  midR));
+              (PieceRules.isRed(boardState.getPiece(midR,midC)) || PieceRules.isRedKing(boardState.getPiece(midR,midC)) );
       case GameConstants.BLACK_KING -> {
         if (diagonalHasPieces(c1, r1, c2, r2, dc, dr)) {
           yield false;
         }
-        yield boardState.isItRed(c2 - dc, r2 - dr) || boardState.isItRedKing(
-            c2 - dc, r2 - dr);
+        yield PieceRules.isRed(boardState.getPiece(r2-dr, c2-dc)) || PieceRules.isRedKing(boardState.getPiece(r2-dr, c2-dc));
       }
       case GameConstants.RED_KING -> {
         if (diagonalHasPieces(c1, r1, c2, r2, dc, dr)) {
           yield false;
         }
-        yield boardState.isItBlack(c2 - dc, r2 - dr)
-            || boardState.isItBlackKing(c2 - dc, r2 - dr);
+        yield PieceRules.isBlack(boardState.getPiece(r2-dr, c2-dc))
+            || PieceRules.isBlackKing(boardState.getPiece(r2-dr, c2-dc));
       }
       default -> false;
     };
@@ -81,22 +79,21 @@ public class Move {
     int piece = boardState.getPiece(row, col);
     if (piece == GameConstants.RED) {
       return
-          (col < GameConstants.LAST_ROW_INDEX && boardState.isItEmpty(col + 1,
-              row - 1)) ||
-              (col > 0 && boardState.isItEmpty(col - 1, row - 1));
+
+          (col < GameConstants.LAST_ROW_INDEX && PieceRules.isEmpty(boardState.getPiece(row - 1, col+1))) ||
+              (col > 0 && PieceRules.isEmpty(boardState.getPiece(row - 1, col-1)));
     } else if (piece == GameConstants.BLACK) {
       return
-          (col < GameConstants.LAST_ROW_INDEX && boardState.isItEmpty(col + 1,
-              row + 1)) ||
-              (col > 0 && boardState.isItEmpty(col - 1, row + 1));
+          (col < GameConstants.LAST_ROW_INDEX && PieceRules.isEmpty(boardState.getPiece(row + 1, col+1))) ||
+              (col > 0 && PieceRules.isEmpty(boardState.getPiece(row + 1, col-1)));
     } else {
-      return boardState.isItKing(piece);
+      return PieceRules.isKing(piece);
     }
   }
 
   public boolean canITake(int col, int row, BoardState bs) {
     int piece = bs.getPiece(row, col);
-    return boardState.isItKing(piece) ? canKingTake(row, col, piece, bs)
+    return PieceRules.isKing(piece) ? canKingTake(row, col, piece, bs)
         : canRegularPieceTake(row, col, piece, bs);
   }
 
@@ -162,7 +159,7 @@ public class Move {
 
   public boolean isItLegalSecondClickMove(int c2, int r2, int c1, int r1,
                                           int color) {
-    if (!boardState.isItEmpty(c2, r2)) {
+    if (!PieceRules.isEmpty(boardState.getPiece(r2,c2))) {
       return false;
     }
 
