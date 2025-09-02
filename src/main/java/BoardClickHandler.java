@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 public final class BoardClickHandler extends MouseAdapter {
 
   private final BoardController controller;
+  private final BotController botController;
   private final Move move;
   private final BoardPanel panel;
   private boolean firstClick = true;
@@ -13,9 +14,11 @@ public final class BoardClickHandler extends MouseAdapter {
   private int firstClickCol = GameConstants.BOARD_SIZE;
   private int firstClickColor;
 
-  public BoardClickHandler(BoardController controller, Move moveParam,
+  public BoardClickHandler(BoardController controller,
+                           BotController botControllerParam, Move moveParam,
                            BoardPanel panelParam) {
     this.controller = controller;
+    botController = botControllerParam;
     move = moveParam;
     panel = panelParam;
   }
@@ -69,7 +72,7 @@ public final class BoardClickHandler extends MouseAdapter {
       controller.getTurnManager().switchTurn();
 
       if (controller.getTurnManager().isCurrentPlayerBot()) {
-        controller.executeBotTurn();
+        botController.executeTurn();
       }
     }
   }
@@ -91,7 +94,7 @@ public final class BoardClickHandler extends MouseAdapter {
     controller.getTurnManager().switchTurn();
 
     if (controller.getTurnManager().isCurrentPlayerBot()) {
-      controller.executeBotTurn();
+      botController.executeTurn();
     }
   }
 }

@@ -50,8 +50,8 @@ public final class Game {
         new BoardController(playerConfiguration, bot, turnManager,
             moveService, moveExecutor, uiController, boardState,
             promotionService);
-
-    BoardClickHandler clickHandler = new BoardClickHandler(controller, move, boardPanel);
+    BotController botController = new BotController(bot, moveExecutor, boardState, promotionService, uiController, playerConfiguration, turnManager);
+    BoardClickHandler clickHandler = new BoardClickHandler(controller,botController ,move, boardPanel);
     boardFrame.addBoardListener(clickHandler);
     JButton red = new JButton("Red");
     JButton black = new JButton("Black");
@@ -84,7 +84,7 @@ public final class Game {
       colorChoiceFrame.dispose();
       boardFrame.setVisible(true);
       if (turnManager.isCurrentPlayerBot()) {
-        controller.executeBotTurn();
+        botController.executeTurn();
       }
     });
 
