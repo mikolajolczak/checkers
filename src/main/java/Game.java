@@ -26,7 +26,7 @@ public final class Game {
         BoardViewMapper.toPieceViews(boardState, selectionState));
     refreshBoardPanel.run();
     PromotionService promotionService = new PromotionService(boardState);
-    Move move = new Move(boardState);
+
     PlayerConfiguration playerConfiguration = new PlayerConfiguration();
     TurnManager turnManager =
         new TurnManager(playerConfiguration, GameConstants.RED,
@@ -35,13 +35,24 @@ public final class Game {
     MoveExecutor moveExecutor = new MoveExecutor();
     UIController uiController = new UIController(boardFrame);
     uiController.setRefreshBoardPanel(refreshBoardPanel);
+    PositionValidator positionValidator = new PositionValidator();
+    DiagonalValidator diagonalValidator = new DiagonalValidator(positionValidator);
+    CaptureRules captureRules = new CaptureRules(positionValidator,diagonalValidator);
+    ThreatEvaluator threatEvaluator = new ThreatEvaluator(captureRules);
+    CaptureEvaluator captureEvaluator = new CaptureEvaluator(captureRules);
+    PromotionEvaluator promotionEvaluator = new PromotionEvaluator();
+    BestMoveSelector bestMoveSelector = new BestMoveSelector(threatEvaluator, captureEvaluator, promotionEvaluator,moveExecutor);
+    MoveRules moveRules = new MoveRules(positionValidator);
+    RegularMoveGenerator regularMoveGenerator = new RegularMoveGenerator(moveRules,positionValidator);
+    KingMoveGenerator kingMoveGenerator = new KingMoveGenerator(moveRules, positionValidator, diagonalValidator);
+    CaptureGenerator captureGenerator = new CaptureGenerator(captureRules, positionValidator, diagonalValidator);
     MoveEvaluator moveEvaluator =
-        new MoveEvaluator(move, playerConfiguration, moveExecutor);
+        new MoveEvaluator(bestMoveSelector);
     MoveGenerator moveGenerator =
-        new MoveGenerator(move, playerConfiguration, boardState);
+        new MoveGenerator(captureRules, moveRules, regularMoveGenerator, kingMoveGenerator, captureGenerator,playerConfiguration);
     MoveService moveService =
-        new MoveService(move, turnManager, boardState, moveGenerator);
-    Bot bot = new Bot(boardState, moveService, moveEvaluator);
+        new MoveService(moveRules, captureRules, turnManager, boardState, moveGenerator);
+    Bot bot = new Bot(boardState, moveService, moveEvaluator, playerConfiguration);
     BotDecisionService botDecisionService = new BotDecisionService(bot);
     BotMoveExecutor botMoveExecutor =
         new BotMoveExecutor(moveExecutor, promotionService, boardState,
@@ -51,10 +62,11 @@ public final class Game {
         new BotController(botDecisionService, botMoveExecutor, botUIHandler);
     CaptureHandler captureHandler =
         new CaptureHandler(moveExecutor, promotionService, turnManager,
-            boardState, botController, move);
+            boardState, botController, captureRules);
     MovePerformer movePerformer = new MovePerformer(moveExecutor,
         promotionService, boardState);
-    MoveValidator moveValidator = new MoveValidator(moveService, boardState);
+    MoveValidator moveValidator = new MoveValidator(moveService,
+        positionValidator, boardState);
     MoveCoordinator moveCoordinator =
         new MoveCoordinator(movePerformer, moveValidator, uiController, turnManager, botController);
     ClickHandler clickHandler = new ClickHandler(moveValidator, captureHandler, selectionState, uiController, moveCoordinator);

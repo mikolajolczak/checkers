@@ -2,8 +2,6 @@ package checkers.src.main.java;
 
 public class PieceRules {
 
-  public PieceRules() {}
-
   public static boolean isRed(int piece) {
     return piece == GameConstants.RED;
   }

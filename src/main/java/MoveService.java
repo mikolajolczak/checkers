@@ -3,37 +3,44 @@ package checkers.src.main.java;
 import java.util.ArrayList;
 
 public class MoveService {
-  private final Move move;
+
+  private final MoveRules moveRules;
+  private final CaptureRules captureRules;
   private final TurnManager turnManager;
   private final BoardState boardState;
   private final MoveGenerator moveGenerator;
 
-  public MoveService(Move moveParam, TurnManager turnManagerParam,
-                     BoardState boardStateParam,
-                     MoveGenerator moveGeneratorParam) {
-    move = moveParam;
-    turnManager = turnManagerParam;
-    boardState = boardStateParam;
-    moveGenerator = moveGeneratorParam;
+  public MoveService(MoveRules moveRules, CaptureRules captureRules,
+                     TurnManager turnManager, BoardState boardState,
+                     MoveGenerator moveGenerator) {
+    this.moveRules = moveRules;
+    this.captureRules = captureRules;
+    this.turnManager = turnManager;
+    this.boardState = boardState;
+    this.moveGenerator = moveGenerator;
   }
 
   public boolean canSelectPiece(int row, int col, BoardState boardStateParam) {
     int value = boardStateParam.getPiece(row, col);
     boolean isCurrentPiece = value == turnManager.getCurrentColor()
         || value == turnManager.getCurrentKingColor();
-    return isCurrentPiece && (move.canIMove(col, row) || move.canITake(col, row,
-        boardStateParam));
+
+    return isCurrentPiece &&
+        (moveRules.canMove(col, row, boardStateParam) ||
+            captureRules.canCapture(col, row, boardStateParam));
   }
 
   public boolean isLegalMove(int row, int col, int firstClickCol,
                              int firstClickRow, int firstClickColor) {
-    return move.isItLegalSecondClickMove(col, row, firstClickCol, firstClickRow,
-        firstClickColor);
+    return moveRules.isLegalMove(col, row, firstClickCol, firstClickRow,
+        firstClickColor, boardState);
   }
 
   public boolean mustTake() {
-    return move.checkAllPiecesPossibleTakes(turnManager.getCurrentColor(),
-        turnManager.getCurrentKingColor(), boardState);
+    return captureRules.checkAllPiecesPossibleCaptures(
+        turnManager.getCurrentColor(),
+        turnManager.getCurrentKingColor(),
+        boardState);
   }
 
   public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {

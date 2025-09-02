@@ -27,7 +27,4 @@ public class BoardState {
     return new BoardState(pieces);
   }
 
-  public int getSize() {
-    return pieces.length;
-  }
 }

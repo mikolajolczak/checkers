@@ -3,22 +3,31 @@ package checkers.src.main.java;
 import java.util.ArrayList;
 
 public class MoveGenerator {
-  private final Move move;
-  private final PlayerConfiguration playerConfiguration;
-  private final ArrayList<BotDecision> possibleMoves = new ArrayList<>();
-  private final BoardState boardState;
 
-  public MoveGenerator(Move moveParam,
-                       PlayerConfiguration playerConfigurationParam,
-                       BoardState boardStateParam) {
-    move = moveParam;
-    playerConfiguration = playerConfigurationParam;
-    boardState = boardStateParam;
+  private final CaptureRules captureRules;
+  private final MoveRules moveRules;
+  private final RegularMoveGenerator regularMoveGenerator;
+  private final KingMoveGenerator kingMoveGenerator;
+  private final CaptureGenerator captureGenerator;
+  private final PlayerConfiguration playerConfiguration;
+
+  public MoveGenerator(CaptureRules captureRules, MoveRules moveRules,
+                       RegularMoveGenerator regularMoveGenerator,
+                       KingMoveGenerator kingMoveGenerator,
+                       CaptureGenerator captureGenerator,
+                       PlayerConfiguration playerConfiguration) {
+    this.captureRules = captureRules;
+    this.moveRules = moveRules;
+    this.regularMoveGenerator = regularMoveGenerator;
+    this.kingMoveGenerator = kingMoveGenerator;
+    this.captureGenerator = captureGenerator;
+    this.playerConfiguration = playerConfiguration;
   }
 
   public ArrayList<BotDecision> getPossibleMoves(BoardState boardState) {
-    possibleMoves.clear();
-    boolean mustTake = move.checkAllPiecesPossibleTakes(
+    ArrayList<BotDecision> possibleMoves = new ArrayList<>();
+
+    boolean mustTake = captureRules.checkAllPiecesPossibleCaptures(
         playerConfiguration.getBotColor(),
         playerConfiguration.getBotKingColor(),
         boardState);
@@ -31,23 +40,15 @@ public class MoveGenerator {
           continue;
         }
 
-        if (mustTake && move
-            .canITake(col, row, boardState)) {
-          findCaptureMoves(row, col, piece);
-        } else if (!mustTake && move.canIMove(col, row)) {
-          findRegularMoves(row, col, piece);
+        if (mustTake && captureRules.canCapture(col, row, boardState)) {
+          generateCaptureMoves(row, col, piece, possibleMoves, boardState);
+        } else if (!mustTake && moveRules.canMove(col, row, boardState)) {
+          generateRegularMoves(row, col, piece, possibleMoves, boardState);
         }
       }
     }
-    return possibleMoves;
-  }
 
-  private void findCaptureMoves(int row, int col, int piece) {
-    if (PieceRules.isKing(piece)) {
-      findKingCaptures(row, col, piece);
-    } else {
-      findRegularCaptures(row, col, piece);
-    }
+    return possibleMoves;
   }
 
   private boolean isBotPiece(int piece) {
@@ -55,104 +56,21 @@ public class MoveGenerator {
         piece == playerConfiguration.getBotKingColor();
   }
 
-  private void findRegularMoves(int row, int col, int piece) {
+  private void generateCaptureMoves(int row, int col, int piece,
+                                    ArrayList<BotDecision> moves, BoardState boardState) {
     if (PieceRules.isKing(piece)) {
-      findKingMoves(row, col, piece);
+      captureGenerator.findKingCaptures(row, col, piece, moves, boardState);
     } else {
-      findRegularPieceMoves(row, col, piece);
+      captureGenerator.findRegularCaptures(row, col, piece, moves, boardState);
     }
   }
 
-
-  private void findRegularCaptures(int row, int col, int piece) {
-    int direction = (piece == GameConstants.RED) ? -1 : 1;
-
-    for (int[] dir : new int[][]{{direction, -1}, {direction, 1}}) {
-      int newRow = row + 2 * dir[0];
-      int newCol = col + 2 * dir[1];
-
-      if (move.isValidPosition(newRow, newCol) &&
-          move
-              .legalTakeMove(newCol, newRow, col, row, piece)) {
-        possibleMoves.add(
-            new BotDecision(row, col, newRow, newCol, GameConstants.TAKE));
-      }
+  private void generateRegularMoves(int row, int col, int piece,
+                                    ArrayList<BotDecision> moves, BoardState boardState) {
+    if (PieceRules.isKing(piece)) {
+      kingMoveGenerator.findKingMoves(row, col, piece, moves, boardState);
+    } else {
+      regularMoveGenerator.findRegularPieceMoves(row, col, piece, moves, boardState);
     }
-  }
-
-  private void findRegularPieceMoves(int row, int col, int piece) {
-    int direction = (piece == GameConstants.RED) ? -1 : 1;
-
-    for (int[] dir : new int[][]{{direction, -1}, {direction, 1}}) {
-      int newRow = row + dir[0];
-      int newCol = col + dir[1];
-
-      if (move.isValidPosition(newRow, newCol) &&
-          move
-              .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
-        possibleMoves.add(
-            new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
-      }
-    }
-  }
-
-  private void findKingCaptures(int row, int col, int piece) {
-    for (int[] dir : GameConstants.DIRECTIONS) {
-      for (int dist = 1; dist < GameConstants.BOARD_SIZE; dist++) {
-        int newRow = row + dist * dir[0];
-        int newCol = col + dist * dir[1];
-
-        if (!move.isValidPosition(newRow, newCol)) {
-          break;
-        }
-
-        if (move
-            .legalTakeMove(newCol, newRow, col, row, piece)) {
-          if (hasObstaclesBetween(col, row, newCol, newRow)) {
-            possibleMoves.add(
-                new BotDecision(row, col, newRow, newCol,
-                    GameConstants.QUEEN_TAKE));
-          }
-        }
-      }
-    }
-  }
-
-  private void findKingMoves(int row, int col, int piece) {
-    for (int[] dir : GameConstants.DIRECTIONS) {
-      for (int dist = 1; dist < GameConstants.BOARD_SIZE; dist++) {
-        int newRow = row + dist * dir[0];
-        int newCol = col + dist * dir[1];
-
-        if (!move.isValidPosition(newRow, newCol)) {
-          break;
-        }
-
-        if (move
-            .isItLegalSecondClickMove(newCol, newRow, col, row, piece)) {
-          if (hasObstaclesBetween(col, row, newCol, newRow)) {
-            possibleMoves.add(
-                new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
-          }
-        } else {
-          break;
-        }
-      }
-    }
-  }
-
-  private boolean hasObstaclesBetween(int fromCol, int fromRow, int toCol,
-                                      int toRow) {
-
-    if (Math.abs(toRow - fromRow) > 1) {
-      return
-          !move
-              .diagonalHasPieces(fromCol, fromRow, toCol, toRow, +1, -1)
-              &&
-              !move
-                  .diagonalHasPieces(fromCol, fromRow, toCol,
-                      toRow, +1, +1);
-    }
-    return true;
   }
 }

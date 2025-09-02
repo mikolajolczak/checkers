@@ -7,24 +7,25 @@ public final class CaptureHandler {
   private final TurnManager turnManager;
   private final BoardState boardState;
   private final BotController botController;
-  private final Move move;
+  private final CaptureRules captureRules;
 
   public CaptureHandler(MoveExecutor moveExecutor,
                         PromotionService promotionService,
                         TurnManager turnManager, BoardState boardState,
-                        BotController botController, Move move) {
+                        BotController botController,
+                        CaptureRules captureRulesParam) {
     this.moveExecutor = moveExecutor;
     this.promotionService = promotionService;
     this.turnManager = turnManager;
     this.boardState = boardState;
     this.botController = botController;
-    this.move = move;
+    captureRules = captureRulesParam;
   }
 
   public void handleCapture(int fromRow, int fromCol, int toRow, int toCol) {
     int pieceColor = boardState.getPiece(fromRow, fromCol);
 
-    if (!move.legalTakeMove(toCol, toRow, fromCol, fromRow, pieceColor)) {
+    if (!captureRules.isLegalCapture(toCol, toRow, fromCol, fromRow, pieceColor, boardState)) {
       return;
     }
 

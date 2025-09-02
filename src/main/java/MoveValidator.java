@@ -3,10 +3,13 @@ package checkers.src.main.java;
 public class MoveValidator {
 
   private final MoveService moveService;
+  private final PositionValidator positionValidator;
   private final BoardState boardState;
 
-  public MoveValidator(MoveService moveService, BoardState boardState) {
+  public MoveValidator(MoveService moveService, PositionValidator positionValidator,
+                       BoardState boardState) {
     this.moveService = moveService;
+    this.positionValidator = positionValidator;
     this.boardState = boardState;
   }
 
@@ -24,7 +27,6 @@ public class MoveValidator {
   }
 
   public boolean isValidPosition(int row, int col) {
-    return row >= 0 && row < GameConstants.BOARD_SIZE &&
-        col >= 0 && col < GameConstants.BOARD_SIZE;
+    return positionValidator.isValidPosition(row, col);
   }
 }
