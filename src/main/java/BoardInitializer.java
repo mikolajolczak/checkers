@@ -1,6 +1,6 @@
 package checkers.src.main.java;
 
-public class BoardInitializer {
+public final class BoardInitializer {
 
   private BoardInitializer() {
   }

@@ -1,14 +1,8 @@
 package checkers.src.main.java;
 
-public class MoveRules {
+public final class MoveRules {
 
-  private final PositionValidator positionValidator;
-
-  public MoveRules() {
-    this.positionValidator = new PositionValidator();
-  }
-
-  public boolean canMove(int col, int row, BoardState boardState) {
+  public static boolean canMove(int col, int row, BoardState boardState) {
     int piece = boardState.getPiece(row, col);
 
     if (piece == GameConstants.RED) {
@@ -20,21 +14,21 @@ public class MoveRules {
     }
   }
 
-  private boolean canRedPieceMove(int col, int row, BoardState boardState) {
+  private static boolean canRedPieceMove(int col, int row, BoardState boardState) {
     return (col < GameConstants.LAST_ROW_INDEX &&
         PieceRules.isEmpty(boardState.getPiece(row - 1, col + 1))) ||
         (col > 0 &&
             PieceRules.isEmpty(boardState.getPiece(row - 1, col - 1)));
   }
 
-  private boolean canBlackPieceMove(int col, int row, BoardState boardState) {
+  private static boolean canBlackPieceMove(int col, int row, BoardState boardState) {
     return (col < GameConstants.LAST_ROW_INDEX &&
         PieceRules.isEmpty(boardState.getPiece(row + 1, col + 1))) ||
         (col > 0 &&
             PieceRules.isEmpty(boardState.getPiece(row + 1, col - 1)));
   }
 
-  public boolean isLegalMove(int c2, int r2, int c1, int r1, int color, BoardState boardState) {
+  public static boolean isLegalMove(int c2, int r2, int c1, int r1, int color, BoardState boardState) {
     if (!PieceRules.isEmpty(boardState.getPiece(r2, c2))) {
       return false;
     }
@@ -50,8 +44,8 @@ public class MoveRules {
     };
   }
 
-  private boolean isLegalKingMove(int c1, int r1, int c2, int r2, BoardState boardState) {
-    if (positionValidator.isNotOnSameDiagonal(c1, r1, c2, r2)) {
+  private static boolean isLegalKingMove(int c1, int r1, int c2, int r2, BoardState boardState) {
+    if (PositionValidator.isNotOnSameDiagonal(c1, r1, c2, r2)) {
       return false;
     }
 

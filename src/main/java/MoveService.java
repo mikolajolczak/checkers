@@ -2,22 +2,8 @@ package checkers.src.main.java;
 
 import java.util.ArrayList;
 
-public class MoveService {
-
-  private final MoveRules moveRules;
-  private final CaptureRules captureRules;
-  private final TurnManager turnManager;
-  private final BoardState boardState;
-  private final MoveGenerator moveGenerator;
-
-  public MoveService(TurnManager turnManager, BoardState boardState,
-                     MoveGenerator moveGenerator) {
-    this.moveRules = new MoveRules();
-    this.captureRules = new CaptureRules();
-    this.turnManager = turnManager;
-    this.boardState = boardState;
-    this.moveGenerator = moveGenerator;
-  }
+public record MoveService(TurnManager turnManager, BoardState boardState,
+                          MoveGenerator moveGenerator) {
 
   public boolean canSelectPiece(int row, int col, BoardState boardStateParam) {
     int value = boardStateParam.getPiece(row, col);
@@ -25,18 +11,18 @@ public class MoveService {
         || value == turnManager.getCurrentKingColor();
 
     return isCurrentPiece &&
-        (moveRules.canMove(col, row, boardStateParam) ||
-            captureRules.canCapture(col, row, boardStateParam));
+        (MoveRules.canMove(col, row, boardStateParam) ||
+            CaptureRules.canCapture(col, row, boardStateParam));
   }
 
   public boolean isLegalMove(int row, int col, int firstClickCol,
                              int firstClickRow, int firstClickColor) {
-    return moveRules.isLegalMove(col, row, firstClickCol, firstClickRow,
+    return MoveRules.isLegalMove(col, row, firstClickCol, firstClickRow,
         firstClickColor, boardState);
   }
 
   public boolean mustTake() {
-    return captureRules.checkAllPiecesPossibleCaptures(
+    return CaptureRules.checkAllPiecesPossibleCaptures(
         turnManager.getCurrentColor(),
         turnManager.getCurrentKingColor(),
         boardState);

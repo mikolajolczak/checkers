@@ -1,14 +1,8 @@
 package checkers.src.main.java;
 
-public class ThreatEvaluator {
+public final class ThreatEvaluator {
 
-  private final CaptureRules captureRules;
-
-  public ThreatEvaluator() {
-    this.captureRules = new CaptureRules();
-  }
-
-  public int evaluatePlayerThreats(BotDecision decision, BoardState boardState,
+  public static int evaluatePlayerThreats(BotDecision decision, BoardState boardState,
                                    PlayerConfiguration playerConfiguration) {
     if (!playerCanCaptureAfterMove(boardState, playerConfiguration)) {
       return 0;
@@ -20,9 +14,9 @@ public class ThreatEvaluator {
         : -GameConstants.SCORE_PLAYER_THREAT;
   }
 
-  private boolean playerCanCaptureAfterMove(BoardState boardState,
+  private static boolean playerCanCaptureAfterMove(BoardState boardState,
                                             PlayerConfiguration playerConfiguration) {
-    return captureRules.checkAllPiecesPossibleCaptures(
+    return CaptureRules.checkAllPiecesPossibleCaptures(
         playerConfiguration.getHumanColor(),
         playerConfiguration.getHumanKingColor(),
         boardState);

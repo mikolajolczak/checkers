@@ -1,17 +1,11 @@
 package checkers.src.main.java;
 
-public class DiagonalValidator {
+public final class DiagonalValidator {
 
-  private final PositionValidator positionValidator;
-
-  public DiagonalValidator() {
-    this.positionValidator = new PositionValidator();
-  }
-
-  public boolean diagonalHasPieces(int c1, int r1, int c2, int r2, int dc,
+  public static boolean diagonalHasPieces(int c1, int r1, int c2, int r2, int dc,
                                    int dr, BoardState boardState) {
     for (int i = r1 + dr, j = c1 + dc; i != r2 && j != c2; i += dr, j += dc) {
-      if (!positionValidator.isValidPosition(i, j)) {
+      if (!PositionValidator.isValidPosition(i, j)) {
         break;
       }
       if (Math.abs(i - r2) <= 1 && Math.abs(j - c2) <= 1) {
@@ -24,7 +18,7 @@ public class DiagonalValidator {
     return false;
   }
 
-  public boolean hasObstaclesBetween(int fromCol, int fromRow, int toCol,
+  public static boolean hasObstaclesBetween(int fromCol, int fromRow, int toCol,
                                      int toRow, BoardState boardState) {
     if (Math.abs(toRow - fromRow) <= 1) {
       return true;

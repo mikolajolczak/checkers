@@ -1,17 +1,8 @@
 package checkers.src.main.java;
 
-public class BotController {
-  private final BotDecisionService decisionService;
-  private final BotMoveExecutor moveExecutor;
-  private final BotUIHandler uiHandler;
-
-  public BotController(BotDecisionService decisionService,
-                       BotMoveExecutor moveExecutor,
-                       BotUIHandler uiHandler) {
-    this.decisionService = decisionService;
-    this.moveExecutor = moveExecutor;
-    this.uiHandler = uiHandler;
-  }
+public record BotController(BotDecisionService decisionService,
+                            BotMoveExecutor moveExecutor,
+                            BotUIHandler uiHandler) {
 
   public void executeTurn() {
     new Thread(() -> {

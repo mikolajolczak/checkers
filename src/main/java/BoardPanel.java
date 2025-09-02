@@ -6,8 +6,6 @@ import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel {
 
-  private final SquareRenderer squareRenderer = new SquareRenderer();
-  private final PieceRenderer pieceRenderer = new PieceRenderer();
   private List<PieceView> piecesToDraw;
 
   public void setPiecesToDraw(List<PieceView> piecesToDraw) {
@@ -23,9 +21,9 @@ public class BoardPanel extends JPanel {
     }
 
     for (PieceView piece : piecesToDraw) {
-      squareRenderer.drawSquare(g, piece.getRow(), piece.getCol(),
-          piece.isSelected(), GameConstants.SQUARE_SIZE);
-      pieceRenderer.drawPiece(g, piece);
+      SquareRenderer.drawSquare(g, piece.row(), piece.col(),
+          piece.selected(), GameConstants.SQUARE_SIZE);
+      PieceRenderer.drawPiece(g, piece);
     }
   }
 }

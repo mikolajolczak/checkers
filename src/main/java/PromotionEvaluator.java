@@ -1,8 +1,8 @@
 package checkers.src.main.java;
 
-public class PromotionEvaluator {
+public final class PromotionEvaluator {
 
-  public int evaluatePromotionChance(BotDecision decision, BoardState boardState,
+  public static int evaluatePromotionChance(BotDecision decision, BoardState boardState,
                                      PlayerConfiguration playerConfiguration) {
     int movedPiece = boardState.getPiece(decision.toRow(), decision.toCol());
 
@@ -12,11 +12,11 @@ public class PromotionEvaluator {
     return 0;
   }
 
-  public boolean canPromoteToQueen(BoardState boardState, int movedPiece, int botColor) {
+  public static boolean canPromoteToQueen(BoardState boardState, int movedPiece, int botColor) {
     return isChanceForQueen(botColor, boardState, movedPiece);
   }
 
-  public boolean isChanceForQueen(int colorToCheck, BoardState boardState, int pieceType) {
+  public static boolean isChanceForQueen(int colorToCheck, BoardState boardState, int pieceType) {
     if (PieceRules.isKing(pieceType)) {
       return false;
     }
@@ -25,13 +25,13 @@ public class PromotionEvaluator {
     return hasPieceOnPromotionRow(boardState, colorToCheck, promotionRow);
   }
 
-  private int getPromotionRow(int colorToCheck) {
+  private static int getPromotionRow(int colorToCheck) {
     return (colorToCheck == GameConstants.BLACK)
         ? GameConstants.LAST_ROW_INDEX
         : 0;
   }
 
-  private boolean hasPieceOnPromotionRow(BoardState boardState, int colorToCheck, int targetRow) {
+  private static boolean hasPieceOnPromotionRow(BoardState boardState, int colorToCheck, int targetRow) {
     for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
       if (boardState.getPiece(targetRow, col) == colorToCheck) {
         return true;

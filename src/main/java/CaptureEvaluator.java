@@ -1,14 +1,8 @@
 package checkers.src.main.java;
 
-public class CaptureEvaluator {
+public final class CaptureEvaluator {
 
-  private final CaptureRules captureRules;
-
-  public CaptureEvaluator() {
-    this.captureRules = new CaptureRules();
-  }
-
-  public int evaluateCaptureOpportunities(BoardState boardState,
+  public static int evaluateCaptureOpportunities(BoardState boardState,
                                           PlayerConfiguration playerConfiguration) {
     if (botCanCaptureAfterMove(boardState, playerConfiguration)) {
       return GameConstants.SCORE_TAKE_POSSIBLE;
@@ -16,9 +10,9 @@ public class CaptureEvaluator {
     return 0;
   }
 
-  private boolean botCanCaptureAfterMove(BoardState boardState,
+  private static boolean botCanCaptureAfterMove(BoardState boardState,
                                          PlayerConfiguration playerConfiguration) {
-    return captureRules.checkAllPiecesPossibleCaptures(
+    return CaptureRules.checkAllPiecesPossibleCaptures(
         playerConfiguration.getBotColor(),
         playerConfiguration.getBotKingColor(),
         boardState);

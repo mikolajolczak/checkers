@@ -1,11 +1,6 @@
 package checkers.src.main.java;
 
-public class PromotionService {
-  private final BoardState boardState;
-
-  public PromotionService(BoardState boardStateParam) {
-    boardState = boardStateParam;
-  }
+public record PromotionService(BoardState boardState) {
 
   public void promoteIfNeeded(int row, int col, int color) {
     if (color == GameConstants.RED && row == 0) {

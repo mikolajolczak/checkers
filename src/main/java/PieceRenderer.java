@@ -2,9 +2,9 @@ package checkers.src.main.java;
 
 import java.awt.Graphics;
 
-public class PieceRenderer {
+public final class PieceRenderer {
 
-  public void drawPiece(Graphics g, PieceView piece) {
+  public static void drawPiece(Graphics g, PieceView piece) {
     if (piece.isEmpty()) {
       return;
     }
@@ -12,9 +12,9 @@ public class PieceRenderer {
     g.setColor(piece.getColor());
     g.fillOval(
         GameConstants.PIECE_PADDING
-            + piece.getCol() * GameConstants.SQUARE_SIZE,
+            + piece.col() * GameConstants.SQUARE_SIZE,
         GameConstants.PIECE_PADDING
-            + piece.getRow() * GameConstants.SQUARE_SIZE,
+            + piece.row() * GameConstants.SQUARE_SIZE,
         GameConstants.PIECE_SIZE,
         GameConstants.PIECE_SIZE
     );
@@ -23,9 +23,9 @@ public class PieceRenderer {
       g.setColor(java.awt.Color.WHITE);
       g.drawOval(
           GameConstants.KING_MARKER_PADDING
-              + piece.getCol() * GameConstants.SQUARE_SIZE,
+              + piece.col() * GameConstants.SQUARE_SIZE,
           GameConstants.KING_MARKER_PADDING
-              + piece.getRow() * GameConstants.SQUARE_SIZE,
+              + piece.row() * GameConstants.SQUARE_SIZE,
           GameConstants.KING_MARKER_SIZE,
           GameConstants.KING_MARKER_SIZE
       );

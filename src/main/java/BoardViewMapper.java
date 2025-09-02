@@ -3,7 +3,7 @@ package checkers.src.main.java;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardViewMapper {
+public final class BoardViewMapper {
 
   public static List<PieceView> toPieceViews(BoardState boardState,
                                              SelectionState selectionState) {

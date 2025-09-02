@@ -2,19 +2,7 @@ package checkers.src.main.java;
 
 import java.awt.Color;
 
-public class PieceView {
-
-  private final int row;
-  private final int col;
-  private final int type;
-  private final boolean selected;
-
-  public PieceView(int row, int col, int type, boolean selected) {
-    this.row = row;
-    this.col = col;
-    this.type = type;
-    this.selected = selected;
-  }
+public record PieceView(int row, int col, int type, boolean selected) {
 
   public boolean isEmpty() {
     return type == GameConstants.EMPTY;
@@ -30,18 +18,6 @@ public class PieceView {
       case GameConstants.BLACK, GameConstants.BLACK_KING -> Color.BLACK;
       default -> null;
     };
-  }
-
-  public boolean isSelected() {
-    return selected;
-  }
-
-  public int getRow() {
-    return row;
-  }
-
-  public int getCol() {
-    return col;
   }
 
 }

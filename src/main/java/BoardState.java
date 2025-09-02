@@ -1,11 +1,9 @@
 package checkers.src.main.java;
 
-public class BoardState {
-
-  private final int[][] pieces;
+public record BoardState(int[][] pieces) {
 
   public BoardState() {
-    pieces = new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
+    this(new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE]);
   }
 
   public BoardState(int[][] pieces) {

@@ -2,17 +2,11 @@ package checkers.src.main.java;
 
 import java.util.ArrayList;
 
-public class MoveEvaluator {
+public final class MoveEvaluator {
 
-  private final BestMoveSelector bestMoveSelector;
-
-  public MoveEvaluator() {
-    this.bestMoveSelector = new BestMoveSelector();
-  }
-
-  public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,
+  public static BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,
                                     BoardState boardState,
                                     PlayerConfiguration playerConfiguration) {
-    return bestMoveSelector.chooseBestMove(possibleMoves, boardState, playerConfiguration);
+    return BestMoveSelector.chooseBestMove(possibleMoves, boardState, playerConfiguration);
   }
 }

@@ -2,17 +2,9 @@ package checkers.src.main.java;
 
 import java.util.ArrayList;
 
-public class RegularMoveGenerator {
+public final class RegularMoveGenerator {
 
-  private final MoveRules moveRules;
-  private final PositionValidator positionValidator;
-
-  public RegularMoveGenerator() {
-    this.moveRules = new MoveRules();
-    this.positionValidator = new PositionValidator();
-  }
-
-  public void findRegularPieceMoves(int row, int col, int piece,
+  public static void findRegularPieceMoves(int row, int col, int piece,
                                     ArrayList<BotDecision> moves, BoardState boardState) {
     int direction = (piece == GameConstants.RED) ? -1 : 1;
 
@@ -20,8 +12,8 @@ public class RegularMoveGenerator {
       int newRow = row + dir[0];
       int newCol = col + dir[1];
 
-      if (positionValidator.isValidPosition(newRow, newCol) &&
-          moveRules.isLegalMove(newCol, newRow, col, row, piece, boardState)) {
+      if (PositionValidator.isValidPosition(newRow, newCol) &&
+          MoveRules.isLegalMove(newCol, newRow, col, row, piece, boardState)) {
         moves.add(new BotDecision(row, col, newRow, newCol, GameConstants.MOVE));
       }
     }

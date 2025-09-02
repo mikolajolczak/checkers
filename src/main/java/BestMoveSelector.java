@@ -2,21 +2,9 @@ package checkers.src.main.java;
 
 import java.util.ArrayList;
 
-public class BestMoveSelector {
+public final class BestMoveSelector {
 
-  private final ThreatEvaluator threatEvaluator;
-  private final CaptureEvaluator captureEvaluator;
-  private final PromotionEvaluator promotionEvaluator;
-  private final MoveExecutor moveExecutor;
-
-  public BestMoveSelector() {
-    this.threatEvaluator = new ThreatEvaluator();
-    this.captureEvaluator = new CaptureEvaluator();
-    this.promotionEvaluator = new PromotionEvaluator();
-    this.moveExecutor = new MoveExecutor();
-  }
-
-  public BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,
+  public static BotDecision chooseBestMove(ArrayList<BotDecision> possibleMoves,
                                     BoardState boardState,
                                     PlayerConfiguration playerConfiguration) {
     BotDecision bestMove = new BotDecision(-1, -1, -1, -1, -1);
@@ -34,16 +22,16 @@ public class BestMoveSelector {
     return bestMove;
   }
 
-  private int evaluateMove(BotDecision decision, BoardState boardState,
+  private static int evaluateMove(BotDecision decision, BoardState boardState,
                            PlayerConfiguration playerConfiguration) {
-    moveExecutor.applyMoveToBoard(decision, boardState, playerConfiguration);
+    MoveExecutor.applyMoveToBoard(decision, boardState, playerConfiguration);
 
     int score = 0;
-    score += threatEvaluator.evaluatePlayerThreats(decision, boardState,
+    score += ThreatEvaluator.evaluatePlayerThreats(decision, boardState,
         playerConfiguration);
-    score += captureEvaluator.evaluateCaptureOpportunities(boardState,
+    score += CaptureEvaluator.evaluateCaptureOpportunities(boardState,
         playerConfiguration);
-    score += promotionEvaluator.evaluatePromotionChance(decision, boardState,
+    score += PromotionEvaluator.evaluatePromotionChance(decision, boardState,
         playerConfiguration);
 
     return score;

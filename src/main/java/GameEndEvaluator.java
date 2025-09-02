@@ -3,15 +3,7 @@ package checkers.src.main.java;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class GameEndEvaluator {
-
-  private final BoardState state;
-  private final JFrame frame;
-
-  public GameEndEvaluator(BoardState state, JFrame frame) {
-    this.state = state;
-    this.frame = frame;
-  }
+public record GameEndEvaluator(BoardState state, JFrame frame) {
 
   public void evaluateGameEnd() {
     int sumOfReds = 0;

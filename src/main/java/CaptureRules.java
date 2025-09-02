@@ -1,23 +1,15 @@
 package checkers.src.main.java;
 
-public class CaptureRules {
+public final class CaptureRules {
 
-  private final PositionValidator positionValidator;
-  private final DiagonalValidator diagonalValidator;
-
-  public CaptureRules() {
-    this.positionValidator = new PositionValidator();
-    this.diagonalValidator = new DiagonalValidator();
-  }
-
-  public boolean canCapture(int col, int row, BoardState boardState) {
+  public static boolean canCapture(int col, int row, BoardState boardState) {
     int piece = boardState.getPiece(row, col);
     return PieceRules.isKing(piece) ?
         canKingCapture(row, col, piece, boardState) :
         canRegularPieceCapture(row, col, piece, boardState);
   }
 
-  public boolean canKingCapture(int row, int col, int piece, BoardState boardState) {
+  public static boolean canKingCapture(int row, int col, int piece, BoardState boardState) {
     int[] enemies = getEnemyPieces(piece);
 
     for (int[] dir : GameConstants.DIRECTIONS) {
@@ -25,7 +17,7 @@ public class CaptureRules {
         int r = row + dist * dir[0];
         int c = col + dist * dir[1];
 
-        if (!positionValidator.isValidPosition(r, c)) {
+        if (!PositionValidator.isValidPosition(r, c)) {
           break;
         }
 
@@ -34,7 +26,7 @@ public class CaptureRules {
           int landR = r + dir[0];
           int landC = c + dir[1];
 
-          if (positionValidator.isValidPosition(landR, landC) &&
+          if (PositionValidator.isValidPosition(landR, landC) &&
               boardState.getPiece(landR, landC) == GameConstants.EMPTY) {
             return true;
           }
@@ -47,7 +39,7 @@ public class CaptureRules {
     return false;
   }
 
-  public boolean canRegularPieceCapture(int row, int col, int piece, BoardState boardState) {
+  public static boolean canRegularPieceCapture(int row, int col, int piece, BoardState boardState) {
     int dir = (piece == GameConstants.RED) ? -1 : 1;
     int[] enemyPieces = getEnemyPieces(piece);
 
@@ -57,8 +49,8 @@ public class CaptureRules {
       int enemyR = row + dir;
       int enemyC = col + dc;
 
-      if (positionValidator.isValidPosition(jumpR, jumpC) &&
-          positionValidator.isValidPosition(enemyR, enemyC)) {
+      if (PositionValidator.isValidPosition(jumpR, jumpC) &&
+          PositionValidator.isValidPosition(enemyR, enemyC)) {
         int enemyPiece = boardState.getPiece(enemyR, enemyC);
 
         if ((enemyPiece == enemyPieces[0] || enemyPiece == enemyPieces[1]) &&
@@ -70,9 +62,9 @@ public class CaptureRules {
     return false;
   }
 
-  public boolean isLegalCapture(int c2, int r2, int c1, int r1, int color, BoardState boardState) {
+  public static boolean isLegalCapture(int c2, int r2, int c1, int r1, int color, BoardState boardState) {
     if (!PieceRules.isEmpty(boardState.getPiece(r2, c2)) ||
-        positionValidator.isNotOnSameDiagonal(c1, r1, c2, r2)) {
+        PositionValidator.isNotOnSameDiagonal(c1, r1, c2, r2)) {
       return false;
     }
 
@@ -85,11 +77,11 @@ public class CaptureRules {
     };
   }
 
-  private boolean isNotJumpMove(int r1, int c1, int r2, int c2) {
+  private static boolean isNotJumpMove(int r1, int c1, int r2, int c2) {
     return Math.abs(c2 - c1) != 2 || Math.abs(r2 - r1) != 2;
   }
 
-  private boolean isLegalRedCapture(int c1, int r1, int c2, int r2, BoardState boardState) {
+  private static boolean isLegalRedCapture(int c1, int r1, int c2, int r2, BoardState boardState) {
     if (isNotJumpMove(r1, c1, r2, c2)) {
       return false;
     }
@@ -101,7 +93,7 @@ public class CaptureRules {
     return PieceRules.isBlack(midPiece) || PieceRules.isBlackKing(midPiece);
   }
 
-  private boolean isLegalBlackCapture(int c1, int r1, int c2, int r2, BoardState boardState) {
+  private static boolean isLegalBlackCapture(int c1, int r1, int c2, int r2, BoardState boardState) {
     if (isNotJumpMove(r1, c1, r2, c2)) {
       return false;
     }
@@ -113,11 +105,11 @@ public class CaptureRules {
     return PieceRules.isRed(midPiece) || PieceRules.isRedKing(midPiece);
   }
 
-  private boolean isLegalKingCapture(int c1, int r1, int c2, int r2, BoardState boardState, boolean isBlackKing) {
+  private static boolean isLegalKingCapture(int c1, int r1, int c2, int r2, BoardState boardState, boolean isBlackKing) {
     int dc = Integer.compare(c2, c1);
     int dr = Integer.compare(r2, r1);
 
-    if (diagonalValidator.diagonalHasPieces(c1, r1, c2, r2, dc, dr, boardState)) {
+    if (DiagonalValidator.diagonalHasPieces(c1, r1, c2, r2, dc, dr, boardState)) {
       return false;
     }
 
@@ -130,7 +122,7 @@ public class CaptureRules {
     }
   }
 
-  public boolean checkAllPiecesPossibleCaptures(int color, int colorQueen, BoardState boardState) {
+  public static boolean checkAllPiecesPossibleCaptures(int color, int colorQueen, BoardState boardState) {
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
         int piece = boardState.getPiece(row, col);
@@ -142,7 +134,7 @@ public class CaptureRules {
     return false;
   }
 
-  private int[] getEnemyPieces(int piece) {
+  private static int[] getEnemyPieces(int piece) {
     boolean isRed = (piece == GameConstants.RED || piece == GameConstants.RED_KING);
     return isRed ?
         new int[]{GameConstants.BLACK, GameConstants.BLACK_KING} :
