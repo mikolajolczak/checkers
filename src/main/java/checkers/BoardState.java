@@ -1,7 +1,5 @@
 package checkers;
 
-import java.util.Arrays;
-
 public record BoardState(int[][] pieces) {
   public BoardState() {
     this(new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE]);
