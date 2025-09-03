@@ -16,7 +16,7 @@ public final class BoardViewMapper {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
         int type = boardState.getPiece(row, col);
         boolean selected = (row == selectionState.getSelectedRow()
-            && col == selectionState.getSelectedColumn());
+            & col == selectionState.getSelectedColumn());
         pieces.add(new PieceView(row, col, type, selected));
       }
     }
