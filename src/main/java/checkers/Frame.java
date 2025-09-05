@@ -9,13 +9,16 @@ public class Frame extends JFrame {
   private final BoardPanel board;
   private final GameEndEvaluator gameEndEvaluator;
 
-  public Frame(BoardState state, BoardPanel board) {
+  public Frame(final BoardState state, final BoardPanel boardParam) {
+    if (state == null) {
+      throw new NullPointerException("BoardState is null");
+    }
     this.setSize(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
     this.setLocationRelativeTo(null);
     this.setBackground(Color.LIGHT_GRAY);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.board = board;
-    this.add(board);
+    this.board = boardParam;
+    this.add(boardParam);
     this.gameEndEvaluator = new GameEndEvaluator(state, this);
   }
 

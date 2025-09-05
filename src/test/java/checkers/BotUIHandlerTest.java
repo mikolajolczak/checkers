@@ -2,14 +2,20 @@ package checkers;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class BotUIHandlerTest {
 
-  UIController uiController = mock(UIController.class);
-  TurnManager turnManager = mock(TurnManager.class);
+  final UIController uiController = mock(UIController.class);
+  final TurnManager turnManager = mock(TurnManager.class);
 
   @Nested
   class ConstructorTest {
@@ -150,7 +156,8 @@ class BotUIHandlerTest {
     @Test
     void shouldReturnDifferentHashCodeForDifferentObjects() {
       BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(uiController, mock(TurnManager.class));
+      BotUIHandler handler2 =
+          new BotUIHandler(uiController, mock(TurnManager.class));
 
       assertNotEquals(handler1.hashCode(), handler2.hashCode());
     }

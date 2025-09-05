@@ -5,12 +5,18 @@ import java.util.ArrayList;
 public final class CaptureGenerator {
 
   private CaptureGenerator() {
+    throw new UnsupportedOperationException("Cannot instantiate utility class");
   }
 
   public static void findRegularCaptures(final int row, final int col,
                                          final int piece,
                                          final ArrayList<BotDecision> moves,
                                          final BoardState boardState) {
+
+    if (moves == null) {
+      throw new NullPointerException("moves is null");
+    }
+
     int direction = (piece == GameConstants.RED) ? -1 : 1;
 
     for (int[] dir : new int[][]{{direction, -1}, {direction, 1}}) {

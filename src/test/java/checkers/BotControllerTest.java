@@ -33,22 +33,16 @@ import static org.mockito.Mockito.when;
 
 class BotControllerTest {
 
+  private static final long BOT_MOVE_DELAY_MS = GameConstants.BOT_MOVE_DELAY_MS;
   @Mock
   private BotDecisionService mockDecisionService;
-
   @Mock
   private BotMoveExecutor mockMoveExecutor;
-
   @Mock
   private BotUIHandler mockUIHandler;
-
   @Mock
   private BotDecision mockBotDecision;
-
   private BotController botController;
-
-  private static final long BOT_MOVE_DELAY_MS = GameConstants.BOT_MOVE_DELAY_MS;
-
   private AutoCloseable mocks;
 
   @BeforeEach

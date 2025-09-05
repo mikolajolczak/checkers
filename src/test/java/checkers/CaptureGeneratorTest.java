@@ -98,7 +98,7 @@ public class CaptureGeneratorTest {
   }
 
   @Test
-  void testFindRegularCaptures_WhitePiece_DownwardDirection() {
+  void testFindRegularCaptures_BlackPiece_DownwardDirection() {
     int row = 2, col = 2;
     int piece = GameConstants.BLACK;
 
@@ -207,27 +207,25 @@ public class CaptureGeneratorTest {
          MockedStatic<DiagonalValidator> diagValidator = mockStatic(
              DiagonalValidator.class)) {
 
-      try (MockedStatic<GameConstants> _ = mockStatic(GameConstants.class)) {
+      posValidator.when(
+              () -> PositionValidator.isValidPosition(anyInt(), anyInt()))
+          .thenReturn(true);
+      captureRules.when(
+              () -> CaptureRules.isLegalCapture(anyInt(), anyInt(), anyInt(),
+                  anyInt(), anyInt(), any()))
+          .thenReturn(true);
+      diagValidator.when(
+              () -> DiagonalValidator.hasObstaclesBetween(anyInt(), anyInt(),
+                  anyInt(), anyInt(), any()))
+          .thenReturn(true);
 
-        posValidator.when(
-                () -> PositionValidator.isValidPosition(anyInt(), anyInt()))
-            .thenReturn(true);
-        captureRules.when(
-                () -> CaptureRules.isLegalCapture(anyInt(), anyInt(), anyInt(),
-                    anyInt(), anyInt(), any()))
-            .thenReturn(true);
-        diagValidator.when(
-                () -> DiagonalValidator.hasObstaclesBetween(anyInt(), anyInt(),
-                    anyInt(), anyInt(), any()))
-            .thenReturn(true);
+      CaptureGenerator.findKingCaptures(row, col, piece, moves,
+          mockBoardState);
 
-        CaptureGenerator.findKingCaptures(row, col, piece, moves,
-            mockBoardState);
+      assertTrue(moves.size() >= 2);
+      assertTrue(moves.stream()
+          .allMatch(move -> move.moveType() == GameConstants.QUEEN_TAKE));
 
-        assertTrue(moves.size() >= 2);
-        assertTrue(moves.stream()
-            .allMatch(move -> move.moveType() == GameConstants.QUEEN_TAKE));
-      }
     }
   }
 
@@ -236,8 +234,8 @@ public class CaptureGeneratorTest {
     int row = 7, col = 7, piece = GameConstants.RED_KING;
 
     try (MockedStatic<PositionValidator> posValidator = mockStatic(
-        PositionValidator.class);
-         MockedStatic<GameConstants> _ = mockStatic(GameConstants.class)) {
+        PositionValidator.class)
+    ) {
 
       posValidator.when(
               () -> PositionValidator.isValidPosition(anyInt(), anyInt()))
@@ -256,8 +254,8 @@ public class CaptureGeneratorTest {
     try (MockedStatic<PositionValidator> posValidator = mockStatic(
         PositionValidator.class);
          MockedStatic<CaptureRules> captureRules = mockStatic(
-             CaptureRules.class);
-         MockedStatic<GameConstants> _ = mockStatic(GameConstants.class)) {
+             CaptureRules.class)
+    ) {
 
       posValidator.when(
               () -> PositionValidator.isValidPosition(anyInt(), anyInt()))
@@ -282,8 +280,8 @@ public class CaptureGeneratorTest {
          MockedStatic<CaptureRules> captureRules = mockStatic(
              CaptureRules.class);
          MockedStatic<DiagonalValidator> diagValidator = mockStatic(
-             DiagonalValidator.class);
-         MockedStatic<GameConstants> _ = mockStatic(GameConstants.class)) {
+             DiagonalValidator.class)
+    ) {
 
       posValidator.when(
               () -> PositionValidator.isValidPosition(anyInt(), anyInt()))
@@ -308,8 +306,8 @@ public class CaptureGeneratorTest {
     int row = 6, col = 6, piece = GameConstants.RED_KING;
 
     try (MockedStatic<PositionValidator> posValidator = mockStatic(
-        PositionValidator.class);
-         MockedStatic<GameConstants> _ = mockStatic(GameConstants.class)) {
+        PositionValidator.class)
+    ) {
 
       posValidator.when(() -> PositionValidator.isValidPosition(7, 7))
           .thenReturn(true);

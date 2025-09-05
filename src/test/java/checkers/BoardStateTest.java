@@ -25,7 +25,8 @@ class BoardStateTest {
 
       for (int i = 0; i < GameConstants.BOARD_SIZE; i++) {
         assertNotNull(boardState.getPiecesRows(i));
-        assertEquals(GameConstants.BOARD_SIZE, boardState.getPiecesRows(i).length);
+        assertEquals(GameConstants.BOARD_SIZE,
+            boardState.getPiecesRows(i).length);
       }
     }
 
@@ -281,7 +282,8 @@ class BoardStateTest {
     @Test
     void complexUsageScenario() {
 
-      int[][] initialState = new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
+      int[][] initialState =
+          new int[GameConstants.BOARD_SIZE][GameConstants.BOARD_SIZE];
       initialState[0][1] = 1;
       initialState[0][3] = 1;
       initialState[7][0] = 2;

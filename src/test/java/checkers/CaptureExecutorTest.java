@@ -14,18 +14,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class CaptureExecutorTest {
 
-  @Mock
-  private PromotionService promotionService;
-
-  @Mock
-  private BoardState boardState;
-
-  @Mock
-  private TurnManager turnManager;
-
-  private CaptureExecutor captureExecutor;
-
-
   private static final int FROM_ROW = 2;
   private static final int FROM_COL = 3;
   private static final int TO_ROW = 4;
@@ -34,6 +22,13 @@ class CaptureExecutorTest {
   private static final int KING_PIECE_COLOR = GameConstants.RED_KING;
   private static final int CURRENT_COLOR = GameConstants.RED;
   private static final int CURRENT_KING_COLOR = GameConstants.RED_KING;
+  @Mock
+  private PromotionService promotionService;
+  @Mock
+  private BoardState boardState;
+  @Mock
+  private TurnManager turnManager;
+  private CaptureExecutor captureExecutor;
 
   @BeforeEach
   void setUp() {
@@ -135,7 +130,7 @@ class CaptureExecutorTest {
   @Test
   void testExecute_WithKingPiece_PassesCorrectKingColor() {
 
-    final int expectedKingColor = 10;
+    final int expectedKingColor = GameConstants.RED;
     when(turnManager.getCurrentKingColor()).thenReturn(expectedKingColor);
 
     try (MockedStatic<PieceRules> pieceRulesMock = mockStatic(PieceRules.class);
@@ -156,7 +151,7 @@ class CaptureExecutorTest {
   @Test
   void testExecute_WithRegularPiece_PassesCorrectRegularColor() {
 
-    final int expectedRegularColor = 8;
+    final int expectedRegularColor = GameConstants.RED;
     when(turnManager.getCurrentColor()).thenReturn(expectedRegularColor);
 
     try (MockedStatic<PieceRules> pieceRulesMock = mockStatic(PieceRules.class);

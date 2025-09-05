@@ -5,11 +5,11 @@ public final class DiagonalValidator {
   private DiagonalValidator() {
   }
 
-  public static boolean diagonalHasPieces(final int c1, final int r1,
-                                          final int c2, final int r2,
-                                          final int dc,
-                                          final int dr,
-                                          final BoardState boardState) {
+  public static boolean isPathClearBetween(final int c1, final int r1,
+                                           final int c2, final int r2,
+                                           final int dc,
+                                           final int dr,
+                                           final BoardState boardState) {
     for (int i = r1 + dr, j = c1 + dc; i != r2 && j != c2; i += dr, j += dc) {
       if (!PositionValidator.isValidPosition(i, j)) {
         break;
@@ -35,7 +35,7 @@ public final class DiagonalValidator {
     int dc = Integer.compare(toCol, fromCol);
     int dr = Integer.compare(toRow, fromRow);
 
-    return !diagonalHasPieces(fromCol, fromRow, toCol, toRow, dc, dr,
+    return !isPathClearBetween(fromCol, fromRow, toCol, toRow, dc, dr,
         boardState);
   }
 }

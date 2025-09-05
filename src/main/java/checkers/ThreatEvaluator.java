@@ -3,11 +3,16 @@ package checkers;
 public final class ThreatEvaluator {
 
   private ThreatEvaluator() {
+    throw new AssertionError("No instances.");
   }
 
   public static int evaluatePlayerThreats(final BotDecision decision,
                                           final BoardState boardState,
                                           final PlayerConfiguration playerConfiguration) {
+    if (decision == null) {
+      throw new NullPointerException("decision is null");
+    }
+
     if (!playerCanCaptureAfterMove(boardState, playerConfiguration)) {
       return 0;
     }

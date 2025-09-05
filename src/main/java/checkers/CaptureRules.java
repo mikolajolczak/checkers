@@ -130,7 +130,7 @@ public final class CaptureRules {
     int dc = Integer.compare(c2, c1);
     int dr = Integer.compare(r2, r1);
 
-    if (DiagonalValidator.diagonalHasPieces(c1, r1, c2, r2, dc, dr,
+    if (DiagonalValidator.isPathClearBetween(c1, r1, c2, r2, dc, dr,
         boardState)) {
       return false;
     }

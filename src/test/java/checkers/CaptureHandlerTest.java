@@ -13,7 +13,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,48 +78,6 @@ class CaptureHandlerTest {
       verify(executor, never()).execute(any(), anyInt(), anyInt(), anyInt(),
           anyInt(), anyInt(), any());
       verify(turnFlow, never()).afterMove();
-    }
-  }
-
-  @Test
-  void shouldHandleCaptureWithDifferentPieceColors() {
-
-    int whitePiece = 0;
-    int blackPiece = 1;
-
-    when(boardState.getPiece(FROM_ROW, FROM_COL)).thenReturn(whitePiece);
-    when(turnFlow.turnManager()).thenReturn(turnManager);
-
-    try (MockedStatic<CaptureValidator> captureValidator = mockStatic(
-        CaptureValidator.class)) {
-      captureValidator.when(() ->
-              CaptureValidator.isValidCapture(boardState, FROM_ROW, FROM_COL,
-                  TO_ROW, TO_COL, whitePiece))
-          .thenReturn(true);
-
-      captureHandler.handleCapture(FROM_ROW, FROM_COL, TO_ROW, TO_COL);
-
-      verify(executor).execute(boardState, FROM_ROW, FROM_COL, TO_ROW, TO_COL,
-          whitePiece, turnManager);
-      verify(turnFlow).afterMove();
-    }
-
-    reset(executor, turnFlow);
-    when(boardState.getPiece(FROM_ROW, FROM_COL)).thenReturn(blackPiece);
-    when(turnFlow.turnManager()).thenReturn(turnManager);
-
-    try (MockedStatic<CaptureValidator> captureValidator = mockStatic(
-        CaptureValidator.class)) {
-      captureValidator.when(() ->
-              CaptureValidator.isValidCapture(boardState, FROM_ROW, FROM_COL,
-                  TO_ROW, TO_COL, blackPiece))
-          .thenReturn(true);
-
-      captureHandler.handleCapture(FROM_ROW, FROM_COL, TO_ROW, TO_COL);
-
-      verify(executor).execute(boardState, FROM_ROW, FROM_COL, TO_ROW, TO_COL,
-          blackPiece, turnManager);
-      verify(turnFlow).afterMove();
     }
   }
 

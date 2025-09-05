@@ -12,8 +12,8 @@ import static org.mockito.Mockito.mock;
 
 class BotStateTest {
 
-  BoardState boardMock = mock(BoardState.class);
-  PlayerConfiguration configMock = mock(PlayerConfiguration.class);
+  final BoardState boardMock = mock(BoardState.class);
+  final PlayerConfiguration configMock = mock(PlayerConfiguration.class);
 
   @Nested
   class ConstructorTest {

@@ -25,6 +25,10 @@ public class MouseInputHandler {
 
   public void handleMouseInput(final int row, final int col) {
     if (!moveValidator.isValidPosition(row, col)) {
+      if (!firstClick) {
+        clearSelectionAndReset();
+      }
+      uiController.refreshBoard();
       return;
     }
 
@@ -60,6 +64,12 @@ public class MouseInputHandler {
       moveCoordinator.handleMove(firstClickRow, firstClickCol, row, col);
     }
 
+    firstClick = true;
+  }
+
+  private void clearSelectionAndReset() {
+    selectionState.setSelectedColumn(GameConstants.BOARD_SIZE);
+    selectionState.setSelectedRow(GameConstants.BOARD_SIZE);
     firstClick = true;
   }
 }

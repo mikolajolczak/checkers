@@ -23,10 +23,12 @@ public record BoardState(int[][] pieces) {
   public BoardState copy() {
     return new BoardState(pieces);
   }
+
   public int[][] getPieces() {
     return pieces;
   }
-  public int[] getPiecesRows(int i){
+
+  public int[] getPiecesRows(int i) {
     return pieces[i];
   }
 }

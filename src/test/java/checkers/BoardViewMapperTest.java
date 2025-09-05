@@ -18,14 +18,11 @@ import static org.mockito.Mockito.when;
 
 class BoardViewMapperTest {
 
+  private static final int BOARD_SIZE = GameConstants.BOARD_SIZE;
   @Mock
   private BoardState mockBoardState;
-
   @Mock
   private SelectionState mockSelectionState;
-
-  private static final int BOARD_SIZE = GameConstants.BOARD_SIZE;
-
   private AutoCloseable mocks;
 
   @BeforeEach
@@ -36,6 +33,35 @@ class BoardViewMapperTest {
   @AfterEach
   void tearDown() throws Exception {
     mocks.close();
+  }
+
+  private void setupMockBoardWithAllZeros() {
+    for (int row = 0; row < BOARD_SIZE; row++) {
+      for (int col = 0; col < BOARD_SIZE; col++) {
+        when(mockBoardState.getPiece(row, col)).thenReturn(0);
+      }
+    }
+  }
+
+  private void setupRemainingFieldsAsZero() {
+    for (int row = 0; row < BOARD_SIZE; row++) {
+      for (int col = 0; col < BOARD_SIZE; col++) {
+        when(mockBoardState.getPiece(row, col)).thenReturn(0);
+      }
+    }
+  }
+
+  private void setupMockSelectionWithNoSelection() {
+    when(mockSelectionState.getSelectedRow()).thenReturn(-1);
+    when(mockSelectionState.getSelectedColumn()).thenReturn(-1);
+  }
+
+  private PieceView findPieceView(List<PieceView> pieces, int row, int col) {
+    return pieces.stream()
+        .filter(p -> p.row() == row && p.col() == col)
+        .findFirst()
+        .orElseThrow(() -> new AssertionError(
+            "PieceView not found at (" + row + "," + col + ")"));
   }
 
   @Nested
@@ -95,7 +121,6 @@ class BoardViewMapperTest {
       when(mockBoardState.getPiece(0, 1)).thenReturn(1);
       when(mockBoardState.getPiece(0, 2)).thenReturn(2);
       when(mockBoardState.getPiece(0, 3)).thenReturn(3);
-
 
       setupMockSelectionWithNoSelection();
 
@@ -213,7 +238,6 @@ class BoardViewMapperTest {
       when(mockBoardState.getPiece(2, 2)).thenReturn(2);
       when(mockBoardState.getPiece(3, 3)).thenReturn(3);
 
-
       when(mockSelectionState.getSelectedRow()).thenReturn(2);
       when(mockSelectionState.getSelectedColumn()).thenReturn(2);
 
@@ -286,8 +310,6 @@ class BoardViewMapperTest {
       when(mockBoardState.getPiece(2, 2)).thenReturn(3);
       when(mockBoardState.getPiece(5, 5)).thenReturn(4);
 
-
-
       when(mockSelectionState.getSelectedRow()).thenReturn(2);
       when(mockSelectionState.getSelectedColumn()).thenReturn(2);
 
@@ -346,35 +368,5 @@ class BoardViewMapperTest {
         assertFalse(pieceView.selected());
       }
     }
-  }
-
-
-  private void setupMockBoardWithAllZeros() {
-    for (int row = 0; row < BOARD_SIZE; row++) {
-      for (int col = 0; col < BOARD_SIZE; col++) {
-        when(mockBoardState.getPiece(row, col)).thenReturn(0);
-      }
-    }
-  }
-
-  private void setupRemainingFieldsAsZero() {
-    for (int row = 0; row < BOARD_SIZE; row++) {
-      for (int col = 0; col < BOARD_SIZE; col++) {
-        when(mockBoardState.getPiece(row, col)).thenReturn(0);
-      }
-    }
-  }
-
-  private void setupMockSelectionWithNoSelection() {
-    when(mockSelectionState.getSelectedRow()).thenReturn(-1);
-    when(mockSelectionState.getSelectedColumn()).thenReturn(-1);
-  }
-
-  private PieceView findPieceView(List<PieceView> pieces, int row, int col) {
-    return pieces.stream()
-        .filter(p -> p.row() == row && p.col() == col)
-        .findFirst()
-        .orElseThrow(() -> new AssertionError(
-            "PieceView not found at (" + row + "," + col + ")"));
   }
 }

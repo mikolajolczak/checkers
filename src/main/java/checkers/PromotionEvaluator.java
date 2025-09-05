@@ -3,6 +3,7 @@ package checkers;
 public final class PromotionEvaluator {
 
   private PromotionEvaluator() {
+    throw new AssertionError("Instantiation not allowed");
   }
 
   public static int evaluatePromotionChance(final BotDecision decision,
@@ -34,15 +35,15 @@ public final class PromotionEvaluator {
     return hasPieceOnPromotionRow(boardState, colorToCheck, promotionRow);
   }
 
-  private static int getPromotionRow(final int colorToCheck) {
+  public static int getPromotionRow(final int colorToCheck) {
     return (colorToCheck == GameConstants.BLACK)
         ? GameConstants.LAST_ROW_INDEX
         : 0;
   }
 
-  private static boolean hasPieceOnPromotionRow(final BoardState boardState,
-                                                final int colorToCheck,
-                                                final int targetRow) {
+  public static boolean hasPieceOnPromotionRow(final BoardState boardState,
+                                               final int colorToCheck,
+                                               final int targetRow) {
     for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
       if (boardState.getPiece(targetRow, col) == colorToCheck) {
         return true;

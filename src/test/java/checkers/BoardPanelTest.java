@@ -282,8 +282,7 @@ class BoardPanelTest {
 
     try (MockedStatic<SquareRenderer> _ = mockStatic(SquareRenderer.class);
          MockedStatic<PieceRenderer> pieceRenderer = mockStatic(
-             PieceRenderer.class);
-         MockedStatic<GameConstants> _ = mockStatic(GameConstants.class)) {
+             PieceRenderer.class)) {
 
       boardPanel.setPiecesToDraw(firstList);
       boardPanel.setPiecesToDraw(secondList);

@@ -19,17 +19,15 @@ import static org.mockito.Mockito.when;
 
 class BotMoveExecutorTest {
 
-  PromotionService promotionService = mock(PromotionService.class);
-  BoardState boardState = mock(BoardState.class);
-  PlayerConfiguration playerConfig = mock(PlayerConfiguration.class);
-
-  BotMoveExecutor executor =
-      new BotMoveExecutor(promotionService, boardState, playerConfig);
-
   private static final int RED = GameConstants.RED;
   private static final int BLACK = GameConstants.BLACK;
   private static final int RED_KING = GameConstants.RED_KING;
   private static final int BLACK_KING = GameConstants.BLACK_KING;
+  final PromotionService promotionService = mock(PromotionService.class);
+  final BoardState boardState = mock(BoardState.class);
+  final PlayerConfiguration playerConfig = mock(PlayerConfiguration.class);
+  final BotMoveExecutor executor =
+      new BotMoveExecutor(promotionService, boardState, playerConfig);
 
   @Nested
   class ConstructorTest {
