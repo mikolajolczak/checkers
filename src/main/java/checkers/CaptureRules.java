@@ -1,10 +1,32 @@
 package checkers;
 
+/**
+ * Utility class providing rules for capturing opponent pieces in a checkers
+ * game.
+ *
+ * <p>This class contains methods to determine if a piece (regular or king) can
+ * perform
+ * a capture, validate the legality of a capture move, and check for possible
+ * captures
+ * for all pieces of a given color on the board.
+ *
+ * <p>All methods are static and the class cannot be instantiated.
+ * </p>
+ */
 public final class CaptureRules {
 
   private CaptureRules() {
   }
 
+  /**
+   * Determines if the piece at the specified position can perform a capture.
+   *
+   * @param col        the column of the piece
+   * @param row        the row of the piece
+   * @param boardState the current state of the game board
+   * @return {@code true} if the piece can capture an opponent's piece,
+   *     {@code false} otherwise
+   */
   public static boolean canCapture(final int col, final int row,
                                    final BoardState boardState) {
     int piece = boardState.getPiece(row, col);
@@ -12,6 +34,16 @@ public final class CaptureRules {
         boardState) : canRegularPieceCapture(row, col, piece, boardState);
   }
 
+  /**
+   * Determines if a king piece at the specified position can perform a capture.
+   *
+   * @param row        the row of the king piece
+   * @param col        the column of the king piece
+   * @param piece      the piece type
+   * @param boardState the current state of the game board
+   * @return {@code true} if the king can capture an opponent's piece, {@code
+   *     false} otherwise
+   */
   public static boolean canKingCapture(final int row, final int col,
                                        final int piece,
                                        final BoardState boardState) {
@@ -44,6 +76,17 @@ public final class CaptureRules {
     return false;
   }
 
+  /**
+   * Determines if a regular piece at the specified position can
+   * perform a capture.
+   *
+   * @param row        the row of the piece
+   * @param col        the column of the piece
+   * @param piece      the piece type
+   * @param boardState the current state of the game board
+   * @return {@code true} if the piece can capture an opponent's piece,
+   *     {@code false} otherwise
+   */
   public static boolean canRegularPieceCapture(final int row, final int col,
                                                final int piece,
                                                final BoardState boardState) {
@@ -69,6 +112,19 @@ public final class CaptureRules {
     return false;
   }
 
+  /**
+   * Checks if a move from (c1, r1) to (c2, r2) is a legal capture
+   * for a piece of the specified color.
+   *
+   * @param c2         the target column
+   * @param r2         the target row
+   * @param c1         the starting column
+   * @param r1         the starting row
+   * @param color      the color or type of the moving piece
+   * @param boardState the current state of the game board
+   * @return {@code true} if the move is a legal capture, {@code false}
+   *     otherwise
+   */
   public static boolean isLegalCapture(final int c2, final int r2, final int c1,
                                        final int r1,
                                        final int color,
@@ -146,14 +202,24 @@ public final class CaptureRules {
     }
   }
 
+  /**
+   * Checks if any pieces of the given color can perform captures on the
+   * current board.
+   *
+   * @param color     the regular piece color
+   * @param colorKing the king piece color
+   * @param state     the current board state
+   * @return {@code true} if at least one piece can capture, {@code false}
+   *     otherwise
+   */
   public static boolean checkAllPiecesPossibleCaptures(final int color,
-                                                       final int colorQueen,
-                                                       final BoardState boardState) {
+                                                       final int colorKing,
+                                                       final BoardState state) {
     for (int row = 0; row < GameConstants.BOARD_SIZE; row++) {
       for (int col = 0; col < GameConstants.BOARD_SIZE; col++) {
-        int piece = boardState.getPiece(row, col);
-        if ((piece == color || piece == colorQueen) && canCapture(col, row,
-            boardState)) {
+        int piece = state.getPiece(row, col);
+        if ((piece == color || piece == colorKing) && canCapture(col, row,
+            state)) {
           return true;
         }
       }

@@ -224,7 +224,7 @@ public class CaptureGeneratorTest {
 
       assertTrue(moves.size() >= 2);
       assertTrue(moves.stream()
-          .allMatch(move -> move.moveType() == GameConstants.QUEEN_TAKE));
+          .allMatch(move -> move.moveType() == GameConstants.KING_TAKE));
 
     }
   }

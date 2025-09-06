@@ -6,11 +6,48 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
+/**
+ * The main entry point for the Checkers game application.
+ *
+ * <p>This class is responsible for initializing and setting up the entire
+ * game environment, including:
+ * <ul>
+ *   <li>Displaying a color selection dialog for the human player.</li>
+ *   <li>Initializing the game board, pawns, and their starting positions.</li>
+ *   <li>Setting up game services such as move validation, promotion
+ *   handling, turn management, and AI bot logic.</li>
+ *   <li>Registering event listeners for mouse and button interactions.</li>
+ * </ul>
+ *
+ * <p>After the human player selects a color, the main game window becomes
+ * visible. If the bot is assigned
+ * to move first, its turn is executed automatically.
+ *
+ * <p>This class cannot be instantiated, as it only provides the
+ * {@link #main(String[])} method.
+ */
 public final class Game {
 
   private Game() {
   }
 
+  /**
+   * The entry point of the Checkers game application.
+   *
+   * <p>This method initializes and sets up the game environment, including:
+   * <ul>
+   *   <li>The color selection frame for the player to choose their color.</li>
+   *   <li>The game board, pieces, and their initial positions.</li>
+   *   <li>All game services and controllers, including move validation,
+   *       promotion handling, turn management, and bot AI.</li>
+   *   <li>Event listeners for mouse input and button actions.</li>
+   * </ul>
+   *
+   * <p>After the player selects a color, the main game window becomes visible,
+   * and if the bot is set to move first, its turn is executed automatically.
+   *
+   * @param args command-line arguments (not used)
+   */
   public static void main(final String[] args) {
     JFrame colorChoiceFrame = new JFrame();
     colorChoiceFrame.setLocation(GameConstants.COLOR_CHOICE_X,
@@ -41,26 +78,26 @@ public final class Game {
 
     PromotionService promotionService = new PromotionService(boardState);
 
-    PlayerConfiguration playerConfiguration = new PlayerConfiguration();
+    PlayerConfig playerConfig = new PlayerConfig();
     TurnManager turnManager =
-        new TurnManager(playerConfiguration, GameConstants.RED,
+        new TurnManager(playerConfig, GameConstants.RED,
             GameConstants.RED_KING);
 
-    UIController uiController = new UIController(boardFrame);
+    UiController uiController = new UiController(boardFrame);
     uiController.setRefreshBoardPanel(refreshBoardPanel);
 
-    MoveGenerator moveGenerator = new MoveGenerator(playerConfiguration);
+    MoveGenerator moveGenerator = new MoveGenerator(playerConfig);
     MoveService moveService =
         new MoveService(turnManager, boardState, moveGenerator);
-    BotState botState = new BotState(boardState, playerConfiguration);
-    BotAI bot = new BotAI(moveService);
+    BotState botState = new BotState(boardState, playerConfig);
+    BotAi bot = new BotAi(moveService);
     BotDecisionService botDecisionService =
         new BotDecisionService(bot, botState);
     BotMoveExecutor botMoveExecutor =
-        new BotMoveExecutor(promotionService, boardState, playerConfiguration);
-    BotUIHandler botUIHandler = new BotUIHandler(uiController, turnManager);
+        new BotMoveExecutor(promotionService, boardState, playerConfig);
+    BotUiHandler botUiHandler = new BotUiHandler(uiController, turnManager);
     BotController botController =
-        new BotController(botDecisionService, botMoveExecutor, botUIHandler);
+        new BotController(botDecisionService, botMoveExecutor, botUiHandler);
 
     CaptureExecutor captureExecutor = new CaptureExecutor(promotionService);
     TurnFlowManager turnFlowManager =
@@ -83,20 +120,20 @@ public final class Game {
 
     boardFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    redButton.addActionListener(_ -> {
-      playerConfiguration.setBotColor(GameConstants.BLACK);
-      playerConfiguration.setBotKingColor(GameConstants.BLACK_KING);
-      playerConfiguration.setHumanColor(GameConstants.RED);
-      playerConfiguration.setHumanKingColor(GameConstants.RED_KING);
+    redButton.addActionListener(ignored -> {
+      playerConfig.setBotColor(GameConstants.BLACK);
+      playerConfig.setBotKingColor(GameConstants.BLACK_KING);
+      playerConfig.setHumanColor(GameConstants.RED);
+      playerConfig.setHumanKingColor(GameConstants.RED_KING);
       colorChoiceFrame.dispose();
       boardFrame.setVisible(true);
     });
 
-    blackButton.addActionListener(_ -> {
-      playerConfiguration.setBotColor(GameConstants.RED);
-      playerConfiguration.setBotKingColor(GameConstants.RED_KING);
-      playerConfiguration.setHumanColor(GameConstants.BLACK);
-      playerConfiguration.setHumanKingColor(GameConstants.BLACK_KING);
+    blackButton.addActionListener(ignored -> {
+      playerConfig.setBotColor(GameConstants.RED);
+      playerConfig.setBotKingColor(GameConstants.RED_KING);
+      playerConfig.setHumanColor(GameConstants.BLACK);
+      playerConfig.setHumanKingColor(GameConstants.BLACK_KING);
       colorChoiceFrame.dispose();
       boardFrame.setVisible(true);
       if (turnManager.isCurrentPlayerBot()) {

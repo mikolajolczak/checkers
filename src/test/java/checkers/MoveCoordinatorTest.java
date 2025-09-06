@@ -22,7 +22,7 @@ class MoveCoordinatorTest {
   private MoveValidator moveValidator;
 
   @Mock
-  private UIController uiController;
+  private UiController uiController;
 
   @Mock
   private TurnManager turnManager;

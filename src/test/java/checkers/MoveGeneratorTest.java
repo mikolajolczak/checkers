@@ -25,16 +25,16 @@ class MoveGeneratorTest {
   private static final int OPPONENT_COLOR = GameConstants.RED;
   private static final int EMPTY_CELL = GameConstants.EMPTY;
   @Mock
-  private PlayerConfiguration playerConfiguration;
+  private PlayerConfig playerConfig;
   @Mock
   private BoardState boardState;
   private MoveGenerator moveGenerator;
 
   @BeforeEach
   void setUp() {
-    when(playerConfiguration.getBotColor()).thenReturn(BOT_COLOR);
-    when(playerConfiguration.getBotKingColor()).thenReturn(BOT_KING_COLOR);
-    moveGenerator = new MoveGenerator(playerConfiguration);
+    when(playerConfig.getBotColor()).thenReturn(BOT_COLOR);
+    when(playerConfig.getBotKingColor()).thenReturn(BOT_KING_COLOR);
+    moveGenerator = new MoveGenerator(playerConfig);
   }
 
   @Test

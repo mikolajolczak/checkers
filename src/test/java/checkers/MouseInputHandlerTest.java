@@ -26,7 +26,7 @@ class MouseInputHandlerTest {
   private SelectionState selectionState;
 
   @Mock
-  private UIController uiController;
+  private UiController uiController;
 
   @Mock
   private MoveCoordinator moveCoordinator;

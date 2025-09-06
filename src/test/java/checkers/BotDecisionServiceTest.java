@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 class BotDecisionServiceTest {
 
   @Mock
-  private BotAI mockBot;
+  private BotAi mockBot;
 
   @Mock
   private BotState mockBotState;
@@ -54,7 +54,7 @@ class BotDecisionServiceTest {
     @Test
     void shouldCreateInstanceWithGivenDependencies() {
 
-      BotAI bot = mock(BotAI.class);
+      BotAi bot = mock(BotAi.class);
       BotState state = mock(BotState.class);
 
       BotDecisionService service = new BotDecisionService(bot, state);
@@ -79,7 +79,7 @@ class BotDecisionServiceTest {
     @Test
     void shouldAcceptNullBotState() {
 
-      BotAI bot = mock(BotAI.class);
+      BotAi bot = mock(BotAi.class);
 
       BotDecisionService service = new BotDecisionService(bot, null);
 
@@ -360,7 +360,7 @@ class BotDecisionServiceTest {
     @Test
     void shouldNotBeEqualToServiceWithDifferentBot() {
 
-      BotAI otherBot = mock(BotAI.class);
+      BotAi otherBot = mock(BotAi.class);
       BotDecisionService service1 =
           new BotDecisionService(mockBot, mockBotState);
       BotDecisionService service2 =
@@ -427,7 +427,7 @@ class BotDecisionServiceTest {
     @Test
     void recordShouldBeImmutable() {
 
-      BotAI originalBot = botDecisionService.bot();
+      BotAi originalBot = botDecisionService.bot();
       BotState originalBotState = botDecisionService.botState();
 
       for (int i = 0; i < 10; i++) {
@@ -442,7 +442,7 @@ class BotDecisionServiceTest {
     @Test
     void differentInstancesShouldMaintainTheirValuesIndependently() {
 
-      BotAI otherBot = mock(BotAI.class);
+      BotAi otherBot = mock(BotAi.class);
       BotState otherBotState = mock(BotState.class);
       BotDecisionService otherService =
           new BotDecisionService(otherBot, otherBotState);

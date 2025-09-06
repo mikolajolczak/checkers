@@ -2,12 +2,32 @@ package checkers;
 
 import java.util.ArrayList;
 
+/**
+ * Utility class for generating all possible capture moves in a checkers game.
+ *
+ * <p>This class provides static methods to find capture moves for both regular
+ * pieces and king pieces. It cannot be instantiated.</p>
+ *
+ * <p>All generated moves are added to the provided list of
+ * {@link BotDecision} objects.</p>
+ */
 public final class CaptureGenerator {
 
   private CaptureGenerator() {
     throw new UnsupportedOperationException("Cannot instantiate utility class");
   }
 
+  /**
+   * Finds all possible capture moves for a regular piece at the given
+   * position on the board and adds them to the provided list of moves.
+   *
+   * @param row        the current row of the piece
+   * @param col        the current column of the piece
+   * @param piece      the type of the piece (e.g., {@link GameConstants#RED})
+   * @param moves      the list where generated capture moves will be added
+   * @param boardState the current state of the board
+   * @throws NullPointerException if {@code moves} is null
+   */
   public static void findRegularCaptures(final int row, final int col,
                                          final int piece,
                                          final ArrayList<BotDecision> moves,
@@ -32,6 +52,16 @@ public final class CaptureGenerator {
     }
   }
 
+  /**
+   * Finds all possible capture moves for a king piece at the given
+   * position on the board and adds them to the provided list of moves.
+   *
+   * @param row        the current row of the piece
+   * @param col        the current column of the piece
+   * @param piece      the type of the piece (king)
+   * @param moves      the list where generated capture moves will be added
+   * @param boardState the current state of the board
+   */
   public static void findKingCaptures(final int row, final int col,
                                       final int piece,
                                       final ArrayList<BotDecision> moves,
@@ -50,7 +80,7 @@ public final class CaptureGenerator {
           if (DiagonalValidator.hasObstaclesBetween(col, row, newCol, newRow,
               boardState)) {
             moves.add(new BotDecision(row, col, newRow, newCol,
-                GameConstants.QUEEN_TAKE));
+                GameConstants.KING_TAKE));
           }
         }
       }

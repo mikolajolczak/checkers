@@ -39,7 +39,7 @@ class BotControllerTest {
   @Mock
   private BotMoveExecutor mockMoveExecutor;
   @Mock
-  private BotUIHandler mockUIHandler;
+  private BotUiHandler mockUIHandler;
   @Mock
   private BotDecision mockBotDecision;
   private BotController botController;
@@ -67,7 +67,7 @@ class BotControllerTest {
 
       BotDecisionService decisionService = mock(BotDecisionService.class);
       BotMoveExecutor moveExecutor = mock(BotMoveExecutor.class);
-      BotUIHandler uiHandler = mock(BotUIHandler.class);
+      BotUiHandler uiHandler = mock(BotUiHandler.class);
 
       BotController controller =
           new BotController(decisionService, moveExecutor, uiHandler);
@@ -117,7 +117,7 @@ class BotControllerTest {
         threadName.set(Thread.currentThread().getName());
         latch.countDown();
         return null;
-      }).when(mockUIHandler).updateUIAndSwitchTurn();
+      }).when(mockUIHandler).updateUiAndSwitchTurn();
 
       String mainThreadName = Thread.currentThread().getName();
 
@@ -139,14 +139,14 @@ class BotControllerTest {
       doAnswer(_ -> {
         latch.countDown();
         return null;
-      }).when(mockUIHandler).updateUIAndSwitchTurn();
+      }).when(mockUIHandler).updateUiAndSwitchTurn();
 
       botController.executeTurn();
 
       assertTrue(latch.await(3, TimeUnit.SECONDS));
       inOrder.verify(mockDecisionService).getBotDecision();
       inOrder.verify(mockMoveExecutor).executeMove(mockBotDecision);
-      inOrder.verify(mockUIHandler).updateUIAndSwitchTurn();
+      inOrder.verify(mockUIHandler).updateUiAndSwitchTurn();
     }
 
     @Test
@@ -161,7 +161,7 @@ class BotControllerTest {
       doAnswer(_ -> {
         latch.countDown();
         return null;
-      }).when(mockUIHandler).updateUIAndSwitchTurn();
+      }).when(mockUIHandler).updateUiAndSwitchTurn();
 
       botController.executeTurn();
 
@@ -261,7 +261,7 @@ class BotControllerTest {
       doAnswer(_ -> {
         completionLatch.countDown();
         return null;
-      }).when(mockUIHandler).updateUIAndSwitchTurn();
+      }).when(mockUIHandler).updateUiAndSwitchTurn();
 
       botController.executeTurn();
 
@@ -273,7 +273,7 @@ class BotControllerTest {
       assertTrue(completionLatch.await(3, TimeUnit.SECONDS));
       verify(mockDecisionService).getBotDecision();
       verify(mockMoveExecutor).executeMove(mockBotDecision);
-      verify(mockUIHandler).updateUIAndSwitchTurn();
+      verify(mockUIHandler).updateUiAndSwitchTurn();
     }
 
     @Test
@@ -304,7 +304,7 @@ class BotControllerTest {
         assertSame(expectedException, caughtException.get());
         verify(mockDecisionService).getBotDecision();
         verify(mockMoveExecutor, never()).executeMove(any());
-        verify(mockUIHandler, never()).updateUIAndSwitchTurn();
+        verify(mockUIHandler, never()).updateUiAndSwitchTurn();
 
       } finally {
         Thread.setDefaultUncaughtExceptionHandler(originalHandler);
@@ -339,7 +339,7 @@ class BotControllerTest {
         assertSame(expectedException, caughtException.get());
         verify(mockDecisionService).getBotDecision();
         verify(mockMoveExecutor).executeMove(mockBotDecision);
-        verify(mockUIHandler, never()).updateUIAndSwitchTurn();
+        verify(mockUIHandler, never()).updateUiAndSwitchTurn();
 
       } finally {
         Thread.setDefaultUncaughtExceptionHandler(originalHandler);
@@ -356,7 +356,7 @@ class BotControllerTest {
           new RuntimeException("UI handler error");
       AtomicReference<Throwable> caughtException = new AtomicReference<>();
 
-      doThrow(expectedException).when(mockUIHandler).updateUIAndSwitchTurn();
+      doThrow(expectedException).when(mockUIHandler).updateUiAndSwitchTurn();
 
       Thread.UncaughtExceptionHandler originalHandler =
           Thread.getDefaultUncaughtExceptionHandler();
@@ -373,7 +373,7 @@ class BotControllerTest {
         assertSame(expectedException, caughtException.get());
         verify(mockDecisionService).getBotDecision();
         verify(mockMoveExecutor).executeMove(mockBotDecision);
-        verify(mockUIHandler).updateUIAndSwitchTurn();
+        verify(mockUIHandler).updateUiAndSwitchTurn();
 
       } finally {
         Thread.setDefaultUncaughtExceptionHandler(originalHandler);
@@ -390,7 +390,7 @@ class BotControllerTest {
       doAnswer(_ -> {
         latch.countDown();
         return null;
-      }).when(mockUIHandler).updateUIAndSwitchTurn();
+      }).when(mockUIHandler).updateUiAndSwitchTurn();
 
       botController.executeTurn();
       botController.executeTurn();
@@ -399,7 +399,7 @@ class BotControllerTest {
       assertTrue(latch.await(5, TimeUnit.SECONDS));
       verify(mockDecisionService, times(3)).getBotDecision();
       verify(mockMoveExecutor, times(3)).executeMove(mockBotDecision);
-      verify(mockUIHandler, times(3)).updateUIAndSwitchTurn();
+      verify(mockUIHandler, times(3)).updateUiAndSwitchTurn();
     }
 
     @Test
@@ -421,7 +421,7 @@ class BotControllerTest {
         }
         latch.countDown();
         return null;
-      }).when(mockUIHandler).updateUIAndSwitchTurn();
+      }).when(mockUIHandler).updateUiAndSwitchTurn();
 
       botController.executeTurn();
       botController.executeTurn();

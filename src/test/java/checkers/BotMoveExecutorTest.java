@@ -25,7 +25,7 @@ class BotMoveExecutorTest {
   private static final int BLACK_KING = GameConstants.BLACK_KING;
   final PromotionService promotionService = mock(PromotionService.class);
   final BoardState boardState = mock(BoardState.class);
-  final PlayerConfiguration playerConfig = mock(PlayerConfiguration.class);
+  final PlayerConfig playerConfig = mock(PlayerConfig.class);
   final BotMoveExecutor executor =
       new BotMoveExecutor(promotionService, boardState, playerConfig);
 
@@ -70,7 +70,7 @@ class BotMoveExecutorTest {
     void eachInstanceShouldMaintainItsOwnValues() {
       PromotionService ps2 = mock(PromotionService.class);
       BoardState bs2 = mock(BoardState.class);
-      PlayerConfiguration pc2 = mock(PlayerConfiguration.class);
+      PlayerConfig pc2 = mock(PlayerConfig.class);
 
       BotMoveExecutor exec1 =
           new BotMoveExecutor(promotionService, boardState, playerConfig);
@@ -119,7 +119,7 @@ class BotMoveExecutorTest {
 
     @Test
     void shouldNotBeEqualIfDifferentPlayerConfig() {
-      PlayerConfiguration otherPc = mock(PlayerConfiguration.class);
+      PlayerConfig otherPc = mock(PlayerConfig.class);
       BotMoveExecutor exec1 =
           new BotMoveExecutor(promotionService, boardState, playerConfig);
       BotMoveExecutor exec2 =
@@ -391,7 +391,7 @@ class BotMoveExecutorTest {
     void differentInstancesShouldRemainIndependent() {
       PromotionService ps2 = mock(PromotionService.class);
       BoardState bs2 = mock(BoardState.class);
-      PlayerConfiguration pc2 = mock(PlayerConfiguration.class);
+      PlayerConfig pc2 = mock(PlayerConfig.class);
 
       BotMoveExecutor exec1 =
           new BotMoveExecutor(promotionService, boardState, playerConfig);

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 class BotStateTest {
 
   final BoardState boardMock = mock(BoardState.class);
-  final PlayerConfiguration configMock = mock(PlayerConfiguration.class);
+  final PlayerConfig configMock = mock(PlayerConfig.class);
 
   @Nested
   class ConstructorTest {
@@ -24,7 +24,7 @@ class BotStateTest {
 
       assertNotNull(state);
       assertEquals(boardMock, state.board());
-      assertEquals(configMock, state.playerConfiguration());
+      assertEquals(configMock, state.playerConfig());
     }
 
     @Test
@@ -32,7 +32,7 @@ class BotStateTest {
       BotState state = new BotState(null, null);
 
       assertNull(state.board());
-      assertNull(state.playerConfiguration());
+      assertNull(state.playerConfig());
     }
 
     @Test
@@ -40,7 +40,7 @@ class BotStateTest {
       BotState state = new BotState(null, configMock);
 
       assertNull(state.board());
-      assertEquals(configMock, state.playerConfiguration());
+      assertEquals(configMock, state.playerConfig());
     }
 
     @Test
@@ -48,7 +48,7 @@ class BotStateTest {
       BotState state = new BotState(boardMock, null);
 
       assertEquals(boardMock, state.board());
-      assertNull(state.playerConfiguration());
+      assertNull(state.playerConfig());
     }
   }
 
@@ -64,13 +64,13 @@ class BotStateTest {
     @Test
     void playerConfigAccessorShouldReturnCorrectValue() {
       BotState state = new BotState(boardMock, configMock);
-      assertEquals(configMock, state.playerConfiguration());
+      assertEquals(configMock, state.playerConfig());
     }
 
     @Test
     void eachInstanceShouldMaintainItsOwnValues() {
       BoardState otherBoard = mock(BoardState.class);
-      PlayerConfiguration otherConfig = mock(PlayerConfiguration.class);
+      PlayerConfig otherConfig = mock(PlayerConfig.class);
 
       BotState state1 = new BotState(boardMock, configMock);
       BotState state2 = new BotState(otherBoard, otherConfig);
@@ -104,7 +104,7 @@ class BotStateTest {
 
     @Test
     void shouldNotBeEqualIfDifferentConfig() {
-      PlayerConfiguration otherConfig = mock(PlayerConfiguration.class);
+      PlayerConfig otherConfig = mock(PlayerConfig.class);
       BotState state1 = new BotState(boardMock, configMock);
       BotState state2 = new BotState(boardMock, otherConfig);
 
@@ -154,7 +154,7 @@ class BotStateTest {
 
     @Test
     void shouldReturnDifferentHashCodeForDifferentObjects() {
-      PlayerConfiguration otherConfig = mock(PlayerConfiguration.class);
+      PlayerConfig otherConfig = mock(PlayerConfig.class);
       BotState state1 = new BotState(boardMock, configMock);
       BotState state2 = new BotState(boardMock, otherConfig);
 
@@ -195,7 +195,7 @@ class BotStateTest {
       String text = state.toString();
 
       assertTrue(text.contains("board"));
-      assertTrue(text.contains("playerConfiguration"));
+      assertTrue(text.contains("playerConfig"));
     }
 
     @Test
@@ -225,23 +225,23 @@ class BotStateTest {
 
       for (int i = 0; i < 10; i++) {
         assertEquals(boardMock, state.board());
-        assertEquals(configMock, state.playerConfiguration());
+        assertEquals(configMock, state.playerConfig());
       }
     }
 
     @Test
     void differentInstancesShouldRemainIndependent() {
       BoardState otherBoard = mock(BoardState.class);
-      PlayerConfiguration otherConfig = mock(PlayerConfiguration.class);
+      PlayerConfig otherConfig = mock(PlayerConfig.class);
 
       BotState state1 = new BotState(boardMock, configMock);
       BotState state2 = new BotState(otherBoard, otherConfig);
 
       assertEquals(boardMock, state1.board());
-      assertEquals(configMock, state1.playerConfiguration());
+      assertEquals(configMock, state1.playerConfig());
 
       assertEquals(otherBoard, state2.board());
-      assertEquals(otherConfig, state2.playerConfiguration());
+      assertEquals(otherConfig, state2.playerConfig());
     }
   }
 
@@ -253,7 +253,7 @@ class BotStateTest {
       BotState state = new BotState(null, null);
 
       assertNull(state.board());
-      assertNull(state.playerConfiguration());
+      assertNull(state.playerConfig());
       assertEquals(new BotState(null, null), state);
     }
 
@@ -262,7 +262,7 @@ class BotStateTest {
       BotState state = new BotState(null, configMock);
 
       assertNull(state.board());
-      assertEquals(configMock, state.playerConfiguration());
+      assertEquals(configMock, state.playerConfig());
     }
 
     @Test
@@ -270,7 +270,7 @@ class BotStateTest {
       BotState state = new BotState(boardMock, null);
 
       assertEquals(boardMock, state.board());
-      assertNull(state.playerConfiguration());
+      assertNull(state.playerConfig());
     }
 
     @Test

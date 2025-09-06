@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-class BotUIHandlerTest {
+class BotUiHandlerTest {
 
-  final UIController uiController = mock(UIController.class);
+  final UiController uiController = mock(UiController.class);
   final TurnManager turnManager = mock(TurnManager.class);
 
   @Nested
@@ -22,7 +22,7 @@ class BotUIHandlerTest {
 
     @Test
     void shouldCreateInstanceWithGivenValues() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
 
       assertNotNull(handler);
       assertEquals(uiController, handler.uiController());
@@ -31,7 +31,7 @@ class BotUIHandlerTest {
 
     @Test
     void shouldAcceptNullValues() {
-      BotUIHandler handler = new BotUIHandler(null, null);
+      BotUiHandler handler = new BotUiHandler(null, null);
 
       assertNull(handler.uiController());
       assertNull(handler.turnManager());
@@ -39,7 +39,7 @@ class BotUIHandlerTest {
 
     @Test
     void shouldAcceptNullUIControllerOnly() {
-      BotUIHandler handler = new BotUIHandler(null, turnManager);
+      BotUiHandler handler = new BotUiHandler(null, turnManager);
 
       assertNull(handler.uiController());
       assertEquals(turnManager, handler.turnManager());
@@ -47,7 +47,7 @@ class BotUIHandlerTest {
 
     @Test
     void shouldAcceptNullTurnManagerOnly() {
-      BotUIHandler handler = new BotUIHandler(uiController, null);
+      BotUiHandler handler = new BotUiHandler(uiController, null);
 
       assertEquals(uiController, handler.uiController());
       assertNull(handler.turnManager());
@@ -59,23 +59,23 @@ class BotUIHandlerTest {
 
     @Test
     void uiControllerAccessorShouldReturnCorrectValue() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
       assertEquals(uiController, handler.uiController());
     }
 
     @Test
     void turnManagerAccessorShouldReturnCorrectValue() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
       assertEquals(turnManager, handler.turnManager());
     }
 
     @Test
     void eachInstanceShouldMaintainItsOwnValues() {
-      UIController otherUI = mock(UIController.class);
+      UiController otherUI = mock(UiController.class);
       TurnManager otherTurnManager = mock(TurnManager.class);
 
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(otherUI, otherTurnManager);
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(otherUI, otherTurnManager);
 
       assertNotEquals(handler1, handler2);
       assertEquals(uiController, handler1.uiController());
@@ -88,8 +88,8 @@ class BotUIHandlerTest {
 
     @Test
     void shouldBeEqualToAnotherWithSameValues() {
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(uiController, turnManager);
 
       assertEquals(handler1, handler2);
       assertEquals(handler2, handler1);
@@ -97,9 +97,9 @@ class BotUIHandlerTest {
 
     @Test
     void shouldNotBeEqualIfDifferentUIController() {
-      UIController otherUI = mock(UIController.class);
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(otherUI, turnManager);
+      UiController otherUI = mock(UiController.class);
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(otherUI, turnManager);
 
       assertNotEquals(handler1, handler2);
     }
@@ -107,23 +107,23 @@ class BotUIHandlerTest {
     @Test
     void shouldNotBeEqualIfDifferentTurnManager() {
       TurnManager otherTurnManager = mock(TurnManager.class);
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(uiController, otherTurnManager);
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(uiController, otherTurnManager);
 
       assertNotEquals(handler1, handler2);
     }
 
     @Test
     void shouldNotBeEqualToNull() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
       assertNotEquals(null, handler);
     }
 
     @Test
     void shouldBeReflexiveSymmetricAndTransitive() {
-      BotUIHandler a = new BotUIHandler(uiController, turnManager);
-      BotUIHandler b = new BotUIHandler(uiController, turnManager);
-      BotUIHandler c = new BotUIHandler(uiController, turnManager);
+      BotUiHandler a = new BotUiHandler(uiController, turnManager);
+      BotUiHandler b = new BotUiHandler(uiController, turnManager);
+      BotUiHandler c = new BotUiHandler(uiController, turnManager);
 
       assertEquals(a, b);
       assertEquals(b, a);
@@ -137,15 +137,15 @@ class BotUIHandlerTest {
 
     @Test
     void shouldReturnSameHashCodeForEqualObjects() {
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(uiController, turnManager);
 
       assertEquals(handler1.hashCode(), handler2.hashCode());
     }
 
     @Test
     void shouldReturnConsistentHashCode() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
 
       int h1 = handler.hashCode();
       int h2 = handler.hashCode();
@@ -155,27 +155,27 @@ class BotUIHandlerTest {
 
     @Test
     void shouldReturnDifferentHashCodeForDifferentObjects() {
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 =
-          new BotUIHandler(uiController, mock(TurnManager.class));
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 =
+          new BotUiHandler(uiController, mock(TurnManager.class));
 
       assertNotEquals(handler1.hashCode(), handler2.hashCode());
     }
 
     @Test
     void shouldHandleNullFieldsInHashCode() {
-      BotUIHandler handler1 = new BotUIHandler(null, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(null, turnManager);
+      BotUiHandler handler1 = new BotUiHandler(null, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(null, turnManager);
 
       assertEquals(handler1.hashCode(), handler2.hashCode());
 
-      BotUIHandler handler3 = new BotUIHandler(uiController, null);
-      BotUIHandler handler4 = new BotUIHandler(uiController, null);
+      BotUiHandler handler3 = new BotUiHandler(uiController, null);
+      BotUiHandler handler4 = new BotUiHandler(uiController, null);
 
       assertEquals(handler3.hashCode(), handler4.hashCode());
 
-      BotUIHandler handler5 = new BotUIHandler(null, null);
-      BotUIHandler handler6 = new BotUIHandler(null, null);
+      BotUiHandler handler5 = new BotUiHandler(null, null);
+      BotUiHandler handler6 = new BotUiHandler(null, null);
 
       assertEquals(handler5.hashCode(), handler6.hashCode());
     }
@@ -186,13 +186,13 @@ class BotUIHandlerTest {
 
     @Test
     void shouldContainClassName() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
       assertTrue(handler.toString().contains("BotUIHandler"));
     }
 
     @Test
     void shouldContainFieldNames() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
       String text = handler.toString();
 
       assertTrue(text.contains("uiController"));
@@ -201,7 +201,7 @@ class BotUIHandlerTest {
 
     @Test
     void shouldBeNotNullAndNotEmpty() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
 
       String text = handler.toString();
       assertNotNull(text);
@@ -210,7 +210,7 @@ class BotUIHandlerTest {
 
     @Test
     void shouldHandleNullValuesInToString() {
-      BotUIHandler handler = new BotUIHandler(null, null);
+      BotUiHandler handler = new BotUiHandler(null, null);
       String text = handler.toString();
 
       assertTrue(text.contains("null"));
@@ -222,7 +222,7 @@ class BotUIHandlerTest {
 
     @Test
     void recordShouldBeImmutableMultipleCallsReturnSameValues() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
 
       for (int i = 0; i < 10; i++) {
         assertEquals(uiController, handler.uiController());
@@ -232,11 +232,11 @@ class BotUIHandlerTest {
 
     @Test
     void differentInstancesShouldRemainIndependent() {
-      UIController otherUI = mock(UIController.class);
+      UiController otherUI = mock(UiController.class);
       TurnManager otherTurnManager = mock(TurnManager.class);
 
-      BotUIHandler handler1 = new BotUIHandler(uiController, turnManager);
-      BotUIHandler handler2 = new BotUIHandler(otherUI, otherTurnManager);
+      BotUiHandler handler1 = new BotUiHandler(uiController, turnManager);
+      BotUiHandler handler2 = new BotUiHandler(otherUI, otherTurnManager);
 
       assertEquals(uiController, handler1.uiController());
       assertEquals(turnManager, handler1.turnManager());
@@ -251,9 +251,9 @@ class BotUIHandlerTest {
 
     @Test
     void shouldUpdateUIAndSwitchTurn() {
-      BotUIHandler handler = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler = new BotUiHandler(uiController, turnManager);
 
-      handler.updateUIAndSwitchTurn();
+      handler.updateUiAndSwitchTurn();
 
       verify(uiController).refreshBoard();
       verify(uiController).checkGameEnd();
@@ -262,16 +262,16 @@ class BotUIHandlerTest {
 
     @Test
     void shouldThrowWhenUIControllerIsNull() {
-      BotUIHandler handler = new BotUIHandler(null, turnManager);
+      BotUiHandler handler = new BotUiHandler(null, turnManager);
 
-      assertThrows(NullPointerException.class, handler::updateUIAndSwitchTurn);
+      assertThrows(NullPointerException.class, handler::updateUiAndSwitchTurn);
     }
 
     @Test
     void shouldThrowWhenTurnManagerIsNull() {
-      BotUIHandler handler = new BotUIHandler(uiController, null);
+      BotUiHandler handler = new BotUiHandler(uiController, null);
 
-      assertThrows(NullPointerException.class, handler::updateUIAndSwitchTurn);
+      assertThrows(NullPointerException.class, handler::updateUiAndSwitchTurn);
     }
   }
 
@@ -280,17 +280,17 @@ class BotUIHandlerTest {
 
     @Test
     void shouldHandleBothFieldsNull() {
-      BotUIHandler handler = new BotUIHandler(null, null);
+      BotUiHandler handler = new BotUiHandler(null, null);
 
       assertNull(handler.uiController());
       assertNull(handler.turnManager());
-      assertEquals(new BotUIHandler(null, null), handler);
+      assertEquals(new BotUiHandler(null, null), handler);
     }
 
     @Test
     void shouldDifferentiateBetweenNullAndNonNull() {
-      BotUIHandler handler1 = new BotUIHandler(uiController, null);
-      BotUIHandler handler2 = new BotUIHandler(uiController, turnManager);
+      BotUiHandler handler1 = new BotUiHandler(uiController, null);
+      BotUiHandler handler2 = new BotUiHandler(uiController, turnManager);
 
       assertNotEquals(handler1, handler2);
     }

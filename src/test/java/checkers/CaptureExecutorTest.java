@@ -58,7 +58,7 @@ class CaptureExecutorTest {
   }
 
   @Test
-  void testExecute_WithKingPiece_CallsExecuteQueenCapture() {
+  void testExecute_WithKingPiece_CallsExecuteKingCapture() {
 
     when(turnManager.getCurrentKingColor()).thenReturn(CURRENT_KING_COLOR);
 
@@ -72,7 +72,7 @@ class CaptureExecutorTest {
       captureExecutor.execute(boardState, FROM_ROW, FROM_COL, TO_ROW, TO_COL,
           KING_PIECE_COLOR, turnManager);
 
-      moveExecutorMock.verify(() -> MoveExecutor.executeQueenCapture(
+      moveExecutorMock.verify(() -> MoveExecutor.executeKingCapture(
           FROM_ROW, FROM_COL, TO_ROW, TO_COL, CURRENT_KING_COLOR, boardState));
       verify(promotionService).promoteIfNeeded(TO_ROW, TO_COL,
           KING_PIECE_COLOR);
@@ -143,7 +143,7 @@ class CaptureExecutorTest {
       captureExecutor.execute(boardState, FROM_ROW, FROM_COL, TO_ROW, TO_COL,
           KING_PIECE_COLOR, turnManager);
 
-      moveExecutorMock.verify(() -> MoveExecutor.executeQueenCapture(
+      moveExecutorMock.verify(() -> MoveExecutor.executeKingCapture(
           FROM_ROW, FROM_COL, TO_ROW, TO_COL, expectedKingColor, boardState));
     }
   }

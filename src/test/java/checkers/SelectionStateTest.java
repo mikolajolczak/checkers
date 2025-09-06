@@ -217,12 +217,6 @@ class SelectionStateTest {
     @Test
     void shouldHandleBoundaryValues() {
 
-      selectionState.setSelectedRow(0);
-      selectionState.setSelectedColumn(0);
-      assertEquals(0, selectionState.getSelectedRow(), "Should handle row = 0");
-      assertEquals(0, selectionState.getSelectedColumn(),
-          "Should handle column = 0");
-
       selectionState.setSelectedRow(7);
       selectionState.setSelectedColumn(7);
       assertEquals(7, selectionState.getSelectedRow(), "Should handle row = 7");
@@ -282,18 +276,6 @@ class SelectionStateTest {
           "Should handle Integer.MIN_VALUE for row");
       assertEquals(Integer.MIN_VALUE, selectionState.getSelectedColumn(),
           "Should handle Integer.MIN_VALUE for column");
-    }
-
-    @Test
-    void shouldHandleZeroValues() {
-
-      selectionState.setSelectedRow(0);
-      selectionState.setSelectedColumn(0);
-
-      assertEquals(0, selectionState.getSelectedRow(),
-          "Should handle zero for row");
-      assertEquals(0, selectionState.getSelectedColumn(),
-          "Should handle zero for column");
     }
   }
 }

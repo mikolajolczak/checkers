@@ -19,14 +19,14 @@ class BestMoveSelectorTest {
 
   private ArrayList<BotDecision> possibleMoves;
   private BoardState mockBoardState;
-  private PlayerConfiguration mockPlayerConfiguration;
+  private PlayerConfig mockPlayerConfig;
   private BotDecision move1, move2, move3, move4;
 
   @BeforeEach
   void setUp() {
     possibleMoves = new ArrayList<>();
     mockBoardState = mock(BoardState.class);
-    mockPlayerConfiguration = mock(PlayerConfiguration.class);
+    mockPlayerConfig = mock(PlayerConfig.class);
 
     move1 = new BotDecision(0, 0, 1, 1, 0);
     move2 = new BotDecision(1, 1, 2, 2, 1);
@@ -47,18 +47,18 @@ class BestMoveSelectorTest {
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class)) {
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(5);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(10);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move3, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(3);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move2, result);
       verify(mockBoardState, times(3)).copy();
@@ -80,12 +80,12 @@ class BestMoveSelectorTest {
       moveEvaluatorMock.when(
               () -> MoveEvaluator.evaluateMove(any(BotDecision.class),
                   eq(mockCopy),
-                  eq(mockPlayerConfiguration)))
+                  eq(mockPlayerConfig)))
           .thenReturn(7);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move3, result);
     }
@@ -104,18 +104,18 @@ class BestMoveSelectorTest {
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class)) {
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(8);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(8);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move3, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(5);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move2, result);
     }
@@ -132,12 +132,12 @@ class BestMoveSelectorTest {
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class)) {
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(15);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move1, result);
       verify(mockBoardState, times(1)).copy();
@@ -157,18 +157,18 @@ class BestMoveSelectorTest {
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class)) {
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(-10);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(-5);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move3, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(-15);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move2, result);
     }
@@ -190,18 +190,18 @@ class BestMoveSelectorTest {
              GameConstants.class)) {
 
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(100);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(500);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move3, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(200);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move2, result);
     }
@@ -222,15 +222,15 @@ class BestMoveSelectorTest {
              GameConstants.class)) {
 
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(Integer.MAX_VALUE - 1);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(Integer.MAX_VALUE);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move2, result);
     }
@@ -252,11 +252,11 @@ class BestMoveSelectorTest {
       moveEvaluatorMock.when(
               () -> MoveEvaluator.evaluateMove(any(BotDecision.class),
                   eq(mockCopy),
-                  eq(mockPlayerConfiguration)))
+                  eq(mockPlayerConfig)))
           .thenReturn(1);
 
       BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-          mockPlayerConfiguration);
+          mockPlayerConfig);
 
       verify(mockBoardState, times(4)).copy();
     }
@@ -267,7 +267,7 @@ class BestMoveSelectorTest {
 
     assertThrows(Exception.class,
         () -> BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-            mockPlayerConfiguration));
+            mockPlayerConfig));
 
     verify(mockBoardState, never()).copy();
   }
@@ -288,18 +288,18 @@ class BestMoveSelectorTest {
              GameConstants.class)) {
 
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(100);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(150);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move3, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(50);
 
       BotDecision result =
           BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration);
+              mockPlayerConfig);
 
       assertEquals(move2, result);
     }
@@ -318,18 +318,18 @@ class BestMoveSelectorTest {
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class)) {
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(5);
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(null, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenThrow(new NullPointerException());
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(10);
 
       assertThrows(NullPointerException.class,
           () -> BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration));
+              mockPlayerConfig));
     }
   }
 
@@ -345,15 +345,15 @@ class BestMoveSelectorTest {
     try (MockedStatic<MoveEvaluator> moveEvaluatorMock = Mockito.mockStatic(
         MoveEvaluator.class)) {
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move1, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenThrow(new RuntimeException("Evaluation Error"));
       moveEvaluatorMock.when(() -> MoveEvaluator.evaluateMove(move2, mockCopy,
-              mockPlayerConfiguration))
+              mockPlayerConfig))
           .thenReturn(10);
 
       assertThrows(RuntimeException.class,
           () -> BestMoveSelector.chooseBestMove(possibleMoves, mockBoardState,
-              mockPlayerConfiguration));
+              mockPlayerConfig));
     }
   }
 }

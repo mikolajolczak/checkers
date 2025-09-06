@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class CaptureEvaluatorTest {
 
   final BoardState boardState = mock(BoardState.class);
-  final PlayerConfiguration config = mock(PlayerConfiguration.class);
+  final PlayerConfig config = mock(PlayerConfig.class);
 
   @Nested
   class ConstructorTest {

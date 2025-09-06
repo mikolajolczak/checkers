@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class BotAITest {
+class BotAiTest {
 
   @Mock
   private MoveService mockMoveService;
@@ -36,7 +36,7 @@ class BotAITest {
   private BoardState mockBoardState;
 
   @Mock
-  private PlayerConfiguration mockPlayerConfiguration;
+  private PlayerConfig mockPlayerConfig;
 
   @Mock
   private BotDecision mockBotDecision1;
@@ -50,14 +50,14 @@ class BotAITest {
   @Mock
   private BotDecision mockBestDecision;
 
-  private BotAI botAI;
+  private BotAi botAI;
 
   private AutoCloseable mocks;
 
   @BeforeEach
   void setUp() {
     mocks = MockitoAnnotations.openMocks(this);
-    botAI = new BotAI(mockMoveService);
+    botAI = new BotAi(mockMoveService);
   }
 
   @AfterEach
@@ -73,7 +73,7 @@ class BotAITest {
 
       MoveService moveService = mock(MoveService.class);
 
-      BotAI bot = new BotAI(moveService);
+      BotAi bot = new BotAi(moveService);
 
       assertNotNull(bot);
       assertEquals(moveService, bot.moveService());
@@ -82,7 +82,7 @@ class BotAITest {
     @Test
     void shouldAcceptNullMoveService() {
 
-      BotAI bot = new BotAI(null);
+      BotAi bot = new BotAi(null);
 
       assertNotNull(bot);
       assertNull(bot.moveService());
@@ -107,8 +107,8 @@ class BotAITest {
     @BeforeEach
     void setupBotState() {
       when(mockBotState.board()).thenReturn(mockBoardState);
-      when(mockBotState.playerConfiguration()).thenReturn(
-          mockPlayerConfiguration);
+      when(mockBotState.playerConfig()).thenReturn(
+          mockPlayerConfig);
     }
 
     @Test
@@ -122,7 +122,7 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                possibleMoves, mockBoardState, mockPlayerConfiguration))
+                possibleMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBestDecision);
 
         botAI.makeMove(mockBotState);
@@ -143,13 +143,13 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                possibleMoves, mockBoardState, mockPlayerConfiguration))
+                possibleMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBestDecision);
 
         botAI.makeMove(mockBotState);
 
         mockedSelector.verify(() -> BestMoveSelector.chooseBestMove(
-            possibleMoves, mockBoardState, mockPlayerConfiguration));
+            possibleMoves, mockBoardState, mockPlayerConfig));
       }
     }
 
@@ -164,7 +164,7 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                possibleMoves, mockBoardState, mockPlayerConfiguration))
+                possibleMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBestDecision);
 
         BotDecision result = botAI.makeMove(mockBotState);
@@ -183,7 +183,7 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                emptyMoves, mockBoardState, mockPlayerConfiguration))
+                emptyMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(null);
 
         BotDecision result = botAI.makeMove(mockBotState);
@@ -191,7 +191,7 @@ class BotAITest {
         assertNull(result);
         verify(mockMoveService).getPossibleMoves(mockBoardState);
         mockedSelector.verify(() -> BestMoveSelector.chooseBestMove(
-            emptyMoves, mockBoardState, mockPlayerConfiguration));
+            emptyMoves, mockBoardState, mockPlayerConfig));
       }
     }
 
@@ -206,7 +206,7 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                singleMove, mockBoardState, mockPlayerConfiguration))
+                singleMove, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBotDecision1);
 
         BotDecision result = botAI.makeMove(mockBotState);
@@ -228,7 +228,7 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                multipleMoves, mockBoardState, mockPlayerConfiguration))
+                multipleMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBotDecision2);
 
         BotDecision result = botAI.makeMove(mockBotState);
@@ -251,14 +251,14 @@ class BotAITest {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
                 (ArrayList<BotDecision>) ArgumentMatchers.<BotDecision>anyList(),
                 eq(mockBoardState),
-                eq(mockPlayerConfiguration)))
+                eq(mockPlayerConfig)))
             .thenReturn(mockBestDecision);
 
         botAI.makeMove(mockBotState);
 
         mockedSelector.verify(() -> BestMoveSelector.chooseBestMove(
             same(possibleMoves), eq(mockBoardState),
-            eq(mockPlayerConfiguration)));
+            eq(mockPlayerConfig)));
       }
     }
 
@@ -290,7 +290,7 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                possibleMoves, mockBoardState, mockPlayerConfiguration))
+                possibleMoves, mockBoardState, mockPlayerConfig))
             .thenThrow(expectedException);
 
         RuntimeException thrownException = assertThrows(RuntimeException.class,
@@ -311,13 +311,13 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                possibleMoves, mockBoardState, mockPlayerConfiguration))
+                possibleMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBestDecision);
 
         botAI.makeMove(mockBotState);
 
         verify(mockBotState, times(2)).board();
-        verify(mockBotState).playerConfiguration();
+        verify(mockBotState).playerConfig();
       }
     }
   }
@@ -333,8 +333,8 @@ class BotAITest {
       possibleMoves.add(mockBotDecision3);
 
       when(mockBotState.board()).thenReturn(mockBoardState);
-      when(mockBotState.playerConfiguration()).thenReturn(
-          mockPlayerConfiguration);
+      when(mockBotState.playerConfig()).thenReturn(
+          mockPlayerConfig);
 
       when(mockMoveService.getPossibleMoves(mockBoardState)).thenReturn(
           possibleMoves);
@@ -342,16 +342,16 @@ class BotAITest {
       try (MockedStatic<BestMoveSelector> mockedSelector = mockStatic(
           BestMoveSelector.class)) {
         mockedSelector.when(() -> BestMoveSelector.chooseBestMove(
-                possibleMoves, mockBoardState, mockPlayerConfiguration))
+                possibleMoves, mockBoardState, mockPlayerConfig))
             .thenReturn(mockBotDecision2);
 
         BotDecision result = botAI.makeMove(mockBotState);
 
         verify(mockBotState, times(2)).board();
         verify(mockMoveService).getPossibleMoves(mockBoardState);
-        verify(mockBotState).playerConfiguration();
+        verify(mockBotState).playerConfig();
         mockedSelector.verify(() -> BestMoveSelector.chooseBestMove(
-            possibleMoves, mockBoardState, mockPlayerConfiguration));
+            possibleMoves, mockBoardState, mockPlayerConfig));
 
         assertSame(mockBotDecision2, result);
       }
@@ -372,8 +372,8 @@ class BotAITest {
     void shouldHandleBotStateWithNullBoard() {
 
       when(mockBotState.board()).thenReturn(null);
-      when(mockBotState.playerConfiguration()).thenReturn(
-          mockPlayerConfiguration);
+      when(mockBotState.playerConfig()).thenReturn(
+          mockPlayerConfig);
 
       assertThrows(RuntimeException.class, () -> botAI.makeMove(mockBotState));
     }
@@ -382,7 +382,7 @@ class BotAITest {
     void shouldHandleBotStateWithNullPlayerConfiguration() {
 
       when(mockBotState.board()).thenReturn(mockBoardState);
-      when(mockBotState.playerConfiguration()).thenReturn(null);
+      when(mockBotState.playerConfig()).thenReturn(null);
 
       ArrayList<BotDecision> possibleMoves = new ArrayList<>();
       possibleMoves.add(mockBotDecision1);
@@ -406,7 +406,7 @@ class BotAITest {
     @Test
     void shouldHandleNullMoveService() {
 
-      BotAI botWithNullService = new BotAI(null);
+      BotAi botWithNullService = new BotAi(null);
 
       assertThrows(NullPointerException.class,
           () -> botWithNullService.makeMove(mockBotState));
@@ -419,21 +419,21 @@ class BotAITest {
     @Test
     void shouldBeEqualToAnotherBotAIWithSameMoveService() {
 
-      BotAI botAI1 = new BotAI(mockMoveService);
-      BotAI botAI2 = new BotAI(mockMoveService);
+      BotAi botAi1 = new BotAi(mockMoveService);
+      BotAi botAi2 = new BotAi(mockMoveService);
 
-      assertEquals(botAI1, botAI2);
-      assertEquals(botAI1.hashCode(), botAI2.hashCode());
+      assertEquals(botAi1, botAi2);
+      assertEquals(botAi1.hashCode(), botAi2.hashCode());
     }
 
     @Test
     void shouldNotBeEqualToBotAIWithDifferentMoveService() {
 
       MoveService otherMoveService = mock(MoveService.class);
-      BotAI botAI1 = new BotAI(mockMoveService);
-      BotAI botAI2 = new BotAI(otherMoveService);
+      BotAi botAi1 = new BotAi(mockMoveService);
+      BotAi botAi2 = new BotAi(otherMoveService);
 
-      assertNotEquals(botAI1, botAI2);
+      assertNotEquals(botAi1, botAi2);
     }
 
     @Test

@@ -28,7 +28,7 @@ class PromotionEvaluatorTest {
   private BotDecision botDecision;
 
   @Mock
-  private PlayerConfiguration playerConfiguration;
+  private PlayerConfig playerConfig;
 
   private AutoCloseable mocks;
 
@@ -46,7 +46,7 @@ class PromotionEvaluatorTest {
   class EvaluatePromotionChanceTests {
 
     @Test
-    void shouldReturnScoreChanceForQueenWhenPieceCanPromote() {
+    void shouldReturnScoreChanceForKingWhenPieceCanPromote() {
 
       int toRow = 3;
       int toCol = 4;
@@ -56,25 +56,25 @@ class PromotionEvaluatorTest {
       when(botDecision.toRow()).thenReturn(toRow);
       when(botDecision.toCol()).thenReturn(toCol);
       when(boardState.getPiece(toRow, toCol)).thenReturn(movedPiece);
-      when(playerConfiguration.getBotColor()).thenReturn(botColor);
+      when(playerConfig.getBotColor()).thenReturn(botColor);
 
       try (MockedStatic<PromotionEvaluator> mockedStatic = mockStatic(
           PromotionEvaluator.class)) {
         mockedStatic.when(
                 () -> PromotionEvaluator.evaluatePromotionChance(botDecision,
-                    boardState, playerConfiguration))
+                    boardState, playerConfig))
             .thenCallRealMethod();
         mockedStatic.when(
-                () -> PromotionEvaluator.canPromoteToQueen(boardState,
+                () -> PromotionEvaluator.canPromoteToKing(boardState,
                     movedPiece,
                     botColor))
             .thenReturn(true);
 
         int result =
             PromotionEvaluator.evaluatePromotionChance(botDecision, boardState,
-                playerConfiguration);
+                playerConfig);
 
-        assertEquals(GameConstants.SCORE_CHANCE_FOR_QUEEN, result);
+        assertEquals(GameConstants.SCORE_CHANCE_FOR_KING, result);
       }
     }
 
@@ -89,23 +89,23 @@ class PromotionEvaluatorTest {
       when(botDecision.toRow()).thenReturn(toRow);
       when(botDecision.toCol()).thenReturn(toCol);
       when(boardState.getPiece(toRow, toCol)).thenReturn(movedPiece);
-      when(playerConfiguration.getBotColor()).thenReturn(botColor);
+      when(playerConfig.getBotColor()).thenReturn(botColor);
 
       try (MockedStatic<PromotionEvaluator> mockedStatic = mockStatic(
           PromotionEvaluator.class)) {
         mockedStatic.when(
                 () -> PromotionEvaluator.evaluatePromotionChance(botDecision,
-                    boardState, playerConfiguration))
+                    boardState, playerConfig))
             .thenCallRealMethod();
         mockedStatic.when(
-                () -> PromotionEvaluator.canPromoteToQueen(boardState,
+                () -> PromotionEvaluator.canPromoteToKing(boardState,
                     movedPiece,
                     botColor))
             .thenReturn(false);
 
         int result =
             PromotionEvaluator.evaluatePromotionChance(botDecision, boardState,
-                playerConfiguration);
+                playerConfig);
 
         assertEquals(0, result);
       }
@@ -113,10 +113,10 @@ class PromotionEvaluatorTest {
   }
 
   @Nested
-  class CanPromoteToQueenTests {
+  class CanPromoteToKingTests {
 
     @Test
-    void shouldReturnTrueWhenChanceForQueen() {
+    void shouldReturnTrueWhenChanceForKing() {
 
       int movedPiece = GameConstants.BLACK;
       int botColor = GameConstants.BLACK;
@@ -124,17 +124,17 @@ class PromotionEvaluatorTest {
       try (MockedStatic<PromotionEvaluator> mockedStatic = mockStatic(
           PromotionEvaluator.class)) {
         mockedStatic.when(
-                () -> PromotionEvaluator.canPromoteToQueen(boardState,
+                () -> PromotionEvaluator.canPromoteToKing(boardState,
                     movedPiece,
                     botColor))
             .thenCallRealMethod();
         mockedStatic.when(
-                () -> PromotionEvaluator.isChanceForQueen(botColor, boardState,
+                () -> PromotionEvaluator.isChanceForKing(botColor, boardState,
                     movedPiece))
             .thenReturn(true);
 
         boolean result =
-            PromotionEvaluator.canPromoteToQueen(boardState, movedPiece,
+            PromotionEvaluator.canPromoteToKing(boardState, movedPiece,
                 botColor);
 
         assertTrue(result);
@@ -142,7 +142,7 @@ class PromotionEvaluatorTest {
     }
 
     @Test
-    void shouldReturnFalseWhenNoChanceForQueen() {
+    void shouldReturnFalseWhenNoChanceForKing() {
 
       int movedPiece = GameConstants.BLACK;
       int botColor = GameConstants.BLACK;
@@ -150,17 +150,17 @@ class PromotionEvaluatorTest {
       try (MockedStatic<PromotionEvaluator> mockedStatic = mockStatic(
           PromotionEvaluator.class)) {
         mockedStatic.when(
-                () -> PromotionEvaluator.canPromoteToQueen(boardState,
+                () -> PromotionEvaluator.canPromoteToKing(boardState,
                     movedPiece,
                     botColor))
             .thenCallRealMethod();
         mockedStatic.when(
-                () -> PromotionEvaluator.isChanceForQueen(botColor, boardState,
+                () -> PromotionEvaluator.isChanceForKing(botColor, boardState,
                     movedPiece))
             .thenReturn(false);
 
         boolean result =
-            PromotionEvaluator.canPromoteToQueen(boardState, movedPiece,
+            PromotionEvaluator.canPromoteToKing(boardState, movedPiece,
                 botColor);
 
         assertFalse(result);
@@ -169,7 +169,7 @@ class PromotionEvaluatorTest {
   }
 
   @Nested
-  class IsChanceForQueenTests {
+  class IsChanceForKingTests {
 
     @Test
     void shouldReturnFalseWhenPieceIsKing() {
@@ -185,13 +185,13 @@ class PromotionEvaluatorTest {
         pieceRulesMock.when(() -> PieceRules.isKing(kingPiece))
             .thenReturn(true);
         promotionMock.when(
-                () -> PromotionEvaluator.isChanceForQueen(colorToCheck,
+                () -> PromotionEvaluator.isChanceForKing(colorToCheck,
                     boardState,
                     kingPiece))
             .thenCallRealMethod();
 
         boolean result =
-            PromotionEvaluator.isChanceForQueen(colorToCheck, boardState,
+            PromotionEvaluator.isChanceForKing(colorToCheck, boardState,
                 kingPiece);
 
         assertFalse(result);
@@ -213,7 +213,7 @@ class PromotionEvaluatorTest {
         pieceRulesMock.when(() -> PieceRules.isKing(regularPiece))
             .thenReturn(false);
         promotionMock.when(
-                () -> PromotionEvaluator.isChanceForQueen(colorToCheck,
+                () -> PromotionEvaluator.isChanceForKing(colorToCheck,
                     boardState,
                     regularPiece))
             .thenCallRealMethod();
@@ -226,7 +226,7 @@ class PromotionEvaluatorTest {
             .thenReturn(true);
 
         boolean result =
-            PromotionEvaluator.isChanceForQueen(colorToCheck, boardState,
+            PromotionEvaluator.isChanceForKing(colorToCheck, boardState,
                 regularPiece);
 
         assertTrue(result);
@@ -247,7 +247,7 @@ class PromotionEvaluatorTest {
         pieceRulesMock.when(() -> PieceRules.isKing(regularPiece))
             .thenReturn(false);
         promotionMock.when(
-                () -> PromotionEvaluator.isChanceForQueen(colorToCheck,
+                () -> PromotionEvaluator.isChanceForKing(colorToCheck,
                     boardState,
                     regularPiece))
             .thenCallRealMethod();
@@ -260,7 +260,7 @@ class PromotionEvaluatorTest {
             .thenReturn(true);
 
         boolean result =
-            PromotionEvaluator.isChanceForQueen(colorToCheck, boardState,
+            PromotionEvaluator.isChanceForKing(colorToCheck, boardState,
                 regularPiece);
 
         assertTrue(result);
@@ -281,7 +281,7 @@ class PromotionEvaluatorTest {
         pieceRulesMock.when(() -> PieceRules.isKing(regularPiece))
             .thenReturn(false);
         promotionMock.when(
-                () -> PromotionEvaluator.isChanceForQueen(colorToCheck,
+                () -> PromotionEvaluator.isChanceForKing(colorToCheck,
                     boardState,
                     regularPiece))
             .thenCallRealMethod();
@@ -294,7 +294,7 @@ class PromotionEvaluatorTest {
             .thenReturn(false);
 
         boolean result =
-            PromotionEvaluator.isChanceForQueen(colorToCheck, boardState,
+            PromotionEvaluator.isChanceForKing(colorToCheck, boardState,
                 regularPiece);
 
         assertFalse(result);
@@ -523,7 +523,7 @@ class PromotionEvaluatorTest {
       when(botDecision.toRow()).thenReturn(toRow);
       when(botDecision.toCol()).thenReturn(toCol);
       when(boardState.getPiece(toRow, toCol)).thenReturn(blackPiece);
-      when(playerConfiguration.getBotColor()).thenReturn(GameConstants.BLACK);
+      when(playerConfig.getBotColor()).thenReturn(GameConstants.BLACK);
       when(boardState.getPiece(GameConstants.LAST_ROW_INDEX, toCol)).thenReturn(
           blackPiece);
 
@@ -534,9 +534,9 @@ class PromotionEvaluatorTest {
 
         int result =
             PromotionEvaluator.evaluatePromotionChance(botDecision, boardState,
-                playerConfiguration);
+                playerConfig);
 
-        assertEquals(GameConstants.SCORE_CHANCE_FOR_QUEEN, result);
+        assertEquals(GameConstants.SCORE_CHANCE_FOR_KING, result);
       }
     }
 
@@ -550,7 +550,7 @@ class PromotionEvaluatorTest {
       when(botDecision.toRow()).thenReturn(toRow);
       when(botDecision.toCol()).thenReturn(toCol);
       when(boardState.getPiece(toRow, toCol)).thenReturn(REDPiece);
-      when(playerConfiguration.getBotColor()).thenReturn(GameConstants.RED);
+      when(playerConfig.getBotColor()).thenReturn(GameConstants.RED);
       when(boardState.getPiece(0, toCol)).thenReturn(REDPiece);
 
       try (MockedStatic<PieceRules> pieceRulesMock = mockStatic(
@@ -560,9 +560,9 @@ class PromotionEvaluatorTest {
 
         int result =
             PromotionEvaluator.evaluatePromotionChance(botDecision, boardState,
-                playerConfiguration);
+                playerConfig);
 
-        assertEquals(GameConstants.SCORE_CHANCE_FOR_QUEEN, result);
+        assertEquals(GameConstants.SCORE_CHANCE_FOR_KING, result);
       }
     }
   }

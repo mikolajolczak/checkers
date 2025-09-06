@@ -24,7 +24,7 @@ class MoveEvaluatorTest {
 
   private BotDecision testDecision;
   private BoardState testBoardState;
-  private PlayerConfiguration testPlayerConfiguration;
+  private PlayerConfig testPlayerConfig;
 
   @BeforeEach
   void setUp() {
@@ -36,7 +36,7 @@ class MoveEvaluatorTest {
 
     testDecision = mock(BotDecision.class);
     testBoardState = mock(BoardState.class);
-    testPlayerConfiguration = mock(PlayerConfiguration.class);
+    testPlayerConfig = mock(PlayerConfig.class);
   }
 
   @AfterEach
@@ -58,37 +58,37 @@ class MoveEvaluatorTest {
 
     threatEvaluatorMock.when(() ->
             ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(threatScore);
 
     captureEvaluatorMock.when(() ->
             CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(captureScore);
 
     promotionEvaluatorMock.when(() ->
             PromotionEvaluator.evaluatePromotionChance(testDecision,
                 testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(promotionScore);
 
     int actualScore = MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     assertEquals(expectedTotalScore, actualScore);
 
     moveExecutorMock.verify(() ->
         MoveExecutor.applyMoveToBoard(testDecision, testBoardState,
-            testPlayerConfiguration), times(1));
+            testPlayerConfig), times(1));
     threatEvaluatorMock.verify(() ->
         ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-            testPlayerConfiguration), times(1));
+            testPlayerConfig), times(1));
     captureEvaluatorMock.verify(() ->
         CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-            testPlayerConfiguration), times(1));
+            testPlayerConfig), times(1));
     promotionEvaluatorMock.verify(() ->
         PromotionEvaluator.evaluatePromotionChance(testDecision, testBoardState,
-            testPlayerConfiguration), times(1));
+            testPlayerConfig), times(1));
   }
 
   @Test
@@ -101,22 +101,22 @@ class MoveEvaluatorTest {
 
     threatEvaluatorMock.when(() ->
             ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(threatScore);
 
     captureEvaluatorMock.when(() ->
             CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(captureScore);
 
     promotionEvaluatorMock.when(() ->
             PromotionEvaluator.evaluatePromotionChance(testDecision,
                 testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(promotionScore);
 
     int actualScore = MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     assertEquals(expectedTotalScore, actualScore);
   }
@@ -131,22 +131,22 @@ class MoveEvaluatorTest {
 
     threatEvaluatorMock.when(() ->
             ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(threatScore);
 
     captureEvaluatorMock.when(() ->
             CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(captureScore);
 
     promotionEvaluatorMock.when(() ->
             PromotionEvaluator.evaluatePromotionChance(testDecision,
                 testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(promotionScore);
 
     int actualScore = MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     assertEquals(expectedTotalScore, actualScore);
   }
@@ -161,22 +161,22 @@ class MoveEvaluatorTest {
 
     threatEvaluatorMock.when(() ->
             ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(threatScore);
 
     captureEvaluatorMock.when(() ->
             CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(captureScore);
 
     promotionEvaluatorMock.when(() ->
             PromotionEvaluator.evaluatePromotionChance(testDecision,
                 testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(promotionScore);
 
     int actualScore = MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     assertEquals(expectedTotalScore, actualScore);
   }
@@ -191,22 +191,22 @@ class MoveEvaluatorTest {
 
     threatEvaluatorMock.when(() ->
             ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(threatScore);
 
     captureEvaluatorMock.when(() ->
             CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(captureScore);
 
     promotionEvaluatorMock.when(() ->
             PromotionEvaluator.evaluatePromotionChance(testDecision,
                 testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(promotionScore);
 
     int actualScore = MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     assertEquals(expectedTotalScore, actualScore);
   }
@@ -221,22 +221,22 @@ class MoveEvaluatorTest {
 
     threatEvaluatorMock.when(() ->
             ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(threatScore);
 
     captureEvaluatorMock.when(() ->
             CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(captureScore);
 
     promotionEvaluatorMock.when(() ->
             PromotionEvaluator.evaluatePromotionChance(testDecision,
                 testBoardState,
-                testPlayerConfiguration))
+                testPlayerConfig))
         .thenReturn(promotionScore);
 
     int actualScore = MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     assertEquals(expectedTotalScore, actualScore);
   }
@@ -257,20 +257,20 @@ class MoveEvaluatorTest {
         .thenReturn(30);
 
     MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     moveExecutorMock.verify(
         () -> MoveExecutor.applyMoveToBoard(testDecision, testBoardState,
-            testPlayerConfiguration));
+            testPlayerConfig));
     threatEvaluatorMock.verify(
         () -> ThreatEvaluator.evaluatePlayerThreats(testDecision,
-            testBoardState, testPlayerConfiguration));
+            testBoardState, testPlayerConfig));
     captureEvaluatorMock.verify(
         () -> CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-            testPlayerConfiguration));
+            testPlayerConfig));
     promotionEvaluatorMock.verify(
         () -> PromotionEvaluator.evaluatePromotionChance(testDecision,
-            testBoardState, testPlayerConfiguration));
+            testBoardState, testPlayerConfig));
 
   }
 
@@ -297,7 +297,7 @@ class MoveEvaluatorTest {
     RuntimeException actualException =
         assertThrows(RuntimeException.class, () ->
             MoveEvaluator.evaluateMove(testDecision, testBoardState,
-                testPlayerConfiguration));
+                testPlayerConfig));
 
     assertEquals(expectedException, actualException);
   }
@@ -314,7 +314,7 @@ class MoveEvaluatorTest {
     RuntimeException actualException =
         assertThrows(RuntimeException.class, () ->
             MoveEvaluator.evaluateMove(testDecision, testBoardState,
-                testPlayerConfiguration));
+                testPlayerConfig));
 
     assertEquals(expectedException, actualException);
   }
@@ -335,20 +335,20 @@ class MoveEvaluatorTest {
         .thenReturn(5);
 
     MoveEvaluator.evaluateMove(testDecision, testBoardState,
-        testPlayerConfiguration);
+        testPlayerConfig);
 
     moveExecutorMock.verify(() ->
         MoveExecutor.applyMoveToBoard(testDecision, testBoardState,
-            testPlayerConfiguration));
+            testPlayerConfig));
 
     threatEvaluatorMock.verify(() ->
         ThreatEvaluator.evaluatePlayerThreats(testDecision, testBoardState,
-            testPlayerConfiguration));
+            testPlayerConfig));
     captureEvaluatorMock.verify(() ->
         CaptureEvaluator.evaluateCaptureOpportunities(testBoardState,
-            testPlayerConfiguration));
+            testPlayerConfig));
     promotionEvaluatorMock.verify(() ->
         PromotionEvaluator.evaluatePromotionChance(testDecision, testBoardState,
-            testPlayerConfiguration));
+            testPlayerConfig));
   }
 }

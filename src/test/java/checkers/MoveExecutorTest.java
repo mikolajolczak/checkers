@@ -20,7 +20,7 @@ class MoveExecutorTest {
   private BoardState mockBoard;
 
   @Mock
-  private PlayerConfiguration mockPlayerConfig;
+  private PlayerConfig mockPlayerConfig;
 
   @Mock
   private BotDecision mockDecision;
@@ -103,7 +103,7 @@ class MoveExecutorTest {
   }
 
   @Test
-  void testExecuteQueenCapture() {
+  void testExecuteKingCapture() {
 
     int fromRow = 0, fromCol = 1;
     int toRow = 4, toCol = 5;
@@ -114,7 +114,7 @@ class MoveExecutorTest {
     int expectedCapturedRow = toRow - rowDir;
     int expectedCapturedCol = toCol - colDir;
 
-    MoveExecutor.executeQueenCapture(fromRow, fromCol, toRow, toCol, color,
+    MoveExecutor.executeKingCapture(fromRow, fromCol, toRow, toCol, color,
         mockBoard);
 
     verify(mockBoard).setPiece(fromRow, fromCol, GameConstants.EMPTY);
@@ -125,25 +125,25 @@ class MoveExecutorTest {
   }
 
   @Test
-  void testExecuteQueenCaptureDirections() {
+  void testExecuteKingCaptureDirections() {
     int color = GameConstants.BLACK_KING;
 
-    MoveExecutor.executeQueenCapture(5, 0, 2, 3, color, mockBoard);
+    MoveExecutor.executeKingCapture(5, 0, 2, 3, color, mockBoard);
     verify(mockBoard).setPiece(3, 2, GameConstants.EMPTY);
 
     reset(mockBoard);
 
-    MoveExecutor.executeQueenCapture(1, 6, 4, 3, color, mockBoard);
+    MoveExecutor.executeKingCapture(1, 6, 4, 3, color, mockBoard);
     verify(mockBoard).setPiece(3, 4, GameConstants.EMPTY);
 
     reset(mockBoard);
 
-    MoveExecutor.executeQueenCapture(1, 1, 5, 5, color, mockBoard);
+    MoveExecutor.executeKingCapture(1, 1, 5, 5, color, mockBoard);
     verify(mockBoard).setPiece(4, 4, GameConstants.EMPTY);
 
     reset(mockBoard);
 
-    MoveExecutor.executeQueenCapture(6, 5, 3, 2, color, mockBoard);
+    MoveExecutor.executeKingCapture(6, 5, 3, 2, color, mockBoard);
     verify(mockBoard).setPiece(4, 3, GameConstants.EMPTY);
   }
 
@@ -182,9 +182,9 @@ class MoveExecutorTest {
   }
 
   @Test
-  void testApplyMoveToBoardQueenCapture() {
+  void testApplyMoveToBoardKingCapture() {
 
-    when(mockDecision.moveType()).thenReturn(GameConstants.QUEEN_TAKE);
+    when(mockDecision.moveType()).thenReturn(GameConstants.KING_TAKE);
     when(mockDecision.fromRow()).thenReturn(0);
     when(mockDecision.fromCol()).thenReturn(1);
     when(mockDecision.toRow()).thenReturn(3);
@@ -233,7 +233,7 @@ class MoveExecutorTest {
 
     MoveExecutor.executeCapture(5, 4, 3, 2, GameConstants.BLACK, mockBoard);
 
-    MoveExecutor.executeQueenCapture(0, 7, 4, 3, GameConstants.RED_KING,
+    MoveExecutor.executeKingCapture(0, 7, 4, 3, GameConstants.RED_KING,
         mockBoard);
 
     verify(mockBoard, times(5)).setPiece(anyInt(), anyInt(),

@@ -30,7 +30,7 @@ class ThreatEvaluatorTest {
   @Mock
   private BoardState mockBoardState;
   @Mock
-  private PlayerConfiguration mockPlayerConfiguration;
+  private PlayerConfig mockPlayerConfig;
 
   @Test
   void shouldReturnZeroWhenPlayerCannotCaptureAfterMove() {
@@ -42,7 +42,7 @@ class ThreatEvaluatorTest {
           .thenReturn(false);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(0, result);
 
@@ -56,8 +56,8 @@ class ThreatEvaluatorTest {
     when(mockBoardState.getPiece(TEST_ROW, TEST_COL)).thenReturn(KING_PIECE);
     when(mockDecision.toRow()).thenReturn(TEST_ROW);
     when(mockDecision.toCol()).thenReturn(TEST_COL);
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
         CaptureRules.class);
@@ -71,7 +71,7 @@ class ThreatEvaluatorTest {
       pieceRulesMock.when(() -> PieceRules.isKing(KING_PIECE)).thenReturn(true);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(-GameConstants.SCORE_PLAYER_THREAT_KING, result);
 
@@ -88,8 +88,8 @@ class ThreatEvaluatorTest {
     when(mockBoardState.getPiece(TEST_ROW, TEST_COL)).thenReturn(REGULAR_PIECE);
     when(mockDecision.toRow()).thenReturn(TEST_ROW);
     when(mockDecision.toCol()).thenReturn(TEST_COL);
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
 
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
@@ -105,7 +105,7 @@ class ThreatEvaluatorTest {
           .thenReturn(false);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(-GameConstants.SCORE_PLAYER_THREAT, result);
 
@@ -122,8 +122,8 @@ class ThreatEvaluatorTest {
     when(mockDecision.toRow()).thenReturn(0);
     when(mockDecision.toCol()).thenReturn(0);
     when(mockBoardState.getPiece(0, 0)).thenReturn(REGULAR_PIECE);
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
         CaptureRules.class);
@@ -138,7 +138,7 @@ class ThreatEvaluatorTest {
           .thenReturn(false);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(-GameConstants.SCORE_PLAYER_THREAT, result);
       verify(mockBoardState).getPiece(0, 0);
@@ -153,8 +153,8 @@ class ThreatEvaluatorTest {
     when(mockDecision.toRow()).thenReturn(maxRow);
     when(mockDecision.toCol()).thenReturn(maxCol);
     when(mockBoardState.getPiece(maxRow, maxCol)).thenReturn(KING_PIECE);
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
 
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
@@ -169,7 +169,7 @@ class ThreatEvaluatorTest {
       pieceRulesMock.when(() -> PieceRules.isKing(KING_PIECE)).thenReturn(true);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(-GameConstants.SCORE_PLAYER_THREAT_KING, result);
       verify(mockBoardState).getPiece(maxRow, maxCol);
@@ -182,8 +182,8 @@ class ThreatEvaluatorTest {
     when(mockBoardState.getPiece(TEST_ROW, TEST_COL)).thenReturn(REGULAR_PIECE);
     when(mockDecision.toRow()).thenReturn(TEST_ROW);
     when(mockDecision.toCol()).thenReturn(TEST_COL);
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
         CaptureRules.class);
@@ -198,12 +198,12 @@ class ThreatEvaluatorTest {
           .thenReturn(false);
 
       ThreatEvaluator.evaluatePlayerThreats(mockDecision, mockBoardState,
-          mockPlayerConfiguration);
+          mockPlayerConfig);
 
       var inOrder =
-          inOrder(mockDecision, mockPlayerConfiguration, mockBoardState);
-      int _ = inOrder.verify(mockPlayerConfiguration).getHumanColor();
-      int _ = inOrder.verify(mockPlayerConfiguration).getHumanKingColor();
+          inOrder(mockDecision, mockPlayerConfig, mockBoardState);
+      int _ = inOrder.verify(mockPlayerConfig).getHumanColor();
+      int _ = inOrder.verify(mockPlayerConfig).getHumanKingColor();
       int _ = inOrder.verify(mockDecision).toRow();
       int _ = inOrder.verify(mockDecision).toCol();
       int _ = inOrder.verify(mockBoardState).getPiece(TEST_ROW, TEST_COL);
@@ -221,14 +221,14 @@ class ThreatEvaluatorTest {
 
       assertThrows(NullPointerException.class, () ->
           ThreatEvaluator.evaluatePlayerThreats(null, mockBoardState,
-              mockPlayerConfiguration));
+              mockPlayerConfig));
     }
   }
 
   @Test
   void shouldHandleNullBoardStateGracefully() {
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
 
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
@@ -239,7 +239,7 @@ class ThreatEvaluatorTest {
 
       assertThrows(NullPointerException.class, () ->
           ThreatEvaluator.evaluatePlayerThreats(mockDecision, null,
-              mockPlayerConfiguration));
+              mockPlayerConfig));
     }
   }
 
@@ -266,8 +266,8 @@ class ThreatEvaluatorTest {
   void shouldHandleDifferentPieceValuesCorrectly() {
     when(mockDecision.toRow()).thenReturn(TEST_ROW);
     when(mockDecision.toCol()).thenReturn(TEST_COL);
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(HUMAN_COLOR);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(HUMAN_COLOR);
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         HUMAN_KING_COLOR);
 
     int unusualPieceValue = 999;
@@ -287,7 +287,7 @@ class ThreatEvaluatorTest {
           .thenReturn(false);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(-GameConstants.SCORE_PLAYER_THREAT, result);
       pieceRulesMock.verify(() -> PieceRules.isKing(unusualPieceValue));
@@ -299,9 +299,9 @@ class ThreatEvaluatorTest {
 
     int differentHumanColor = 5;
     int differentHumanKingColor = 10;
-    when(mockPlayerConfiguration.getHumanColor()).thenReturn(
+    when(mockPlayerConfig.getHumanColor()).thenReturn(
         differentHumanColor);
-    when(mockPlayerConfiguration.getHumanKingColor()).thenReturn(
+    when(mockPlayerConfig.getHumanKingColor()).thenReturn(
         differentHumanKingColor);
 
     try (MockedStatic<CaptureRules> captureRulesMock = mockStatic(
@@ -311,7 +311,7 @@ class ThreatEvaluatorTest {
           .thenReturn(false);
 
       int result = ThreatEvaluator.evaluatePlayerThreats(
-          mockDecision, mockBoardState, mockPlayerConfiguration);
+          mockDecision, mockBoardState, mockPlayerConfig);
 
       assertEquals(0, result);
       captureRulesMock.verify(() -> CaptureRules.checkAllPiecesPossibleCaptures(

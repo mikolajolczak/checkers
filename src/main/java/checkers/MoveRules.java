@@ -1,10 +1,28 @@
 package checkers;
 
+/**
+ * Provides utility methods to validate moves in a checkers game.
+ *
+ * <p>This class is final and contains only static methods to check whether a
+ * piece
+ * can move and to validate the legality of specific moves, including normal
+ * pieces
+ * and kings. It interacts with {@link BoardState} to inspect the current state
+ * of the game board and {@link PieceRules} for piece-specific movement rules.
+ */
 public final class MoveRules {
 
   private MoveRules() {
   }
 
+  /**
+   * Checks whether a piece at the given board position can move.
+   *
+   * @param col        the column index of the piece
+   * @param row        the row index of the piece
+   * @param boardState the current state of the game board
+   * @return true if the piece can make at least one valid move, false otherwise
+   */
   public static boolean canMove(final int col, final int row,
                                 final BoardState boardState) {
     int piece = boardState.getPiece(row, col);
@@ -32,6 +50,18 @@ public final class MoveRules {
         && PieceRules.isEmpty(boardState.getPiece(row + 1, col - 1)));
   }
 
+  /**
+   * Determines if a move from one position to another is legal for a piece
+   * of a given color.
+   *
+   * @param c2         the destination column
+   * @param r2         the destination row
+   * @param c1         the starting column
+   * @param r1         the starting row
+   * @param color      the color/type of the piece
+   * @param boardState the current state of the game board
+   * @return true if the move is legal, false otherwise
+   */
   public static boolean isLegalMove(final int c2, final int r2, final int c1,
                                     final int r1, final int color,
                                     final BoardState boardState) {

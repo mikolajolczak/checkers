@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 class TurnManagerTest {
 
   @Mock
-  private PlayerConfiguration mockPlayerConfig;
+  private PlayerConfig mockPlayerConfig;
 
   private TurnManager turnManager;
 

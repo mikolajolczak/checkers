@@ -14,7 +14,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class UIControllerTest {
+class UiControllerTest {
 
   @Mock
   private Frame mockFrame;
@@ -22,14 +22,14 @@ class UIControllerTest {
   @Mock
   private Runnable mockRefreshBoardPanel;
 
-  private UIController uiController;
+  private UiController uiController;
 
   private AutoCloseable mocks;
 
   @BeforeEach
   void setUp() {
     mocks = MockitoAnnotations.openMocks(this);
-    uiController = new UIController(mockFrame);
+    uiController = new UiController(mockFrame);
   }
 
   @AfterEach
@@ -40,7 +40,7 @@ class UIControllerTest {
   @Test
   void constructor_ShouldCreateUIControllerWithGivenFrame() {
 
-    UIController controller = new UIController(mockFrame);
+    UiController controller = new UiController(mockFrame);
 
     assertNotNull(controller);
   }
@@ -48,7 +48,7 @@ class UIControllerTest {
   @Test
   void constructor_ShouldAcceptNullFrame() {
 
-    assertDoesNotThrow(() -> new UIController(null));
+    assertDoesNotThrow(() -> new UiController(null));
   }
 
   @Test
@@ -133,7 +133,7 @@ class UIControllerTest {
   @Test
   void checkGameEnd_ShouldThrowException_WhenFrameIsNull() {
 
-    UIController controllerWithNullFrame = new UIController(null);
+    UiController controllerWithNullFrame = new UiController(null);
 
     assertThrows(NullPointerException.class,
         controllerWithNullFrame::checkGameEnd);
